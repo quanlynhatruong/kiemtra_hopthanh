@@ -152,7 +152,6 @@
     const mode = document.querySelector('input[name="upMode"]:checked').value;
     const wMode = document.querySelector('input[name="writeMode"]:checked').value;
     
-    // ĐÃ SỬA: Lấy chính xác Mã hồ sơ của dòng đang được thao tác thay vì dòng đầu tiên
     let maHs = "";
     if (typeof currentRowUpload !== 'undefined' && currentRowUpload) {
         const cell = currentRowUpload.querySelector('.ma-ho-so-cell');
@@ -186,7 +185,6 @@
           if (count === CURR_FILES.length) {
             st.innerText = `⏳ Đang gửi ${CURR_FILES.length} file lên Drive...`;
             
-            // ĐÃ BỔ SUNG: .withFailureHandler để chống treo giao diện khi lỗi mạng
             google.script.run
             .withSuccessHandler(res => {
                 handleUpResult(res, st, btn);
@@ -216,7 +214,6 @@
           if (count === CURR_FILES.length) {
             st.innerText = "⏳ Đang gửi dữ liệu lên Drive...";
             
-            // ĐÃ BỔ SUNG: .withFailureHandler để chống treo giao diện
             google.script.run
             .withSuccessHandler(res => {
                 handleUpResult(res, st, btn);
