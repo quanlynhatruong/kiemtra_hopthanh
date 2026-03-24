@@ -10,7 +10,6 @@
 
   <style>
     /* --- CSS MÀN HÌNH ĐĂNG NHẬP VÀ LOADER --- */
-    /* ĐÃ SỬA: Hạ mức z-index và dùng màu nền trong suốt để tránh bị AI Chrome nhận diện là quảng cáo che màn hình/Clickjacking */
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner-ring { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #1e3a8a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
     .loader-text { font-family: 'Segoe UI', sans-serif; font-weight: bold; color: #1e3a8a; letter-spacing: 1px; font-size: 14px; }
@@ -137,7 +136,7 @@
       <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V2.4.2026</p1>
       
       <div id="g_id_onload"
-            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
+           data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
            data-callback="handleCredentialResponse"
            data-auto_prompt="false">
       </div>
@@ -190,10 +189,10 @@
     <div id="MinhChungContainer"></div>
 
     <div id="modal_overlay">
-      <div id=\"modal_box\">
+      <div id="modal_box">
         <h3>✅ THÔNG BÁO</h3>
-        <p id=\"modal_message\"></p>
-        <button class=\"modal-btn\" onclick=\"document.getElementById('modal_overlay').style.display='none'\">ĐÓNG</button>
+        <p id="modal_message"></p>
+        <button class="modal-btn" onclick="document.getElementById('modal_overlay').style.display='none'">ĐÓNG</button>
       </div>
     </div>
     
@@ -277,7 +276,6 @@
 
       google.script.run
         .withSuccessHandler(data => {
-          
           if (data.hasPermission === false) {
             safeRemoveStorage("SKT_USER_EMAIL");
             window.SKT_GLOBAL_EMAIL = null;
@@ -293,7 +291,6 @@
             
             document.getElementById('access_denied_msg').style.display = 'block';
             document.getElementById('denied_reason').innerText = data.message;
-            
           } else {
             let isAuthorizedUser = false;
             if(data.giaoVienData && data.giaoVienData.some(x => String(x.email).toLowerCase() === currentEmail)) isAuthorizedUser = true;
