@@ -4,7 +4,6 @@
     background: white; padding: 5px 10px; border-radius: 6px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 5px; border-top: 3px solid #b91c1c; 
   }
-  /* ĐÃ CẬP NHẬT: Thêm font-family Times New Roman và giảm font-size xuống 17px (nhỏ hơn 30% so với 24px cũ) */
   .page-title {
     text-align: center; font-size: 22px; font-family: 'Times New Roman', serif; font-weight: 900; color: #b91c1c; 
     margin: 5px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; line-height: 1.1;
@@ -121,7 +120,6 @@
     text-align: left;
   }
   
-  /* Đã bổ sung CSS cho các nút file nhỏ gọn trong bảng */
   .file-badge {
     display: inline-block;
     text-decoration: none;
@@ -321,7 +319,6 @@
         let linkHtml = "";
         if(r[15] && r[15].includes('http')) {
             const links = r[15].toString().split(',').map(l => l.trim()).filter(l => l !== "");
-            // Render mỗi link thành một badge nhỏ gọn
             linkHtml = links.map((url, idx) => 
                 `<a href="${url}" target="_blank" class="file-badge" title="Xem tài liệu ${idx + 1}">📎 ${idx + 1}</a>`
             ).join('');
