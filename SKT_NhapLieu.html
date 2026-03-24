@@ -524,7 +524,6 @@
       const targetRow = rowToDelete; 
       const maHS = targetRow.querySelector('.ma-ho-so-cell').innerText;
       
-      // LẤY ĐƯỜNG LINK FILE TỪ GIAO DIỆN (NẾU CÓ)
       const linkInput = targetRow.querySelector('.link-input');
       const fileUrl = linkInput ? linkInput.value : "";
       
@@ -533,19 +532,17 @@
       
       closeConfirmModal(); 
       
-      // HIỂN THỊ THÔNG BÁO CHỜ XÓA
       showModal("⏳ Đang xử lý xóa dữ liệu trên hệ thống. Vui lòng chờ...");
       const btnCloseModal = document.querySelector('#modal_overlay_nhap .btn-cancel');
-      if (btnCloseModal) btnCloseModal.style.display = 'none'; // Tạm ẩn nút đóng
+      if (btnCloseModal) btnCloseModal.style.display = 'none'; 
       
-      // ĐÓNG GÓI MÃ HỒ SƠ + ĐƯỜNG LINK THÀNH CHUỖI ĐỂ GỬI VỀ SERVER
       const payload = maHS + (fileUrl ? "|||" + fileUrl : "");
       
       google.script.run.withSuccessHandler(function(response) {
-          if (btnCloseModal) btnCloseModal.style.display = 'inline-block'; // Mở lại nút đóng
+          if (btnCloseModal) btnCloseModal.style.display = 'inline-block'; 
 
           if (response === "SUCCESS" || response === "NOT_FOUND" || response.includes("Không tìm thấy")) {
-              closeModal(); // Tắt thông báo chờ
+              closeModal(); 
               targetRow.style.transition = "all 0.5s ease"; 
               targetRow.style.opacity = "0"; 
               targetRow.style.transform = "translateX(50px)";
@@ -574,4 +571,3 @@
       rowToDelete = null; 
   }
 </script>
-</div>
