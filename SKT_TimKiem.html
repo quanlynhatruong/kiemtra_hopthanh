@@ -1,43 +1,18 @@
 <style>
-  /* --- 1. CSS TỐI ƯU SIÊU NHỎ GỌN --- */
-  .header-card {
-    background: white; padding: 5px 10px; border-radius: 6px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 5px; border-top: 3px solid #b91c1c; 
-  }
-  .page-title {
-    text-align: center; font-size: 22px; font-family: 'Times New Roman', serif; font-weight: 900; color: #b91c1c; 
-    margin: 5px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; line-height: 1.1;
-  }
-  
-  /* --- 2. CSS BỘ LỌC --- */
-  .filter-section-search { 
-    display: grid; 
-    grid-template-columns: 180px 180px 130px 100px 100px 1fr; 
-    gap: 8px; margin-top: 5px; align-items: end; justify-content: center; 
-  }
+  .header-card { background: white; padding: 5px 10px; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 5px; border-top: 3px solid #b91c1c; }
+  .page-title { text-align: center; font-size: 22px; font-family: 'Times New Roman', serif; font-weight: 900; color: #b91c1c; margin: 5px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; line-height: 1.1; }
+  .filter-section-search { display: grid; grid-template-columns: 180px 180px 130px 100px 100px 1fr; gap: 8px; margin-top: 5px; align-items: end; justify-content: center; }
   .filter-section-search .f-item { text-align: left !important; width: 100%; }
-  .filter-section-search .f-item span { 
-    font-size: 13px; margin-bottom: 2px; font-weight: bold; color: #1e3a8a; display: block; text-align: left; 
-  }
+  .filter-section-search .f-item span { font-size: 13px; margin-bottom: 2px; font-weight: bold; color: #1e3a8a; display: block; text-align: left; }
   .filter-section-search .f-input { width: 100% !important; font-size: 13px; padding: 3px 5px; height: 30px; border: 1px solid #ccc; border-radius: 3px; }
-
-  /* Nút bấm */
   .search-btn { background: #2563eb; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; height: 30px; width: 60px; font-size: 13px; }
   .search-btn:disabled { background: #9ca3af; cursor: not-allowed; } 
   .reset-search-btn { background: #dc2626; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; height: 30px; width: 35px; margin-left: 5px; font-size: 13px; }
-  
-  /* Nút in ấn */
-  .print-btn { 
-    background: #7c3aed; color: white; border: none; border-radius: 3px; 
-    cursor: pointer; font-weight: bold; height: 30px; width: 45px; margin-left: 5px; 
-    font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  }
+  .print-btn { background: #7c3aed; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; height: 30px; width: 45px; margin-left: 5px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
   .print-btn:hover { background: #6d28d9; }
   .print-btn:disabled { background: #ccc; cursor: wait; }
   .print-link { margin-left: 10px; font-size: 13px; font-weight: bold; color: #059669; text-decoration: none; border-bottom: 2px solid #059669; padding-bottom: 2px; animation: fadeIn 0.5s; white-space: nowrap; }
   .print-link:hover { color: #047857; border-color: #047857; }
-
-  /* --- 3. CSS BẢNG THỐNG KÊ --- */
   .stats-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #ddd; justify-content: center; }
   .stat-group { flex: 1; min-width: 150px; max-width: 200px; background: #fff; border: 1px solid #e5e7eb; border-radius: 4px; padding: 3px 6px; }
   .sg-general { border-left: 3px solid #2563eb; } .sg-hoso { border-left: 3px solid #059669; } .sg-day { border-left: 3px solid #d97706; } .sg-ks { border-left: 3px solid #7c3aed; } .sg-khac { border-left: 3px solid #db2777; }
@@ -45,99 +20,24 @@
   .sg-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 1px; color: #000; }
   .sg-row span:last-child { font-weight: bold; color: #1e40af; font-size: 14px; }
   .sg-total { color: #dc2626 !important; font-size: 15px !important; font-weight: 900 !important; }
-
-  /* --- 4. CSS BẢNG KẾT QUẢ --- */
-  .table-container-search { 
-    width: 100%; 
-    overflow-x: auto; 
-    overflow-y: auto; 
-    max-height: 78vh; 
-    border: 1px solid #9ca3af; 
-    background: #fff; 
-    padding-bottom: 50px; 
-  }
+  .table-container-search { width: 100%; overflow-x: auto; overflow-y: auto; max-height: 78vh; border: 1px solid #9ca3af; background: #fff; padding-bottom: 50px; }
   .result-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .result-table thead th { position: sticky; top: 0; z-index: 10; background: #e0f2fe; border-bottom: 1px solid #64748b; }
   .result-table th { color: #0c4a6e; font-weight: bold; text-align: center; padding: 6px 4px; border-right: 1px solid #cbd5e1; font-size: 13px; border: 1px solid #cbd5e1; }
-  
-  .result-table td { 
-    border: 1px solid #cbd5e1; 
-    padding: 4px; 
-    vertical-align: top; 
-    color: #333; 
-    font-size: 13px; 
-    overflow: visible; 
-  }
-  
+  .result-table td { border: 1px solid #cbd5e1; padding: 4px; vertical-align: top; color: #333; font-size: 13px; overflow: visible; }
   .result-link { color: #2563eb; text-decoration: underline; cursor: pointer; font-weight: bold; }
   .no-result { text-align: center; font-style: italic; color: #666; padding: 20px; }
   .design-footer { text-align: center; margin-top: 5px; padding-top: 5px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #1e3a8a; font-weight: bold; font-style: italic; font-family: "Times New Roman", serif; }
-
-  /* --- 5. CSS HỘP THÔNG BÁO --- */
   .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; }
   .modal-box { background: white; padding: 20px; border-radius: 8px; width: 350px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
   .modal-msg { font-size: 15px; margin-bottom: 15px; color: #333; font-weight: 500; }
   .modal-btn { background: #2563eb; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
   .modal-btn:hover { background: #1d4ed8; }
-
-  /* --- 6. CSS NỔI NỘI DUNG --- */
-  .opinion-cell-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  .opinion-content {
-    display: -webkit-box;
-    -webkit-line-clamp: 2; 
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 13px;
-    color: #333;
-    cursor: help;
-    transition: all 0.2s ease;
-  }
-
-  .opinion-cell-wrapper:hover .opinion-content {
-    position: absolute;
-    top: -5px; 
-    left: -5px; 
-    width: auto;
-    min-width: 300px;  
-    max-width: 450px;  
-    height: auto;
-    background-color: white;
-    color: black;
-    padding: 12px;
-    border: 1px solid #0d6efd;
-    border-radius: 6px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.4); 
-    z-index: 9999; 
-    white-space: normal;
-    -webkit-line-clamp: unset; 
-    overflow: visible;
-    text-align: left;
-  }
-  
-  .file-badge {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 11px;
-    cursor: pointer;
-    margin: 2px;
-    padding: 2px 5px;
-    background: #e0f2fe;
-    border: 1px solid #bae6fd;
-    border-radius: 4px;
-    color: #0369a1;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-  .file-badge:hover {
-    background: #bae6fd;
-    color: #0c4a6e;
-  }
+  .opinion-cell-wrapper { position: relative; width: 100%; height: 100%; }
+  .opinion-content { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; font-size: 13px; color: #333; cursor: help; transition: all 0.2s ease; }
+  .opinion-cell-wrapper:hover .opinion-content { position: absolute; top: -5px; left: -5px; width: auto; min-width: 300px; max-width: 450px; height: auto; background-color: white; color: black; padding: 12px; border: 1px solid #0d6efd; border-radius: 6px; box-shadow: 0 5px 25px rgba(0,0,0,0.4); z-index: 9999; white-space: normal; -webkit-line-clamp: unset; overflow: visible; text-align: left; }
+  .file-badge { display: inline-block; text-decoration: none; font-size: 11px; cursor: pointer; margin: 2px; padding: 2px 5px; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 4px; color: #0369a1; font-weight: bold; white-space: nowrap; }
+  .file-badge:hover { background: #bae6fd; color: #0c4a6e; }
 </style>
 
 <div class="header-card">
@@ -147,12 +47,12 @@
     <div class="f-item"><span>Giáo viên</span><select id="s_gv" class="f-input"><option value="">-- Tất cả --</option></select></div>
     <div class="f-item"><span>Người kiểm tra</span><select id="s_nkt" class="f-input"><option value="">-- Tất cả --</option></select></div>
     <div class="f-item"><span>Bộ phận</span><select id="s_bp" class="f-input"><option value="">-- Tất cả --</option></select></div>
-    <div class="f-item"><span>Từ ngày</span><input type="text" id="s_from" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="formatDay(event)"></div>
-    <div class="f-item"><span>Đến ngày</span><input type="text" id="s_to" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="formatDay(event)"></div>
+    <div class="f-item"><span>Từ ngày</span><input type="text" id="s_from" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_dinhDangNgay_fn(event)"></div>
+    <div class="f-item"><span>Đến ngày</span><input type="text" id="s_to" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_dinhDangNgay_fn(event)"></div>
     <div class="f-item" style="display:flex; align-items: flex-end;">
-      <button id="btn_search_main" class="search-btn" onclick="doSearch()">🔍 Tìm</button>
-      <button class="reset-search-btn" onclick="clearSearch()">↻</button>
-      <button class="print-btn" onclick="printReport()" title="Xuất kết quả ra Google Doc">🖨️</button>
+      <button id="btn_search_main" class="search-btn" onclick="hts_thucHienTimKiem_fn()">🔍 Tìm</button>
+      <button class="reset-search-btn" onclick="hts_xoaTrangTimKiem_fn()">↻</button>
+      <button class="print-btn" onclick="hts_inBaoCao_fn()" title="Xuất kết quả ra biểu mẫu">🖨️</button>
       <span id="print_link_container"></span>
     </div>
   </div>
@@ -233,12 +133,12 @@
 <div id="tk_modal_overlay" class="modal-overlay">
   <div class="modal-box">
     <div id="tk_modal_message" class="modal-msg"></div>
-    <button class="modal-btn" onclick="closeTkModal()">Đóng</button>
+    <button class="modal-btn" onclick="hts_dongHopThoaiTK_fn()">Đóng</button>
   </div>
 </div>
 
 <script>
-  (function initSearch() {
+  (function hts_khoiTaoTimKiem_fn() {
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const yyyy = d.getFullYear();
@@ -247,34 +147,34 @@
     document.getElementById('s_from').value = `01/${mm}/${yyyy}`;
     document.getElementById('s_to').value = `${dd}/${mm}/${yyyy}`;
 
-    const filters = document.querySelectorAll('.filter-section-search .f-input');
-    filters.forEach(input => {
+    const hts_mangBoLoc_arr = document.querySelectorAll('.filter-section-search .f-input');
+    hts_mangBoLoc_arr.forEach(input => {
         input.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault(); 
-                doSearch(); 
+                hts_thucHienTimKiem_fn(); 
             }
         });
     });
 
     google.script.run.withSuccessHandler(data => {
-      if (data.hasPermission === false) {
-          showTkModal(data.message); 
+      if (data.hts_coQuyen_bol === false) {
+          hts_hienThiHopThoaiTK_fn(data.hts_thongBao_str); 
           document.getElementById('btn_search_main').disabled = true; 
           document.querySelector('.print-btn').disabled = true; 
-          document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result" style="color:red; font-weight:bold;">' + data.message + '</td></tr>';
+          document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result" style="color:red; font-weight:bold;">' + data.hts_thongBao_str + '</td></tr>';
           return;
       }
-      const gv = document.getElementById('s_gv');
-      const nkt = document.getElementById('s_nkt');
-      const bp = document.getElementById('s_bp');
-      data.gvList.forEach(x => gv.add(new Option(x, x)));
-      data.nktList.forEach(x => nkt.add(new Option(x, x)));
-      data.bpList.forEach(x => bp.add(new Option(x, x)));
-    }).SKT_getSearchFilterData();
+      const hts_theChonGV_el = document.getElementById('s_gv');
+      const hts_theChonNKT_el = document.getElementById('s_nkt');
+      const hts_theChonBP_el = document.getElementById('s_bp');
+      data.hts_danhSachGV_arr.forEach(x => hts_theChonGV_el.add(new Option(x, x)));
+      data.hts_danhSachNKT_arr.forEach(x => hts_theChonNKT_el.add(new Option(x, x)));
+      data.hts_danhSachBP_arr.forEach(x => hts_theChonBP_el.add(new Option(x, x)));
+    }).hts_layDuLieuLocTimKiem_fn();
   })();
 
-  function renderContentWithHover(content) {
+  function hts_taoNoiDungCoHover_fn(content) {
     if (!content) return "";
     return `
       <div class="opinion-cell-wrapper">
@@ -283,8 +183,8 @@
     `;
   }
 
-  function doSearch() {
-    const criteria = {
+  function hts_thucHienTimKiem_fn() {
+    const hts_boTieuChi_obj = {
       gv: document.getElementById('s_gv').value,
       nkt: document.getElementById('s_nkt').value,
       bp: document.getElementById('s_bp').value,
@@ -294,61 +194,60 @@
 
     document.getElementById('dashboard_stats').style.display = 'none';
     document.getElementById('print_link_container').innerHTML = ""; 
-    const tbody = document.getElementById('searchBody');
-    tbody.innerHTML = '<tr><td colspan="17" class="no-result" style="color:blue">⏳ Đang tải dữ liệu...</td></tr>';
+    const hts_thanBangHienThi_el = document.getElementById('searchBody');
+    hts_thanBangHienThi_el.innerHTML = '<tr><td colspan="17" class="no-result" style="color:blue">⏳ Đang lấy dữ liệu...</td></tr>';
 
     google.script.run
     .withFailureHandler(error => {
-        showTkModal(error.message);
-        tbody.innerHTML = `<tr><td colspan="17" class="no-result" style="color:red">❌ ${error.message}</td></tr>`;
+        hts_hienThiHopThoaiTK_fn(error.message);
+        hts_thanBangHienThi_el.innerHTML = `<tr><td colspan="17" class="no-result" style="color:red">❌ ${error.message}</td></tr>`;
     })
     .withSuccessHandler(results => {
-      tbody.innerHTML = "";
+      hts_thanBangHienThi_el.innerHTML = "";
       if (results.length > 0) {
         document.getElementById('dashboard_stats').style.display = 'flex';
-        calculateStats(results);
+        hts_tinhToanThongKe_fn(results);
       } else {
         document.getElementById('dashboard_stats').style.display = 'none';
-        tbody.innerHTML = '<tr><td colspan="17" class="no-result">❌ Không tìm thấy kết quả nào.</td></tr>';
+        hts_thanBangHienThi_el.innerHTML = '<tr><td colspan="17" class="no-result">❌ Không tìm thấy kết quả nào.</td></tr>';
         return;
       }
       results.forEach((r, i) => {
-        const tr = document.createElement('tr');
+        const hts_dongMoi_el = document.createElement('tr');
         
-        // --- XỬ LÝ NHIỀU LINK ---
-        let linkHtml = "";
+        let hts_chuoiLienKet_str = "";
         if(r[15] && r[15].includes('http')) {
-            const links = r[15].toString().split(',').map(l => l.trim()).filter(l => l !== "");
-            linkHtml = links.map((url, idx) => 
+            const hts_mangLienKet_arr = r[15].toString().split(',').map(l => l.trim()).filter(l => l !== "");
+            hts_chuoiLienKet_str = hts_mangLienKet_arr.map((url, idx) => 
                 `<a href="${url}" target="_blank" class="file-badge" title="Xem tài liệu ${idx + 1}">📎 ${idx + 1}</a>`
             ).join('');
         }
         
-        tr.innerHTML = `
+        hts_dongMoi_el.innerHTML = `
           <td style="text-align:center">${i+1}</td>
           <td style="text-align:center">${r[4]}</td>
           <td>${r[0]}</td>
           <td>${r[1]}</td>
           <td>${r[2]}</td>
-          <td>${renderContentWithHover(r[5])}</td> 
-          <td>${renderContentWithHover(r[6])}</td>  
-          <td>${renderContentWithHover(r[7])}</td>
-          <td>${renderContentWithHover(r[8])}</td>
+          <td>${hts_taoNoiDungCoHover_fn(r[5])}</td> 
+          <td>${hts_taoNoiDungCoHover_fn(r[6])}</td>  
+          <td>${hts_taoNoiDungCoHover_fn(r[7])}</td>
+          <td>${hts_taoNoiDungCoHover_fn(r[8])}</td>
           <td style="text-align:center; font-weight:bold;">${r[9]}</td>
           <td style="text-align:center; font-weight:bold;">${r[10]}</td>
           <td style="text-align:center; font-weight:bold;">${r[11]}</td>
           <td style="text-align:center; font-weight:bold;">${r[12]}</td>
-          <td style="text-align:center;">${renderContentWithHover(r[13])}</td>
-          <td>${renderContentWithHover(r[14])}</td>
-          <td style="text-align:center">${linkHtml}</td>
+          <td style="text-align:center;">${hts_taoNoiDungCoHover_fn(r[13])}</td>
+          <td>${hts_taoNoiDungCoHover_fn(r[14])}</td>
+          <td style="text-align:center">${hts_chuoiLienKet_str}</td>
           <td style="text-align:center; font-weight:bold; color:#555;">${r[16]}</td>
         `;
-        tbody.appendChild(tr);
+        hts_thanBangHienThi_el.appendChild(hts_dongMoi_el);
       });
-    }).SKT_searchRecords(criteria);
+    }).hts_timKiemBanGhi_fn(hts_boTieuChi_obj);
   }
 
-  function calculateStats(data) {
+  function hts_tinhToanThongKe_fn(data) {
     let c = {
         bgh:0, tcm:0, tvp:0,
         hs_total:0, hs_tot:0, hs_kha:0, hs_tb:0,
@@ -389,7 +288,6 @@
            else if(ks.includes("yếu") || ks === "y") c.ks_yeu++;
         }
 
-        // --- Đếm thống kê cho XL khác ---
         let khac = String(row[12]||"").toLowerCase().trim();
         if(khac !== "") {
            c.khac_total++;
@@ -422,7 +320,6 @@
     document.getElementById('st_ks_dat').innerText = c.ks_dat; 
     document.getElementById('st_ks_yeu').innerText = c.ks_yeu;
 
-    // --- Hiển thị cho XL khác ---
     document.getElementById('st_khac_total').innerText = c.khac_total;
     document.getElementById('st_khac_tot').innerText = c.khac_tot;
     document.getElementById('st_khac_kha').innerText = c.khac_kha;
@@ -430,7 +327,7 @@
     document.getElementById('st_khac_cd').innerText = c.khac_cd;
   }
   
-  function clearSearch() {
+  function hts_xoaTrangTimKiem_fn() {
     ['s_gv','s_nkt','s_bp','s_from','s_to'].forEach(id=>document.getElementById(id).value="");
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -444,21 +341,21 @@
     document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result">Vui lòng chọn điều kiện và nhấn Tìm kiếm</td></tr>';
   }
 
-  function printReport() {
-    const tbody = document.getElementById('searchBody');
-    if (tbody.innerText.includes("Vui lòng chọn") || tbody.innerText.includes("Không tìm thấy") || tbody.rows.length === 0) {
-      showTkModal("⚠️ Vui lòng tìm kiếm và đảm bảo có dữ liệu trước khi in!"); 
+  function hts_inBaoCao_fn() {
+    const hts_thanBangHienThi_el = document.getElementById('searchBody');
+    if (hts_thanBangHienThi_el.innerText.includes("Vui lòng chọn") || hts_thanBangHienThi_el.innerText.includes("Không tìm thấy") || hts_thanBangHienThi_el.rows.length === 0) {
+      hts_hienThiHopThoaiTK_fn("⚠️ Vui lòng tìm kiếm và đảm bảo có dữ liệu trước khi xuất biểu mẫu!"); 
       return;
     }
-    const btn = document.querySelector('.print-btn');
-    const orgText = btn.innerHTML;
-    const linkContainer = document.getElementById('print_link_container');
+    const hts_nutIn_el = document.querySelector('.print-btn');
+    const hts_chuoiGoc_str = hts_nutIn_el.innerHTML;
+    const hts_vungLienKet_el = document.getElementById('print_link_container');
     
-    btn.disabled = true;
-    btn.innerHTML = "⏳";
-    linkContainer.innerHTML = "<span style='color:blue; font-size:12px; margin-left:5px;'>Đang tạo...</span>";
+    hts_nutIn_el.disabled = true;
+    hts_nutIn_el.innerHTML = "⏳";
+    hts_vungLienKet_el.innerHTML = "<span style='color:blue; font-size:12px; margin-left:5px;'>Đang tạo tệp...</span>";
 
-    const criteria = {
+    const hts_boTieuChi_obj = {
       gv: document.getElementById('s_gv').value,
       nkt: document.getElementById('s_nkt').value,
       bp: document.getElementById('s_bp').value,
@@ -467,32 +364,22 @@
     };
 
     google.script.run.withSuccessHandler(res => {
-      btn.disabled = false;
-      btn.innerHTML = orgText;
-      if (res.success) {
-        linkContainer.innerHTML = `<a href="${res.url}" target="_blank" class="print-link">🖨️ In sổ kiểm tra</a>`;
+      hts_nutIn_el.disabled = false;
+      hts_nutIn_el.innerHTML = hts_chuoiGoc_str;
+      if (res.hts_thanhCong_bol) {
+        hts_vungLienKet_el.innerHTML = `<a href="${res.hts_duongDanTep_str}" target="_blank" class="print-link">🖨️ Xem dữ liệu kết xuất</a>`;
       } else {
-        showTkModal("❌ Lỗi: " + res.message); 
-        linkContainer.innerHTML = "<span style='color:red;'>Lỗi!</span>";
+        hts_hienThiHopThoaiTK_fn("❌ Lỗi Giao tiếp: " + res.hts_thongBao_str); 
+        hts_vungLienKet_el.innerHTML = "<span style='color:red;'>Lỗi!</span>";
       }
-    }).SKT_createReportDoc(criteria);
+    }).hts_taoTaiLieuBaoCao_fn(hts_boTieuChi_obj);
   }
 
-  function formatDay(e) { 
-      let v=e.target.value.replace(/\D/g,''); 
-      if(v.length>8)v=v.substring(0,8); 
-      let o=""; 
-      if(v.length>0)o+=v.substring(0,2); 
-      if(v.length>2)o+='/'+v.substring(2,4); 
-      if(v.length>4)o+='/'+v.substring(4,8); 
-      e.target.value=o; 
-  }
-
-  function showTkModal(msg) {
+  function hts_hienThiHopThoaiTK_fn(msg) {
     document.getElementById('tk_modal_message').innerText = msg;
     document.getElementById('tk_modal_overlay').style.display = 'flex';
   }
-  function closeTkModal() {
+  function hts_dongHopThoaiTK_fn() {
     document.getElementById('tk_modal_overlay').style.display = 'none';
   }
 </script>
