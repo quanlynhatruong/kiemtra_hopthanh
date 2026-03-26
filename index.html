@@ -13,13 +13,10 @@
     .spinner-ring { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #1e3a8a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
     .loader-text { font-family: 'Segoe UI', sans-serif; font-weight: bold; color: #1e3a8a; letter-spacing: 1px; font-size: 14px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
     #main-wrapper { opacity: 0; transition: opacity 0.5s ease; display: none; } 
-    
     #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(240, 253, 244, 0.98); z-index: 1040; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: "Times New Roman", serif; }
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
-    
     .dev-badge-container { display: flex; align-items: center; background: linear-gradient(135deg, #1e3a8a 0%, #b91c1c 100%); padding: 4px 12px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden; }
     .dev-badge-container:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
     .dev-icon-fly { font-size: 16px; margin-right: 8px; animation: bounce 2s infinite; }
@@ -27,76 +24,61 @@
     .dev-name-label { font-weight: 800; font-size: 11px; color: #ffeb3b; text-transform: uppercase; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); }
     .dev-role-label { font-size: 9px; color: #ffffff; opacity: 0.9; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
     body { font-family: "Times New Roman", serif; background: #f3f4f6; padding: 16px; margin: 0; box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
-
     .school-header { display: flex; align-items: center; justify-content: space-between; width: 1550px; max-width: 99%; margin: 0 auto 10px auto !important; }
     .logo-group { display: flex; align-items: center; }
     .school-logo { width: 1cm; height: 1cm; object-fit: contain; margin-right: 10px; padding: 0px; }
     .school-name { font-weight: bold; font-size: 17px; color: var(--primary-blue); text-transform: uppercase; }
     .loading-spin { background-image: url('https://i.gifer.com/ZKZg.gif') !important; background-repeat: no-repeat !important; background-position: right 8px center !important; background-size: 16px !important; background-color: #fffde7 !important; }
-    
     #so_wrapper { width: 1550px; max-width: 99%; margin: auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    
     .table-container { overflow-x: auto; margin-top: 10px; border: 1px solid var(--grid-border) !important; }
     table { width: 100%; border-collapse: collapse !important; table-layout: fixed; }
     th, td { border: 1px solid var(--grid-border) !important; }
     th { background: #eff6ff; color: var(--primary-blue); padding: 8px 4px; font-size: 14px; text-align: center; }
     td { vertical-align: middle; background: #fff; padding: 0; position: relative; } 
-    
     .cell-input { width: 100%; border: none; padding: 8px 5px; font-family: "Times New Roman"; font-size: 15px; box-sizing: border-box; display: block; outline: none; resize: none; min-height: 35px; color: #000; }
     .cell-input:disabled { background-color: #f1f5f9; color: #334155 !important; opacity: 1; -webkit-text-fill-color: #334155; }
     .cell-input::placeholder { color: #94a3b8 !important; opacity: 0.5; font-style: italic; font-size: 13px; }
     #mainTable .cell-input::placeholder { opacity: 0.4; }
-
     textarea.cell-input { overflow: hidden; resize: none; padding-top: 5px; }
     .f-input { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
     .filter-section { display: grid; grid-template-columns: 220px 220px 220px 120px 1fr; gap: 15px; margin-top: 15px; }
     .f-item:nth-child(5) { grid-column: 5; display: flex; flex-direction: column; justify-self: end; text-align: right; }
     .f-item:nth-child(5) .f-input { width: 180px; margin-left: auto; }
     .f-item span { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #333; }
-
     .btn-save { margin-top: 20px; padding: 12px 40px; background: var(--primary-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; float: right; }
     .btn-save:disabled { background-color: #ccc; cursor: not-allowed; }
     .btn-row { padding: 4px 12px; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 10px; }
     .btn-reset { background: var(--reset-color); }
     .btn-submit { background: var(--submit-green); }
     .refresh-btn { background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; margin-left: 5px; }
-
     .status-stepper { display: flex; align-items: center; margin-top: 10px; gap: 10px; font-size: 12px; border-top: 1px dashed #eee; padding-top: 3px; }
     .step { padding: 4px 15px; border-radius: 20px; border: 1px solid var(--step-gray); transition: 0.3s; }
     .step.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
     .step.completed { background: #10b981; color: white; border-color: #10b981; }
     #user_display { margin-left: auto; font-style: italic; color: #64748b; font-size: 13px; }
-
     .ma-ho-so-cell { font-size: 14px !important; font-weight: bold; text-align: center; vertical-align: middle; background: #f9fafb; padding: 8px 5px; }
     .link-view-btn { display: inline-block; padding: 6px 15px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; font-size: 14px; text-decoration: none; border-radius: 4px; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     .link-view-btn:hover { background: #2563eb; color: white; border-color: #2563eb; }
-
     .link-edit-corner { position: absolute; bottom: 2px; right: 2px; font-size: 11px; color: #d97706; cursor: pointer; opacity: 0.8; padding: 2px 4px; background: #fffbeb; border-radius: 3px; }
     .link-edit-corner:hover { opacity: 1; font-weight: bold; background: #fef3c7; color: #b45309; }
     .link-edit-corner.disabled { pointer-events: none; opacity: 0; display: none; }
-
     .tab-container { display: flex; margin-bottom: 5px; border-bottom: 2px solid #e5e7eb; }
     .tab-button { padding: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 5px; font-weight: bold; color: #6b7280; cursor: pointer; }
     .tab-button.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
     .tab-content { display: none; padding-top: 15px; }
     .tab-content.active { display: block; }
-
     #modal_overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1085; justify-content: center; align-items: center; }
     #modal_box { background: white; padding: 30px; border-radius: 10px; text-align: center; min-width: 300px; }
     .modal-btn { background: #2563eb; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-
     .btn-icon-del { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 16px; padding: 4px; border-radius: 4px; }
     .btn-icon-del:hover { background-color: #fee2e2; }
     .btn-icon-del:disabled { color: #d1d5db; cursor: not-allowed; pointer-events: none; }
-    
     .add-row-container { text-align: left; margin-top: 5px; padding-left: 5px; }
     .btn-add-row { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
     .btn-add-row:hover { background-color: #059669; }
-
     .btn-upload-icon { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 14px; }
     .btn-upload-icon:disabled { opacity: 0.5; cursor: not-allowed; }
     .evidence-uploaded { background-color: #f0fdf4; }
@@ -106,42 +88,21 @@
 </head>
 <body>
 
-  <div class="modal fade" id="trialModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" style="z-index: 1090;">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center p-4 border-0 shadow-lg" style="background: rgba(255, 255, 255, 0.95);">
-        <div class="mb-4 mt-2">
-          <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" alt="Hợp Thành Logo" width="100">
-        </div>
-        <h5 class="fw-bold mb-3" style="font-family: 'Segoe UI', sans-serif;" id="trialTitle">Thông báo dùng thử</h5>
-        <p class="fs-5 text-secondary" style="font-family: 'Segoe UI', sans-serif;" id="trialMessage">
-          Bạn đang trong thời gian dùng thử 14 ngày. Ngày bắt đầu: 07/02/2026.
-        </p>
-        <button type="button" id="btnTrialOk" class="btn btn-primary px-5 mt-3 fw-bold" data-bs-dismiss="modal">Đồng ý</button>
-      </div>
-    </div>
-  </div>
-
   <div id="login-overlay">
     <div class="login-box">
       <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="login-logo">
       <h2 style="color: #b91c1c; margin-top: 0; text-transform: uppercase;">Sổ Kiểm Tra Nội Bộ</h2>
       <h3 style="color: #1e3a8a; margin-bottom: 25px;">Trường TH&THCS Hợp Thành</h3>
-      
-      <div class="alert alert-success text-start" style="font-size: 12px; padding: 10px; margin-bottom: 20px; border-radius: 8px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
-        <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ thông tin cá nhân của Thầy/Cô.
-      </div>
-
       <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V2.4.2026</p1>
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
-           data-callback="hts_xuLyXacThuc_fn"
+           data-callback="hts_mua_go_tinh_fn"
            data-auto_prompt="false">
       </div>
       <div class="d-flex justify-content-center w-100 mt-2">
          <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left"></div>
       </div>
-      
       <div style="margin-top: 30px; font-size: 12px; color: #999; font-weight: bold;">Nhà phát triển: HOÀNG NGỌC LÂM</div>
     </div>
   </div>
@@ -157,30 +118,20 @@
         <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="school-logo">
         <span class="school-name">Trường TH&THCS Hợp Thành</span>
       </div>
-      <div class="dev-badge-container">
-        <div class="dev-icon-fly">🚀</div>
-        <div class="dev-text-group">
-          <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
-          <div class="dev-role-label">System Developer</div>
-        </div>
-      </div>
     </div>
 
     <div id="so_wrapper">
       <div class="tab-container">
-        <button class="tab-button active" onclick="hts_chuyenDoiThe_fn('TabNhapLieu', this)">📝 GHI SỔ</button>
-        <button class="tab-button" onclick="hts_chuyenDoiThe_fn('TabTimKiem', this)">🔍 THỐNG KÊ</button>
-        <button class="tab-button" onclick="hts_chuyenDoiThe_fn('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
-        <button class="tab-button" onclick="hts_dangXuatHeThong_fn()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
+        <button class="tab-button active" onclick="hts_xanh_chay_am_fn('TabNhapLieu', this)">📝 GHI SỔ</button>
+        <button class="tab-button" onclick="hts_xanh_chay_am_fn('TabTimKiem', this)">🔍 THỐNG KÊ</button>
+        <button class="tab-button" onclick="hts_xanh_chay_am_fn('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
+        <button class="tab-button" onclick="hts_vui_doc_ban_fn()" style="margin-left:auto; color:#dc2626;">🚪 ĐĂNG XUẤT</button>
       </div>
       
       <div id="TabNhapLieu" class="tab-content active"></div>
       <div id="TabTimKiem" class="tab-content"></div>
       <div id="TabHuongDan" class="tab-content">
-        <h3>Thông báo:</h3>
-        <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
-        <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem được nội dung cuộc kiểm tra của mình. Không thể mở được của người khác!</p>
-        <p><b> Tác giả: Hoàng Ngọc Lâm </b></p>
+        <h3>Hướng dẫn</h3>
       </div>
     </div>
 
@@ -197,201 +148,131 @@
     <div id="access_denied_msg" style="display:none; text-align:center; margin-top:50px;">
       <h2 style="color:#b91c1c;">⛔ TRUY CẬP BỊ TỪ CHỐI</h2>
       <p id="denied_reason" style="font-weight:bold;"></p>
-      <button class="modal-btn" onclick="hts_dangXuatHeThong_fn()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
+      <button class="modal-btn" onclick="hts_vui_doc_ban_fn()">ĐĂNG NHẬP LẠI</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    function hts_kiemTraThoiGianThu_fn() {
-       return true; //dung lai
-            const hts_ngayBatDau_date = new Date(2026, 1, 7); 
-      const hts_soNgayThu_num = 14; 
-      
-      const hts_ngayKetThuc_date = new Date(hts_ngayBatDau_date);
-      hts_ngayKetThuc_date.setDate(hts_ngayBatDau_date.getDate() + hts_soNgayThu_num);
-      const hts_ngayHienTai_date = new Date();
+    const hts_khoa_cua_sat_str = "e" + "m" + "a" + "i" + "l";
+    const hts_tu_lanh_to_str = "SKT_USER_" + hts_khoa_cua_sat_str.toUpperCase();
 
-      const hts_hopThoaiThu_el = document.getElementById('trialModal');
-      const hts_nutDongY_el = document.getElementById('btnTrialOk');
-      const hts_tinNhanThu_el = document.getElementById('trialMessage');
-      const hts_tieuDeThu_el = document.getElementById('trialTitle');
-
-      if (!hts_hopThoaiThu_el || !hts_nutDongY_el) return true;
-
-      if (hts_ngayHienTai_date > hts_ngayKetThuc_date) {
-        hts_tieuDeThu_el.innerText = "Hết hạn dùng thử";
-        hts_tieuDeThu_el.style.color = "#dc3545"; 
-        hts_tinNhanThu_el.innerHTML = "Thời gian dùng thử 14 ngày của bạn đã kết thúc.<br>Vui lòng liên hệ Admin (Hoàng Ngọc Lâm) để gia hạn phần mềm.";
-        
-        hts_nutDongY_el.innerText = 'Thoát hệ thống';
-        hts_nutDongY_el.classList.remove('btn-primary');
-        hts_nutDongY_el.classList.add('btn-danger');
-        hts_nutDongY_el.removeAttribute('data-bs-dismiss'); 
-        
-        hts_nutDongY_el.onclick = function() {
-          window.location.href = "https://www.google.com"; 
-        };
-        
-        const hts_modalTam_obj = new bootstrap.Modal(hts_hopThoaiThu_el, { backdrop: 'static', keyboard: false });
-        hts_modalTam_obj.show();
-        
-        document.getElementById('welcome-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'none';
-        
-        return false; 
-      }
-      
-      const hts_modalTam_obj = new bootstrap.Modal(hts_hopThoaiThu_el, { backdrop: 'static', keyboard: false });
-      hts_modalTam_obj.show();
-      return true; 
-    }
-
-    const hts_khoaAnEmail_str = "e" + "m" + "a" + "i" + "l";
-    const hts_khoaPhien_str = "SKT_USER_" + hts_khoaAnEmail_str.toUpperCase();
-
-    window.hts_boNhoTamThoi_obj = {};
-    function hts_luuTruAnToan_fn(key, value) {
-        window.hts_boNhoTamThoi_obj[key] = value;
+    window.hts_bo_nho_tam_obj = {};
+    function hts_ban_tra_da_fn(hts_chu_ngua_di_str, hts_bien_sau_ngu_str) {
+        window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] = hts_bien_sau_ngu_str;
         try { 
-            sessionStorage.setItem(key, value); 
-            if (key === "SKT_USER_ID") sessionStorage.setItem(hts_khoaPhien_str, value); 
-        } catch(e) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
+            sessionStorage.setItem(hts_chu_ngua_di_str, hts_bien_sau_ngu_str); 
+            if (hts_chu_ngua_di_str === "SKT_USER_ID") sessionStorage.setItem(hts_tu_lanh_to_str, hts_bien_sau_ngu_str); 
+        } catch(hts_loi_da_roi_obj) { }
     }
-    function hts_layTruyXuatAnToan_fn(key) {
+    function hts_cuc_tay_nho_fn(hts_chu_ngua_di_str) {
         try { 
-            let val = sessionStorage.getItem(key);
-            if (!val && key === "SKT_USER_ID") val = sessionStorage.getItem(hts_khoaPhien_str);
-            return val || window.hts_boNhoTamThoi_obj[key] || null; 
-        } catch(e) { return window.hts_boNhoTamThoi_obj[key] || null; }
+            let hts_may_tinh_ban_str = sessionStorage.getItem(hts_chu_ngua_di_str);
+            if (!hts_may_tinh_ban_str && hts_chu_ngua_di_str === "SKT_USER_ID") hts_may_tinh_ban_str = sessionStorage.getItem(hts_tu_lanh_to_str);
+            return hts_may_tinh_ban_str || window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] || null; 
+        } catch(hts_loi_da_roi_obj) { return window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] || null; }
     }
-    function hts_xoaTruyXuatAnToan_fn(key) {
-        delete window.hts_boNhoTamThoi_obj[key];
+    function hts_dong_ho_tay_fn(hts_chu_ngua_di_str) {
+        delete window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str];
         try { 
-            sessionStorage.removeItem(key); 
-            if (key === "SKT_USER_ID") sessionStorage.removeItem(hts_khoaPhien_str);
-        } catch(e) { console.warn("Chrome chặn xóa"); }
+            sessionStorage.removeItem(hts_chu_ngua_di_str); 
+            if (hts_chu_ngua_di_str === "SKT_USER_ID") sessionStorage.removeItem(hts_tu_lanh_to_str);
+        } catch(hts_loi_da_roi_obj) { }
     }
 
     window.onload = function() {
-      if (!hts_kiemTraThoiGianThu_fn()) return; 
-
-      const hts_idLuuTru_str = hts_layTruyXuatAnToan_fn("SKT_USER_ID");
-      if(hts_idLuuTru_str) {
-        window.hts_dinhDanhToanCuc_str = hts_idLuuTru_str; 
+      const hts_xe_may_cu_str = hts_cuc_tay_nho_fn("SKT_USER_ID");
+      if(hts_xe_may_cu_str) {
+        window.hts_ngu_bay_xanh_str = hts_xe_may_cu_str; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        hts_kiemTraVaTaiDuLieu_fn();
+        hts_quan_ao_dep_fn();
       }
     };
 
-    function hts_xuLyXacThuc_fn(response) {
-      if (!hts_kiemTraThoiGianThu_fn()) return; 
-
+    function hts_mua_go_tinh_fn(hts_la_cay_roi_obj) {
       try {
-        const hts_giaTriGiaiMa_obj = hts_giaiMaChuoiXacThuc_fn(response.credential);
-        const hts_giaTriDinhDanh_str = hts_giaTriGiaiMa_obj[hts_khoaAnEmail_str]; 
-        
-        hts_luuTruAnToan_fn("SKT_USER_ID", hts_giaTriDinhDanh_str);
-        window.hts_dinhDanhToanCuc_str = hts_giaTriDinhDanh_str; 
-        
+        const hts_meo_an_may_obj = hts_nha_cao_tang_fn(hts_la_cay_roi_obj.credential);
+        const hts_giay_trang_tinh_str = hts_meo_an_may_obj[hts_khoa_cua_sat_str]; 
+        hts_ban_tra_da_fn("SKT_USER_ID", hts_giay_trang_tinh_str);
+        window.hts_ngu_bay_xanh_str = hts_giay_trang_tinh_str; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        
-        hts_kiemTraVaTaiDuLieu_fn();
-      } catch (err) {
-        alert("Lỗi giải mã Google: " + err.message);
-      }
+        hts_quan_ao_dep_fn();
+      } catch (hts_loi_da_roi_obj) {}
     }
 
-    function hts_giaiMaChuoiXacThuc_fn(token) {
-      let hts_chuoiBase64Url_str = token.split('.')[1];
-      let hts_chuoiBase64_str = hts_chuoiBase64Url_str.replace(/-/g, '+').replace(/_/g, '/');
-      let hts_chuoiJsonDich_str = decodeURIComponent(atob(hts_chuoiBase64_str).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    function hts_nha_cao_tang_fn(hts_chu_ngua_di_str) {
+      let hts_may_bay_giay_str = hts_chu_ngua_di_str.split('.')[1];
+      let hts_xe_dap_nhanh_str = hts_may_bay_giay_str.replace(/-/g, '+').replace(/_/g, '/');
+      let hts_tra_da_lanh_str = decodeURIComponent(atob(hts_xe_dap_nhanh_str).split('').map(function(hts_la_bay_nhay_str) {
+          return '%' + ('00' + hts_la_bay_nhay_str.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
-      return JSON.parse(hts_chuoiJsonDich_str);
+      return JSON.parse(hts_tra_da_lanh_str);
     }
 
-    function hts_dangXuatHeThong_fn() {
-      hts_xoaTruyXuatAnToan_fn("SKT_USER_ID");
-      window.hts_dinhDanhToanCuc_str = null;
+    function hts_vui_doc_ban_fn() {
+      hts_dong_ho_tay_fn("SKT_USER_ID");
+      window.hts_ngu_bay_xanh_str = null;
       location.reload(); 
     }
 
-    function hts_kiemTraVaTaiDuLieu_fn() {
-      let hts_idHienTai_str = window.hts_dinhDanhToanCuc_str || hts_layTruyXuatAnToan_fn("SKT_USER_ID") || "";
-      hts_idHienTai_str = String(hts_idHienTai_str).toLowerCase().trim();
+    function hts_quan_ao_dep_fn() {
+      let hts_cho_nhay_hoa_str = window.hts_ngu_bay_xanh_str || hts_cuc_tay_nho_fn("SKT_USER_ID") || "";
+      hts_cho_nhay_hoa_str = String(hts_cho_nhay_hoa_str).toLowerCase().trim();
 
       google.script.run
-        .withSuccessHandler(data => {
-          if (data.hts_coQuyen_bol === false) {
-            hts_xoaTruyXuatAnToan_fn("SKT_USER_ID");
-            window.hts_dinhDanhToanCuc_str = null;
-
+        .withSuccessHandler(hts_la_cay_roi_obj => {
+          if (hts_la_cay_roi_obj.hasPermission === false) {
+            hts_dong_ho_tay_fn("SKT_USER_ID");
+            window.hts_ngu_bay_xanh_str = null;
             document.getElementById('instant-loader').style.display = 'none';
             document.getElementById('main-wrapper').style.display = 'block';
             setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
-            
-            const hts_theTieuDe_el = document.querySelector('.school-header');
-            if (hts_theTieuDe_el) hts_theTieuDe_el.style.display = 'none';
+            const hts_mua_roi_nhe_obj = document.querySelector('.school-header');
+            if (hts_mua_roi_nhe_obj) hts_mua_roi_nhe_obj.style.display = 'none';
             document.getElementById('so_wrapper').style.display = 'none';
             document.getElementById('MinhChungContainer').style.display = 'none';
-            
             document.getElementById('access_denied_msg').style.display = 'block';
-            document.getElementById('denied_reason').innerText = data.hts_thongBao_str;
+            document.getElementById('denied_reason').innerText = hts_la_cay_roi_obj.message;
           } else {
-            let hts_laNguoiDungHopLe_bol = false;
-            if(data.hts_duLieuGiaoVien_arr && data.hts_duLieuGiaoVien_arr.some(x => String(x.uid || x.account || x[hts_khoaAnEmail_str]).toLowerCase() === hts_idHienTai_str)) hts_laNguoiDungHopLe_bol = true;
-            if(data.hts_duLieuNguoiKT_arr && data.hts_duLieuNguoiKT_arr.some(x => String(x.uid || x.account || x[hts_khoaAnEmail_str]).toLowerCase() === hts_idHienTai_str)) hts_laNguoiDungHopLe_bol = true;
-            
-            window.hts_trangThaiXacThuc_bol = hts_laNguoiDungHopLe_bol; 
-            hts_taiCacPhanHe_fn();
+            let hts_ban_phim_den_bol = false;
+            if(hts_la_cay_roi_obj.giaoVienData && hts_la_cay_roi_obj.giaoVienData.some(hts_xe_may_cu_obj => String(hts_xe_may_cu_obj.uid || hts_xe_may_cu_obj[hts_khoa_cua_sat_str]).toLowerCase() === hts_cho_nhay_hoa_str)) hts_ban_phim_den_bol = true;
+            if(hts_la_cay_roi_obj.nguoiKTData && hts_la_cay_roi_obj.nguoiKTData.some(hts_xe_may_cu_obj => String(hts_xe_may_cu_obj.uid || hts_xe_may_cu_obj[hts_khoa_cua_sat_str]).toLowerCase() === hts_cho_nhay_hoa_str)) hts_ban_phim_den_bol = true;
+            window.hts_hoa_do_bay_bol = hts_ban_phim_den_bol; 
+            hts_mu_bao_hiem_fn();
           }
         })
-        .withFailureHandler(error => {
+        .withFailureHandler(hts_loi_da_roi_obj => {
            document.getElementById('instant-loader').style.display = 'none';
-           alert("Lỗi kết nối máy chủ Google: " + error.message);
         })
-        .hts_layDuLieuKhoiTao_fn(hts_idHienTai_str, new Date().getTime()); 
+        .hts_bay_da_ngu_fn(hts_cho_nhay_hoa_str, new Date().getTime()); 
     }
 
-    async function hts_taiCacPhanHe_fn() {
+    async function hts_mu_bao_hiem_fn() {
       try {
-        const hts_hauToChongDem_str = "?v=" + new Date().getTime(); 
-        
-        const [hts_phaiNhapLieu_obj, hts_phanTimKiem_obj, hts_phanMinhChung_obj] = await Promise.all([
-            fetch('./SKT_NhapLieu.html' + hts_hauToChongDem_str),
-            fetch('./SKT_TimKiem.html' + hts_hauToChongDem_str),
-            fetch('./SKT_MinhChung.html' + hts_hauToChongDem_str)
+        const hts_may_anh_so_str = "?v=" + new Date().getTime(); 
+        const [hts_tivi_man_hinh_obj, hts_loa_phat_thanh_obj, hts_chuot_may_tinh_obj] = await Promise.all([
+            fetch('./SKT_NhapLieu.html' + hts_may_anh_so_str),
+            fetch('./SKT_TimKiem.html' + hts_may_anh_so_str),
+            fetch('./SKT_MinhChung.html' + hts_may_anh_so_str)
         ]);
+        document.getElementById('TabNhapLieu').innerHTML = await hts_tivi_man_hinh_obj.text();
+        document.getElementById('TabTimKiem').innerHTML = await hts_loa_phat_thanh_obj.text();
+        document.getElementById('MinhChungContainer').innerHTML = await hts_chuot_may_tinh_obj.text();
 
-        if (!hts_phaiNhapLieu_obj.ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
-        if (!hts_phanTimKiem_obj.ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
-        if (!hts_phanMinhChung_obj.ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
-
-        document.getElementById('TabNhapLieu').innerHTML = await hts_phaiNhapLieu_obj.text();
-        document.getElementById('TabTimKiem').innerHTML = await hts_phanTimKiem_obj.text();
-        document.getElementById('MinhChungContainer').innerHTML = await hts_phanMinhChung_obj.text();
-
-        hts_thucThiMaLenh_fn(document.getElementById('TabNhapLieu'));
-        hts_thucThiMaLenh_fn(document.getElementById('TabTimKiem'));
-        hts_thucThiMaLenh_fn(document.getElementById('MinhChungContainer'));
+        hts_kinh_ram_den_fn(document.getElementById('TabNhapLieu'));
+        hts_kinh_ram_den_fn(document.getElementById('TabTimKiem'));
+        hts_kinh_ram_den_fn(document.getElementById('MinhChungContainer'));
 
         setTimeout(() => {
-            try { if (typeof hts_taiDuLieuNguon_fn === 'function') hts_taiDuLieuNguon_fn(); } catch(e) {}
-            try { if (typeof hts_taiThuMuc_fn === 'function') hts_taiThuMuc_fn(); } catch(e) {}
-            try { if (typeof hts_themDongMoi_fn === 'function' && document.getElementById('tableContent').rows.length === 0) hts_themDongMoi_fn(); } catch(e) {}
-            
-            if (window.hts_trangThaiXacThuc_bol === false) {
-               hts_khoaNhapLieuKhach_fn();
-            }
+            try { if (typeof hts_coc_nuoc_loc_fn === 'function') hts_coc_nuoc_loc_fn(); } catch(hts_loi_da_roi_obj) {}
+            try { if (typeof hts_ghe_da_cu_fn === 'function') hts_ghe_da_cu_fn(); } catch(hts_loi_da_roi_obj) {}
+            try { if (typeof hts_tui_xach_da_fn === 'function' && document.getElementById('tableContent').rows.length === 0) hts_tui_xach_da_fn(); } catch(hts_loi_da_roi_obj) {}
+            if (window.hts_hoa_do_bay_bol === false) { hts_giay_the_thao_fn(); }
         }, 800);
-
-      } catch (e) {
-        alert("LỖI KẾT NỐI TỆP: " + e.message);
-      }
+      } catch (hts_loi_da_roi_obj) {}
 
       setTimeout(function() { 
           document.getElementById('instant-loader').style.display = 'none'; 
@@ -400,42 +281,32 @@
       }, 500); 
     }
 
-    function hts_khoaNhapLieuKhach_fn() {
+    function hts_giay_the_thao_fn() {
         if (!document.getElementById('guest-lock-style')) {
-            const hts_theKieuDinhDang_el = document.createElement('style');
-            hts_theKieuDinhDang_el.id = 'guest-lock-style';
-            hts_theKieuDinhDang_el.innerHTML = `
-                #so_wrapper input, 
-                #so_wrapper textarea, 
-                #so_wrapper select, 
-                #so_wrapper button:not(.tab-button):not(.modal-btn) {
-                    pointer-events: none !important;
-                    background-color: #f1f5f9 !important;
-                    opacity: 0.6 !important;
-                }
-            `;
-            document.head.appendChild(hts_theKieuDinhDang_el);
+            const hts_cai_bat_an_obj = document.createElement('style');
+            hts_cai_bat_an_obj.id = 'guest-lock-style';
+            hts_cai_bat_an_obj.innerHTML = `#so_wrapper input, #so_wrapper textarea, #so_wrapper select, #so_wrapper button:not(.tab-button):not(.modal-btn) { pointer-events: none !important; background-color: #f1f5f9 !important; opacity: 0.6 !important; }`;
+            document.head.appendChild(hts_cai_bat_an_obj);
         }
-        
-        document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>ĐỊNH DANH KHÁCH (CHỈ XEM)</span><br><br>Định danh của bạn không có trong hệ thống được cấp quyền. Bạn chỉ có thể đăng nhập, không có quyền tương tác trên ứng dụng.";
+        document.getElementById('modal_message').innerHTML = "CHỈ XEM";
         document.getElementById('modal_overlay').style.display = 'flex';
     }
 
-    function hts_thucThiMaLenh_fn(element) {
-        const hts_mangMaLenh_arr = element.querySelectorAll('script');
-        hts_mangMaLenh_arr.forEach(hts_theCu_el => {
-            const hts_theMoi_el = document.createElement('script');
-            Array.from(hts_theCu_el.attributes).forEach(attr => hts_theMoi_el.setAttribute(attr.name, attr.value));
-            hts_theMoi_el.appendChild(document.createTextNode(hts_theCu_el.innerHTML));
-            hts_theCu_el.parentNode.replaceChild(hts_theMoi_el, hts_theCu_el);
+    function hts_kinh_ram_den_fn(hts_la_cay_roi_obj) {
+        const hts_dua_hau_do_arr = hts_la_cay_roi_obj.querySelectorAll('script');
+        hts_dua_hau_do_arr.forEach(hts_xe_may_cu_obj => {
+            const hts_may_bay_giay_obj = document.createElement('script');
+            Array.from(hts_xe_may_cu_obj.attributes).forEach(hts_hop_but_bi_obj => hts_may_bay_giay_obj.setAttribute(hts_hop_but_bi_obj.name, hts_hop_but_bi_obj.value));
+            hts_may_bay_giay_obj.appendChild(document.createTextNode(hts_xe_may_cu_obj.innerHTML));
+            hts_xe_may_cu_obj.parentNode.replaceChild(hts_may_bay_giay_obj, hts_xe_may_cu_obj);
         });
     }
 
-    function hts_chuyenDoiThe_fn(id, btn) {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if(btn) btn.classList.add('active');
+    function hts_xanh_chay_am_fn(hts_chu_ngua_di_str, hts_ban_hoc_go_obj) {
+      document.querySelectorAll('.tab-content').forEach(hts_la_cay_roi_obj => hts_la_cay_roi_obj.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(hts_la_cay_roi_obj => hts_la_cay_roi_obj.classList.remove('active'));
+      document.getElementById(hts_chu_ngua_di_str).classList.add('active');
+      if(hts_ban_hoc_go_obj) hts_ban_hoc_go_obj.classList.add('active');
     }
   </script>
 </body>
