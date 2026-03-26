@@ -1,5 +1,4 @@
 <style>
-  /* CSS riêng cho Modal Upload */
   #upload_modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10005; justify-content: center; align-items: center; }
   .up-container { background: white; padding: 20px; border-radius: 12px; width: 600px; max-width: 95%; box-shadow: 0 5px 20px rgba(0,0,0,0.3); font-family: "Times New Roman"; }
   .up-header { text-align: center; border-bottom: 2px solid #1e3a8a; margin-bottom: 15px; padding-bottom: 5px; }
@@ -9,7 +8,6 @@
   #uploadBtn { width: 100%; padding: 12px; background: #059669; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; opacity: 0.5; pointer-events: none; margin-top: 10px; }
   #uploadBtn.active { opacity: 1; pointer-events: auto; }
   .close-up { background: #ef4444; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; float: right; }
-  /* CSS cho thông báo xóa file cũ */
   #warnDelete { display:none; color:#d97706; font-size:13px; text-align:center; margin-bottom:5px; font-weight:bold; background: #fffbeb; padding: 5px; border-radius: 4px; border: 1px dashed #d97706; }
 </style>
 
@@ -28,22 +26,22 @@
       <label style="display:block; margin-bottom:5px;"><b>2. Chọn chế độ và phương thức tải:</b></label>
       
       <div style="display:flex; gap:20px; justify-content:center; margin-bottom:10px; font-weight:bold;">
-        <label><input type="radio" name="upMode" value="file" checked onchange="toggleUpMode()"> 📄 Chọn nhiều File lẻ</label>
-        <label><input type="radio" name="upMode" value="folder" onchange="changeToFolderMode()"> 📂 Cả thư mục</label>
+        <label><input type="radio" name="upMode" value="file" checked onchange="hts_chuyenCheDoTai_fn()"> 📄 Chọn nhiều File lẻ</label>
+        <label><input type="radio" name="upMode" value="folder" onchange="hts_chuyenCheDoThuMuc_fn()"> 📂 Cả thư mục</label>
       </div>
       
       <div style="display:flex; gap:20px; justify-content:center; padding:8px; background:#e0f2fe; border-radius:6px; margin-bottom:10px; font-size: 14px;">
         <label style="color:#0369a1; cursor:pointer;" title="Xóa tài liệu cũ trên hệ thống, thay bằng tài liệu mới">
-          <input type="radio" name="writeMode" value="replace" checked onchange="updateWarnDisplay()"> 🔄 Thay thế tài liệu cũ
+          <input type="radio" name="writeMode" value="replace" checked onchange="hts_capNhatCanhBao_fn()"> 🔄 Thay thế tài liệu cũ
         </label>
         <label style="color:#0369a1; cursor:pointer;" title="Giữ nguyên tài liệu cũ, chèn thêm tài liệu mới vào hệ thống">
-          <input type="radio" name="writeMode" value="append" onchange="updateWarnDisplay()"> ➕ Chèn thêm tài liệu
+          <input type="radio" name="writeMode" value="append" onchange="hts_capNhatCanhBao_fn()"> ➕ Chèn thêm tài liệu
         </label>
       </div>
       
       <div class="up-dropzone" onclick="document.getElementById('fileIn').click()">
         <span id="fileLabel">Nhấn vào đây để chọn file</span>
-        <input type="file" id="fileIn" style="display:none" onchange="fileSel(this)" multiple>
+        <input type="file" id="fileIn" style="display:none" onchange="hts_chonTepTaiLen_fn(this)" multiple>
       </div>
     </div>
 
@@ -52,92 +50,92 @@
     <div id="upStatus" style="text-align:center; font-weight:bold; min-height:20px; color:#333;"></div>
     
     <div style="margin-top:10px;">
-      <button id="uploadBtn" onclick="doUpload()">BẮT ĐẦU TẢI LÊN</button>
-      <button class="close-up" onclick="closeUploadModal()">ĐÓNG</button>
+      <button id="uploadBtn" onclick="hts_thucHienTaiLen_fn()">BẮT ĐẦU TẢI LÊN</button>
+      <button class="close-up" onclick="hts_dongHopThoaiTaiLen_fn()">ĐÓNG</button>
       <div style="clear:both"></div>
     </div>
   </div>
 </div>
 
 <script>
-  let CURR_FILES = [];
-  let LINK_CAN_XOA = ""; 
-  const ROOT_ID = '1_Z4ipFI-LQCJ33FSyb4zzURg6KINvWgG';
+  let hts_danhSachTepHienTai_arr = [];
+  let hts_lienKetChoXoa_str = ""; 
+  const hts_idGoc_str = '1_Z4ipFI-LQCJ33FSyb4zzURg6KINvWgG';
 
-  function loadFolders() {
-    const s = document.getElementById('folderSelect');
+  function hts_taiThuMuc_fn() {
+    const hts_theHopChon_el = document.getElementById('folderSelect');
     google.script.run.withSuccessHandler(fs => {
-      s.innerHTML = `<option value="${ROOT_ID}">-- Thư mục gốc --</option>`;
-      if(fs) fs.forEach(f => s.add(new Option("📂 " + f.name, f.id)));
-    }).SKT_getSubFolders();
+      hts_theHopChon_el.innerHTML = `<option value="${hts_idGoc_str}">-- Thư mục gốc --</option>`;
+      if(fs) fs.forEach(f => hts_theHopChon_el.add(new Option("📂 " + f.name, f.id)));
+    }).hts_layThuMucCon_fn();
   }
 
-  function openUploadModal(linkHienTai) {
-    const cbNkt = document.getElementById('cbNguoiKiemTra');
-    if (cbNkt) {
-      const nkt = cbNkt.value;
-      if (!nkt) return typeof showModal === 'function' ? showModal("⚠️ Chọn Người kiểm tra trước!") : alert("⚠️ Chọn Người kiểm tra trước!");
+  function hts_moHopThoaiTaiLen_fn(hts_lienKetVao_str) {
+    const hts_theChonNKT_el = document.getElementById('cbNguoiKiemTra');
+    if (hts_theChonNKT_el) {
+      const hts_giaTriNKT_str = hts_theChonNKT_el.value;
+      if (!hts_giaTriNKT_str) return typeof hts_hienThiThongBao_fn === 'function' ? hts_hienThiThongBao_fn("⚠️ Chọn Người kiểm tra trước!") : alert("⚠️ Chọn Người kiểm tra trước!");
     }
     
-    LINK_CAN_XOA = linkHienTai || "";
-    updateWarnDisplay();
+    hts_lienKetChoXoa_str = hts_lienKetVao_str || "";
+    hts_capNhatCanhBao_fn();
     document.getElementById('upload_modal').style.display = 'flex';
   }
 
-  function updateWarnDisplay() {
-    const wMode = document.querySelector('input[name="writeMode"]:checked').value;
-    const warnDiv = document.getElementById('warnDelete');
+  function hts_capNhatCanhBao_fn() {
+    const hts_cheDoLuu_str = document.querySelector('input[name="writeMode"]:checked').value;
+    const hts_theCanhBao_el = document.getElementById('warnDelete');
     
-    if(wMode === 'replace' && LINK_CAN_XOA && LINK_CAN_XOA.trim() !== "") {
-        warnDiv.style.display = 'block';
+    if(hts_cheDoLuu_str === 'replace' && hts_lienKetChoXoa_str && hts_lienKetChoXoa_str.trim() !== "") {
+        hts_theCanhBao_el.style.display = 'block';
     } else {
-        warnDiv.style.display = 'none';
+        hts_theCanhBao_el.style.display = 'none';
     }
   }
 
-  function closeUploadModal() {
+  function hts_dongHopThoaiTaiLen_fn() {
     document.getElementById('upload_modal').style.display = 'none';
     document.getElementById('upStatus').innerText = "";
     document.getElementById('fileIn').value = "";
     document.getElementById('fileLabel').innerText = "Nhấn để chọn file";
     document.getElementById('warnDelete').style.display = 'none';
-    CURR_FILES = []; 
-    LINK_CAN_XOA = "";
+    hts_danhSachTepHienTai_arr = []; 
+    hts_lienKetChoXoa_str = "";
     document.getElementById('uploadBtn').classList.remove('active');
   }
 
-  function toggleUpMode() {
-    const inp = document.getElementById('fileIn');
-    inp.removeAttribute('webkitdirectory'); inp.removeAttribute('directory'); 
-    inp.setAttribute('multiple', 'multiple'); 
-    resetFileInput();
+  function hts_chuyenCheDoTai_fn() {
+    const hts_theDauVao_el = document.getElementById('fileIn');
+    hts_theDauVao_el.removeAttribute('webkitdirectory'); hts_theDauVao_el.removeAttribute('directory'); 
+    hts_theDauVao_el.setAttribute('multiple', 'multiple'); 
+    hts_datLaiDauVaoTep_fn();
   }
 
-  function changeToFolderMode() {
-    const inp = document.getElementById('fileIn');
-    inp.setAttribute('webkitdirectory', ''); inp.setAttribute('directory', ''); inp.setAttribute('multiple', 'multiple');
-    resetFileInput();
+  function hts_chuyenCheDoThuMuc_fn() {
+    const hts_theDauVao_el = document.getElementById('fileIn');
+    hts_theDauVao_el.setAttribute('webkitdirectory', ''); hts_theDauVao_el.setAttribute('directory', ''); hts_theDauVao_el.setAttribute('multiple', 'multiple');
+    hts_datLaiDauVaoTep_fn();
   }
 
-  function resetFileInput() {
+  function hts_datLaiDauVaoTep_fn() {
     document.getElementById('fileIn').value = "";
     document.getElementById('fileLabel').innerText = "Nhấn vào đây để chọn file";
     document.getElementById('uploadBtn').classList.remove('active');
-    CURR_FILES = [];
+    hts_danhSachTepHienTai_arr = [];
   }
 
-  function fileSel(input) {
+  function hts_chonTepTaiLen_fn(input) {
     if (input.files.length > 0) {
-      CURR_FILES = input.files;
-      const mode = document.querySelector('input[name="upMode"]:checked').value;
-      if (mode === 'folder') {
-        const folderName = CURR_FILES[0].webkitRelativePath.split('/')[0];
-        document.getElementById('fileLabel').innerText = `📂 ${folderName} (${CURR_FILES.length} files)`;
+      hts_danhSachTepHienTai_arr = input.files;
+      const hts_kieuGhi_str = document.querySelector('input[name="upMode"]:checked').value;
+      if (hts_kieuGhi_str === 'folder') {
+        const hts_tenThuMuc_str = hts_danhSachTepHienTai_arr[0].webkitRelativePath.split('/')[0];
+        document.getElementById('fileLabel').innerText = `📂 ${hts_tenThuMuc_str} (${hts_danhSachTepHienTai_arr.length} files)`;
       } else {
-        if (CURR_FILES.length === 1) {
-            document.getElementById('fileLabel').innerText = "📄 " + CURR_FILES[0].name;
+        if (hts_danhSachTepHienTai_arr.length === 1) {
+            document.getElementById('fileLabel').innerText = "📄 " + hts_danhSachTepHienTai_arr[0].name;
         } else {
-            document.getElementById('fileLabel').innerText = `📄 Đã chọn ${CURR_FILES.length} file`;
+            document.getElementById('fileLabel').innerText = `📄 Đã chọn ${hts_danhSachTepHienTai_arr.length} file`;
         }
       }
       document.getElementById('uploadBtn').classList.add('active');
@@ -145,101 +143,101 @@
     }
   }
 
-  function doUpload() {
-    if (!CURR_FILES || CURR_FILES.length === 0) return;
-    const btn = document.getElementById('uploadBtn'), st = document.getElementById('upStatus');
-    const fId = document.getElementById('folderSelect').value || ROOT_ID;
-    const mode = document.querySelector('input[name="upMode"]:checked').value;
-    const wMode = document.querySelector('input[name="writeMode"]:checked').value;
+  function hts_thucHienTaiLen_fn() {
+    if (!hts_danhSachTepHienTai_arr || hts_danhSachTepHienTai_arr.length === 0) return;
+    const hts_nutTai_el = document.getElementById('uploadBtn'), hts_trangThai_el = document.getElementById('upStatus');
+    const hts_idDich_str = document.getElementById('folderSelect').value || hts_idGoc_str;
+    const hts_kieuGhi_str = document.querySelector('input[name="upMode"]:checked').value;
+    const hts_cheDoLuu_str = document.querySelector('input[name="writeMode"]:checked').value;
     
-    let maHs = "";
-    if (typeof currentRowUpload !== 'undefined' && currentRowUpload) {
-        const cell = currentRowUpload.querySelector('.ma-ho-so-cell');
-        if (cell) maHs = cell.innerText;
+    let hts_maHoSoHienTai_str = "";
+    if (typeof hts_dongTaiLenHienTai_el !== 'undefined' && hts_dongTaiLenHienTai_el) {
+        const hts_oChuaMa_el = hts_dongTaiLenHienTai_el.querySelector('.ma-ho-so-cell');
+        if (hts_oChuaMa_el) hts_maHoSoHienTai_str = hts_oChuaMa_el.innerText;
     } else {
-        const maHsCell = document.querySelector('.ma-ho-so-cell');
-        maHs = maHsCell ? maHsCell.innerText : "";
+        const hts_oChuaMaChung_el = document.querySelector('.ma-ho-so-cell');
+        hts_maHoSoHienTai_str = hts_oChuaMaChung_el ? hts_oChuaMaChung_el.innerText : "";
     }
 
-    if (!maHs || maHs.trim() === "") {
-        st.style.color = "red";
-        st.innerText = "❌ Lỗi: Không tìm thấy Mã hồ sơ để gắn minh chứng!";
-        btn.classList.add('active');
+    if (!hts_maHoSoHienTai_str || hts_maHoSoHienTai_str.trim() === "") {
+        hts_trangThai_el.style.color = "red";
+        hts_trangThai_el.innerText = "❌ Lỗi: Không tìm thấy Mã hồ sơ để gắn minh chứng!";
+        hts_nutTai_el.classList.add('active');
         return;
     }
 
-    btn.classList.remove('active');
-    st.style.color = "blue"; st.innerText = "⏳ Đang xử lý tải lên...";
+    hts_nutTai_el.classList.remove('active');
+    hts_trangThai_el.style.color = "blue"; hts_trangThai_el.innerText = "⏳ Đang xử lý tải lên...";
 
-    if (mode === 'file') {
-      let filesData = [];
-      let count = 0;
-      st.innerText = `⏳ Đang đọc ${CURR_FILES.length} file...`;
+    if (hts_kieuGhi_str === 'file') {
+      let hts_mangDuLieuGui_arr = [];
+      let hts_bienDem_num = 0;
+      hts_trangThai_el.innerText = `⏳ Đang đọc ${hts_danhSachTepHienTai_arr.length} file...`;
       
-      Array.from(CURR_FILES).forEach(file => {
-        const r = new FileReader();
-        r.onload = e => {
-          filesData.push({ fileName: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
-          count++;
+      Array.from(hts_danhSachTepHienTai_arr).forEach(file => {
+        const hts_boDoc_obj = new FileReader();
+        hts_boDoc_obj.onload = e => {
+          hts_mangDuLieuGui_arr.push({ fileName: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
+          hts_bienDem_num++;
           
-          if (count === CURR_FILES.length) {
-            st.innerText = `⏳ Đang gửi ${CURR_FILES.length} file lên Drive...`;
+          if (hts_bienDem_num === hts_danhSachTepHienTai_arr.length) {
+            hts_trangThai_el.innerText = `⏳ Đang gửi ${hts_danhSachTepHienTai_arr.length} file lên Drive...`;
             
             google.script.run
             .withSuccessHandler(res => {
-                handleUpResult(res, st, btn);
+                hts_xuLyKetQuaTai_fn(res, hts_trangThai_el, hts_nutTai_el);
             })
             .withFailureHandler(err => {
-                st.style.color = "red"; 
-                st.innerText = "❌ Lỗi mạng hoặc Server: " + err.message;
-                btn.classList.add('active');
+                hts_trangThai_el.style.color = "red"; 
+                hts_trangThai_el.innerText = "❌ Lỗi mạng hoặc Server: " + err.message;
+                hts_nutTai_el.classList.add('active');
             })
-            .SKT_uploadMultipleFilesToDrive(filesData, maHs, fId, LINK_CAN_XOA, wMode); 
+            .hts_taiNhieuTepLen_fn(hts_mangDuLieuGui_arr, hts_maHoSoHienTai_str, hts_idDich_str, hts_lienKetChoXoa_str, hts_cheDoLuu_str); 
           }
         };
-        r.readAsDataURL(file);
+        hts_boDoc_obj.readAsDataURL(file);
       });
     } else {
-      const folderName = CURR_FILES[0].webkitRelativePath.split('/')[0];
-      let filesData = [];
-      let count = 0;
-      st.innerText = `⏳ Đang đọc ${CURR_FILES.length} file...`;
+      const hts_tenThuMuc_str = hts_danhSachTepHienTai_arr[0].webkitRelativePath.split('/')[0];
+      let hts_mangDuLieuGui_arr = [];
+      let hts_bienDem_num = 0;
+      hts_trangThai_el.innerText = `⏳ Đang đọc ${hts_danhSachTepHienTai_arr.length} file...`;
       
-      Array.from(CURR_FILES).forEach(file => {
-        const r = new FileReader();
-        r.onload = e => {
-          filesData.push({ fileName: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
-          count++;
+      Array.from(hts_danhSachTepHienTai_arr).forEach(file => {
+        const hts_boDoc_obj = new FileReader();
+        hts_boDoc_obj.onload = e => {
+          hts_mangDuLieuGui_arr.push({ fileName: file.name, mimeType: file.type, data: e.target.result.split(',')[1] });
+          hts_bienDem_num++;
           
-          if (count === CURR_FILES.length) {
-            st.innerText = "⏳ Đang gửi dữ liệu lên Drive...";
+          if (hts_bienDem_num === hts_danhSachTepHienTai_arr.length) {
+            hts_trangThai_el.innerText = "⏳ Đang gửi dữ liệu lên Drive...";
             
             google.script.run
             .withSuccessHandler(res => {
-                handleUpResult(res, st, btn);
+                hts_xuLyKetQuaTai_fn(res, hts_trangThai_el, hts_nutTai_el);
             })
             .withFailureHandler(err => {
-                st.style.color = "red"; 
-                st.innerText = "❌ Lỗi mạng hoặc Server: " + err.message;
-                btn.classList.add('active');
+                hts_trangThai_el.style.color = "red"; 
+                hts_trangThai_el.innerText = "❌ Lỗi mạng hoặc Server: " + err.message;
+                hts_nutTai_el.classList.add('active');
             })
-            .SKT_uploadFolderEvidence(fId, folderName, filesData, LINK_CAN_XOA, wMode); 
+            .hts_taiThuMucLen_fn(hts_idDich_str, hts_tenThuMuc_str, hts_mangDuLieuGui_arr, hts_lienKetChoXoa_str, hts_cheDoLuu_str); 
           }
         };
-        r.readAsDataURL(file);
+        hts_boDoc_obj.readAsDataURL(file);
       });
     }
   }
 
-  function handleUpResult(res, st, btn) {
-    if (res.success) {
-      st.style.color = "green"; st.innerText = "✅ " + res.message;
-      if(typeof returnLinkToMain === 'function') {
-          returnLinkToMain(res.fileUrl); 
+  function hts_xuLyKetQuaTai_fn(res, st, btn) {
+    if (res.hts_thanhCong_bol) {
+      st.style.color = "green"; st.innerText = "✅ " + res.hts_thongBao_str;
+      if(typeof hts_traLienKetVeChinh_fn === 'function') {
+          hts_traLienKetVeChinh_fn(res.hts_duongDanTep_str); 
       }
-      setTimeout(closeUploadModal, 1000); 
+      setTimeout(hts_dongHopThoaiTaiLen_fn, 1000); 
     } else {
-      st.style.color = "red"; st.innerText = "❌ " + res.message;
+      st.style.color = "red"; st.innerText = "❌ " + res.hts_thongBao_str;
       btn.classList.add('active');
     }
   }
