@@ -47,12 +47,12 @@
     <div class="f-item"><span>Giáo viên</span><select id="s_gv" class="f-input"><option value="">-- Tất cả --</option></select></div>
     <div class="f-item"><span>Người kiểm tra</span><select id="s_nkt" class="f-input"><option value="">-- Tất cả --</option></select></div>
     <div class="f-item"><span>Bộ phận</span><select id="s_bp" class="f-input"><option value="">-- Tất cả --</option></select></div>
-    <div class="f-item"><span>Từ ngày</span><input type="text" id="s_from" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_dinhDangNgay_fn(event)"></div>
-    <div class="f-item"><span>Đến ngày</span><input type="text" id="s_to" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_dinhDangNgay_fn(event)"></div>
+    <div class="f-item"><span>Từ ngày</span><input type="text" id="s_from" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_hanh_tinh_xa_fn(event)"></div>
+    <div class="f-item"><span>Đến ngày</span><input type="text" id="s_to" class="f-input text-center" placeholder="dd/mm/yyyy" oninput="hts_hanh_tinh_xa_fn(event)"></div>
     <div class="f-item" style="display:flex; align-items: flex-end;">
-      <button id="btn_search_main" class="search-btn" onclick="hts_thucHienTimKiem_fn()">🔍 Tìm</button>
-      <button class="reset-search-btn" onclick="hts_xoaTrangTimKiem_fn()">↻</button>
-      <button class="print-btn" onclick="hts_inBaoCao_fn()" title="Xuất kết quả ra biểu mẫu">🖨️</button>
+      <button id="btn_search_main" class="search-btn" onclick="hts_sat_thep_cung_fn()">🔍 Tìm</button>
+      <button class="reset-search-btn" onclick="hts_kem_deo_dai_fn()">↻</button>
+      <button class="print-btn" onclick="hts_chi_nang_ne_fn()" title="Xuất kết quả ra biểu mẫu">🖨️</button>
       <span id="print_link_container"></span>
     </div>
   </div>
@@ -133,12 +133,12 @@
 <div id="tk_modal_overlay" class="modal-overlay">
   <div class="modal-box">
     <div id="tk_modal_message" class="modal-msg"></div>
-    <button class="modal-btn" onclick="hts_dongHopThoaiTK_fn()">Đóng</button>
+    <button class="modal-btn" onclick="hts_titan_bong_bay_fn()">Đóng</button>
   </div>
 </div>
 
 <script>
-  (function hts_khoiTaoTimKiem_fn() {
+  (function hts_bac_trang_tinh_fn() {
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const yyyy = d.getFullYear();
@@ -147,34 +147,34 @@
     document.getElementById('s_from').value = `01/${mm}/${yyyy}`;
     document.getElementById('s_to').value = `${dd}/${mm}/${yyyy}`;
 
-    const hts_mangBoLoc_arr = document.querySelectorAll('.filter-section-search .f-input');
-    hts_mangBoLoc_arr.forEach(input => {
+    const filters = document.querySelectorAll('.filter-section-search .f-input');
+    filters.forEach(input => {
         input.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault(); 
-                hts_thucHienTimKiem_fn(); 
+                hts_sat_thep_cung_fn(); 
             }
         });
     });
 
     google.script.run.withSuccessHandler(data => {
-      if (data.hts_coQuyen_bol === false) {
-          hts_hienThiHopThoaiTK_fn(data.hts_thongBao_str); 
+      if (data.hasPermission === false) {
+          hts_thiec_mem_mong_fn(data.message); 
           document.getElementById('btn_search_main').disabled = true; 
           document.querySelector('.print-btn').disabled = true; 
-          document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result" style="color:red; font-weight:bold;">' + data.hts_thongBao_str + '</td></tr>';
+          document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result" style="color:red; font-weight:bold;">' + data.message + '</td></tr>';
           return;
       }
-      const hts_theChonGV_el = document.getElementById('s_gv');
-      const hts_theChonNKT_el = document.getElementById('s_nkt');
-      const hts_theChonBP_el = document.getElementById('s_bp');
-      data.hts_danhSachGV_arr.forEach(x => hts_theChonGV_el.add(new Option(x, x)));
-      data.hts_danhSachNKT_arr.forEach(x => hts_theChonNKT_el.add(new Option(x, x)));
-      data.hts_danhSachBP_arr.forEach(x => hts_theChonBP_el.add(new Option(x, x)));
-    }).hts_layDuLieuLocTimKiem_fn();
+      const gv = document.getElementById('s_gv');
+      const nkt = document.getElementById('s_nkt');
+      const bp = document.getElementById('s_bp');
+      data.gvList.forEach(x => gv.add(new Option(x, x)));
+      data.nktList.forEach(x => nkt.add(new Option(x, x)));
+      data.bpList.forEach(x => bp.add(new Option(x, x)));
+    }).SKT_getSearchFilterData();
   })();
 
-  function hts_taoNoiDungCoHover_fn(content) {
+  function hts_dong_do_quang_fn(content) {
     if (!content) return "";
     return `
       <div class="opinion-cell-wrapper">
@@ -183,8 +183,8 @@
     `;
   }
 
-  function hts_thucHienTimKiem_fn() {
-    const hts_boTieuChi_obj = {
+  function hts_sat_thep_cung_fn() {
+    const criteria = {
       gv: document.getElementById('s_gv').value,
       nkt: document.getElementById('s_nkt').value,
       bp: document.getElementById('s_bp').value,
@@ -194,60 +194,60 @@
 
     document.getElementById('dashboard_stats').style.display = 'none';
     document.getElementById('print_link_container').innerHTML = ""; 
-    const hts_thanBangHienThi_el = document.getElementById('searchBody');
-    hts_thanBangHienThi_el.innerHTML = '<tr><td colspan="17" class="no-result" style="color:blue">⏳ Đang lấy dữ liệu...</td></tr>';
+    const tbody = document.getElementById('searchBody');
+    tbody.innerHTML = '<tr><td colspan="17" class="no-result" style="color:blue">⏳ Đang lấy dữ liệu...</td></tr>';
 
     google.script.run
     .withFailureHandler(error => {
-        hts_hienThiHopThoaiTK_fn(error.message);
-        hts_thanBangHienThi_el.innerHTML = `<tr><td colspan="17" class="no-result" style="color:red">❌ ${error.message}</td></tr>`;
+        hts_thiec_mem_mong_fn(error.message);
+        tbody.innerHTML = `<tr><td colspan="17" class="no-result" style="color:red">❌ ${error.message}</td></tr>`;
     })
     .withSuccessHandler(results => {
-      hts_thanBangHienThi_el.innerHTML = "";
+      tbody.innerHTML = "";
       if (results.length > 0) {
         document.getElementById('dashboard_stats').style.display = 'flex';
-        hts_tinhToanThongKe_fn(results);
+        hts_nhom_nhe_teh_fn(results);
       } else {
         document.getElementById('dashboard_stats').style.display = 'none';
-        hts_thanBangHienThi_el.innerHTML = '<tr><td colspan="17" class="no-result">❌ Không tìm thấy kết quả nào.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="17" class="no-result">❌ Không tìm thấy kết quả nào.</td></tr>';
         return;
       }
       results.forEach((r, i) => {
-        const hts_dongMoi_el = document.createElement('tr');
+        const tr = document.createElement('tr');
         
-        let hts_chuoiLienKet_str = "";
+        let linkHtml = "";
         if(r[15] && r[15].includes('http')) {
-            const hts_mangLienKet_arr = r[15].toString().split(',').map(l => l.trim()).filter(l => l !== "");
-            hts_chuoiLienKet_str = hts_mangLienKet_arr.map((url, idx) => 
+            const links = r[15].toString().split(',').map(l => l.trim()).filter(l => l !== "");
+            linkHtml = links.map((url, idx) => 
                 `<a href="${url}" target="_blank" class="file-badge" title="Xem tài liệu ${idx + 1}">📎 ${idx + 1}</a>`
             ).join('');
         }
         
-        hts_dongMoi_el.innerHTML = `
+        tr.innerHTML = `
           <td style="text-align:center">${i+1}</td>
           <td style="text-align:center">${r[4]}</td>
           <td>${r[0]}</td>
           <td>${r[1]}</td>
           <td>${r[2]}</td>
-          <td>${hts_taoNoiDungCoHover_fn(r[5])}</td> 
-          <td>${hts_taoNoiDungCoHover_fn(r[6])}</td>  
-          <td>${hts_taoNoiDungCoHover_fn(r[7])}</td>
-          <td>${hts_taoNoiDungCoHover_fn(r[8])}</td>
+          <td>${hts_dong_do_quang_fn(r[5])}</td> 
+          <td>${hts_dong_do_quang_fn(r[6])}</td>  
+          <td>${hts_dong_do_quang_fn(r[7])}</td>
+          <td>${hts_dong_do_quang_fn(r[8])}</td>
           <td style="text-align:center; font-weight:bold;">${r[9]}</td>
           <td style="text-align:center; font-weight:bold;">${r[10]}</td>
           <td style="text-align:center; font-weight:bold;">${r[11]}</td>
           <td style="text-align:center; font-weight:bold;">${r[12]}</td>
-          <td style="text-align:center;">${hts_taoNoiDungCoHover_fn(r[13])}</td>
-          <td>${hts_taoNoiDungCoHover_fn(r[14])}</td>
-          <td style="text-align:center">${hts_chuoiLienKet_str}</td>
+          <td style="text-align:center;">${hts_dong_do_quang_fn(r[13])}</td>
+          <td>${hts_dong_do_quang_fn(r[14])}</td>
+          <td style="text-align:center">${linkHtml}</td>
           <td style="text-align:center; font-weight:bold; color:#555;">${r[16]}</td>
         `;
-        hts_thanBangHienThi_el.appendChild(hts_dongMoi_el);
+        tbody.appendChild(tr);
       });
-    }).hts_timKiemBanGhi_fn(hts_boTieuChi_obj);
+    }).SKT_searchRecords(criteria);
   }
 
-  function hts_tinhToanThongKe_fn(data) {
+  function hts_nhom_nhe_teh_fn(data) {
     let c = {
         bgh:0, tcm:0, tvp:0,
         hs_total:0, hs_tot:0, hs_kha:0, hs_tb:0,
@@ -327,7 +327,7 @@
     document.getElementById('st_khac_cd').innerText = c.khac_cd;
   }
   
-  function hts_xoaTrangTimKiem_fn() {
+  function hts_kem_deo_dai_fn() {
     ['s_gv','s_nkt','s_bp','s_from','s_to'].forEach(id=>document.getElementById(id).value="");
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -341,21 +341,21 @@
     document.getElementById('searchBody').innerHTML = '<tr><td colspan="17" class="no-result">Vui lòng chọn điều kiện và nhấn Tìm kiếm</td></tr>';
   }
 
-  function hts_inBaoCao_fn() {
-    const hts_thanBangHienThi_el = document.getElementById('searchBody');
-    if (hts_thanBangHienThi_el.innerText.includes("Vui lòng chọn") || hts_thanBangHienThi_el.innerText.includes("Không tìm thấy") || hts_thanBangHienThi_el.rows.length === 0) {
-      hts_hienThiHopThoaiTK_fn("⚠️ Vui lòng tìm kiếm và đảm bảo có dữ liệu trước khi xuất biểu mẫu!"); 
+  function hts_chi_nang_ne_fn() {
+    const tbody = document.getElementById('searchBody');
+    if (tbody.innerText.includes("Vui lòng chọn") || tbody.innerText.includes("Không tìm thấy") || tbody.rows.length === 0) {
+      hts_thiec_mem_mong_fn("⚠️ Vui lòng tìm kiếm và đảm bảo có dữ liệu trước khi xuất biểu mẫu!"); 
       return;
     }
-    const hts_nutIn_el = document.querySelector('.print-btn');
-    const hts_chuoiGoc_str = hts_nutIn_el.innerHTML;
-    const hts_vungLienKet_el = document.getElementById('print_link_container');
+    const btn = document.querySelector('.print-btn');
+    const orgText = btn.innerHTML;
+    const linkContainer = document.getElementById('print_link_container');
     
-    hts_nutIn_el.disabled = true;
-    hts_nutIn_el.innerHTML = "⏳";
-    hts_vungLienKet_el.innerHTML = "<span style='color:blue; font-size:12px; margin-left:5px;'>Đang tạo tệp...</span>";
+    btn.disabled = true;
+    btn.innerHTML = "⏳";
+    linkContainer.innerHTML = "<span style='color:blue; font-size:12px; margin-left:5px;'>Đang tạo tệp...</span>";
 
-    const hts_boTieuChi_obj = {
+    const criteria = {
       gv: document.getElementById('s_gv').value,
       nkt: document.getElementById('s_nkt').value,
       bp: document.getElementById('s_bp').value,
@@ -364,22 +364,22 @@
     };
 
     google.script.run.withSuccessHandler(res => {
-      hts_nutIn_el.disabled = false;
-      hts_nutIn_el.innerHTML = hts_chuoiGoc_str;
-      if (res.hts_thanhCong_bol) {
-        hts_vungLienKet_el.innerHTML = `<a href="${res.hts_duongDanTep_str}" target="_blank" class="print-link">🖨️ Xem dữ liệu kết xuất</a>`;
+      btn.disabled = false;
+      btn.innerHTML = orgText;
+      if (res.success) {
+        linkContainer.innerHTML = `<a href="${res.url}" target="_blank" class="print-link">🖨️ Xem dữ liệu kết xuất</a>`;
       } else {
-        hts_hienThiHopThoaiTK_fn("❌ Lỗi Giao tiếp: " + res.hts_thongBao_str); 
-        hts_vungLienKet_el.innerHTML = "<span style='color:red;'>Lỗi!</span>";
+        hts_thiec_mem_mong_fn("❌ Lỗi Giao tiếp: " + res.message); 
+        linkContainer.innerHTML = "<span style='color:red;'>Lỗi!</span>";
       }
-    }).hts_taoTaiLieuBaoCao_fn(hts_boTieuChi_obj);
+    }).SKT_createReportDoc(criteria);
   }
 
-  function hts_hienThiHopThoaiTK_fn(msg) {
+  function hts_thiec_mem_mong_fn(msg) {
     document.getElementById('tk_modal_message').innerText = msg;
     document.getElementById('tk_modal_overlay').style.display = 'flex';
   }
-  function hts_dongHopThoaiTK_fn() {
+  function hts_titan_bong_bay_fn() {
     document.getElementById('tk_modal_overlay').style.display = 'none';
   }
 </script>
