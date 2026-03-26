@@ -9,14 +9,18 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
+    /* --- CSS MÀN HÌNH ĐĂNG NHẬP VÀ LOADER --- */
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner-ring { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #1e3a8a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
     .loader-text { font-family: 'Segoe UI', sans-serif; font-weight: bold; color: #1e3a8a; letter-spacing: 1px; font-size: 14px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
     #main-wrapper { opacity: 0; transition: opacity 0.5s ease; display: none; } 
+    
     #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(240, 253, 244, 0.98); z-index: 1040; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: "Times New Roman", serif; }
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
+    
     .dev-badge-container { display: flex; align-items: center; background: linear-gradient(135deg, #1e3a8a 0%, #b91c1c 100%); padding: 4px 12px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden; }
     .dev-badge-container:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
     .dev-icon-fly { font-size: 16px; margin-right: 8px; animation: bounce 2s infinite; }
@@ -24,61 +28,77 @@
     .dev-name-label { font-weight: 800; font-size: 11px; color: #ffeb3b; text-transform: uppercase; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); }
     .dev-role-label { font-size: 9px; color: #ffffff; opacity: 0.9; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+
+    /* --- CSS CẤU TRÚC CHÍNH --- */
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
     body { font-family: "Times New Roman", serif; background: #f3f4f6; padding: 16px; margin: 0; box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
+
     .school-header { display: flex; align-items: center; justify-content: space-between; width: 1550px; max-width: 99%; margin: 0 auto 10px auto !important; }
     .logo-group { display: flex; align-items: center; }
     .school-logo { width: 1cm; height: 1cm; object-fit: contain; margin-right: 10px; padding: 0px; }
     .school-name { font-weight: bold; font-size: 17px; color: var(--primary-blue); text-transform: uppercase; }
     .loading-spin { background-image: url('https://i.gifer.com/ZKZg.gif') !important; background-repeat: no-repeat !important; background-position: right 8px center !important; background-size: 16px !important; background-color: #fffde7 !important; }
+    
     #so_wrapper { width: 1550px; max-width: 99%; margin: auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    
     .table-container { overflow-x: auto; margin-top: 10px; border: 1px solid var(--grid-border) !important; }
     table { width: 100%; border-collapse: collapse !important; table-layout: fixed; }
     th, td { border: 1px solid var(--grid-border) !important; }
     th { background: #eff6ff; color: var(--primary-blue); padding: 8px 4px; font-size: 14px; text-align: center; }
     td { vertical-align: middle; background: #fff; padding: 0; position: relative; } 
+    
     .cell-input { width: 100%; border: none; padding: 8px 5px; font-family: "Times New Roman"; font-size: 15px; box-sizing: border-box; display: block; outline: none; resize: none; min-height: 35px; color: #000; }
     .cell-input:disabled { background-color: #f1f5f9; color: #334155 !important; opacity: 1; -webkit-text-fill-color: #334155; }
     .cell-input::placeholder { color: #94a3b8 !important; opacity: 0.5; font-style: italic; font-size: 13px; }
     #mainTable .cell-input::placeholder { opacity: 0.4; }
+
     textarea.cell-input { overflow: hidden; resize: none; padding-top: 5px; }
     .f-input { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
     .filter-section { display: grid; grid-template-columns: 220px 220px 220px 120px 1fr; gap: 15px; margin-top: 15px; }
     .f-item:nth-child(5) { grid-column: 5; display: flex; flex-direction: column; justify-self: end; text-align: right; }
     .f-item:nth-child(5) .f-input { width: 180px; margin-left: auto; }
     .f-item span { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #333; }
+
     .btn-save { margin-top: 20px; padding: 12px 40px; background: var(--primary-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; float: right; }
     .btn-save:disabled { background-color: #ccc; cursor: not-allowed; }
     .btn-row { padding: 4px 12px; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 10px; }
     .btn-reset { background: var(--reset-color); }
     .btn-submit { background: var(--submit-green); }
     .refresh-btn { background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; margin-left: 5px; }
+
     .status-stepper { display: flex; align-items: center; margin-top: 10px; gap: 10px; font-size: 12px; border-top: 1px dashed #eee; padding-top: 3px; }
     .step { padding: 4px 15px; border-radius: 20px; border: 1px solid var(--step-gray); transition: 0.3s; }
     .step.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
     .step.completed { background: #10b981; color: white; border-color: #10b981; }
     #user_display { margin-left: auto; font-style: italic; color: #64748b; font-size: 13px; }
+
     .ma-ho-so-cell { font-size: 14px !important; font-weight: bold; text-align: center; vertical-align: middle; background: #f9fafb; padding: 8px 5px; }
     .link-view-btn { display: inline-block; padding: 6px 15px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; font-size: 14px; text-decoration: none; border-radius: 4px; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     .link-view-btn:hover { background: #2563eb; color: white; border-color: #2563eb; }
+
     .link-edit-corner { position: absolute; bottom: 2px; right: 2px; font-size: 11px; color: #d97706; cursor: pointer; opacity: 0.8; padding: 2px 4px; background: #fffbeb; border-radius: 3px; }
     .link-edit-corner:hover { opacity: 1; font-weight: bold; background: #fef3c7; color: #b45309; }
     .link-edit-corner.disabled { pointer-events: none; opacity: 0; display: none; }
+
     .tab-container { display: flex; margin-bottom: 5px; border-bottom: 2px solid #e5e7eb; }
     .tab-button { padding: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 5px; font-weight: bold; color: #6b7280; cursor: pointer; }
     .tab-button.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
     .tab-content { display: none; padding-top: 15px; }
     .tab-content.active { display: block; }
+
     #modal_overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1085; justify-content: center; align-items: center; }
     #modal_box { background: white; padding: 30px; border-radius: 10px; text-align: center; min-width: 300px; }
     .modal-btn { background: #2563eb; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
     .btn-icon-del { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 16px; padding: 4px; border-radius: 4px; }
     .btn-icon-del:hover { background-color: #fee2e2; }
     .btn-icon-del:disabled { color: #d1d5db; cursor: not-allowed; pointer-events: none; }
+    
     .add-row-container { text-align: left; margin-top: 5px; padding-left: 5px; }
     .btn-add-row { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
     .btn-add-row:hover { background-color: #059669; }
+
     .btn-upload-icon { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 14px; }
     .btn-upload-icon:disabled { opacity: 0.5; cursor: not-allowed; }
     .evidence-uploaded { background-color: #f0fdf4; }
@@ -88,21 +108,42 @@
 </head>
 <body>
 
+  <div class="modal fade" id="trialModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" style="z-index: 1090;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center p-4 border-0 shadow-lg" style="background: rgba(255, 255, 255, 0.95);">
+        <div class="mb-4 mt-2">
+          <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" alt="Hợp Thành Logo" width="100">
+        </div>
+        <h5 class="fw-bold mb-3" style="font-family: 'Segoe UI', sans-serif;" id="trialTitle">Thông báo dùng thử</h5>
+        <p class="fs-5 text-secondary" style="font-family: 'Segoe UI', sans-serif;" id="trialMessage">
+          Bạn đang trong thời gian dùng thử 14 ngày. Ngày bắt đầu: 07/02/2026.
+        </p>
+        <button type="button" id="btnTrialOk" class="btn btn-primary px-5 mt-3 fw-bold" data-bs-dismiss="modal">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+
   <div id="login-overlay">
     <div class="login-box">
       <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="login-logo">
       <h2 style="color: #b91c1c; margin-top: 0; text-transform: uppercase;">Sổ Kiểm Tra Nội Bộ</h2>
       <h3 style="color: #1e3a8a; margin-bottom: 25px;">Trường TH&THCS Hợp Thành</h3>
+      
+      <div class="alert alert-success text-start" style="font-size: 12px; padding: 10px; margin-bottom: 20px; border-radius: 8px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
+        <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ thông tin cá nhân của Thầy/Cô.
+      </div>
+
       <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V2.4.2026</p1>
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
-           data-callback="hts_mua_go_tinh_fn"
+           data-callback="hts_giay_trang_tinh_fn"
            data-auto_prompt="false">
       </div>
       <div class="d-flex justify-content-center w-100 mt-2">
          <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left"></div>
       </div>
+      
       <div style="margin-top: 30px; font-size: 12px; color: #999; font-weight: bold;">Nhà phát triển: HOÀNG NGỌC LÂM</div>
     </div>
   </div>
@@ -118,20 +159,30 @@
         <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="school-logo">
         <span class="school-name">Trường TH&THCS Hợp Thành</span>
       </div>
+      <div class="dev-badge-container">
+        <div class="dev-icon-fly">🚀</div>
+        <div class="dev-text-group">
+          <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
+          <div class="dev-role-label">System Developer</div>
+        </div>
+      </div>
     </div>
 
     <div id="so_wrapper">
       <div class="tab-container">
-        <button class="tab-button active" onclick="hts_xanh_chay_am_fn('TabNhapLieu', this)">📝 GHI SỔ</button>
-        <button class="tab-button" onclick="hts_xanh_chay_am_fn('TabTimKiem', this)">🔍 THỐNG KÊ</button>
-        <button class="tab-button" onclick="hts_xanh_chay_am_fn('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
-        <button class="tab-button" onclick="hts_vui_doc_ban_fn()" style="margin-left:auto; color:#dc2626;">🚪 ĐĂNG XUẤT</button>
+        <button class="tab-button active" onclick="hts_mai_nha_cao_fn('TabNhapLieu', this)">📝 GHI SỔ</button>
+        <button class="tab-button" onclick="hts_mai_nha_cao_fn('TabTimKiem', this)">🔍 THỐNG KÊ</button>
+        <button class="tab-button" onclick="hts_mai_nha_cao_fn('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
+        <button class="tab-button" onclick="hts_but_chi_den_fn()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
       </div>
       
       <div id="TabNhapLieu" class="tab-content active"></div>
       <div id="TabTimKiem" class="tab-content"></div>
       <div id="TabHuongDan" class="tab-content">
-        <h3>Hướng dẫn</h3>
+        <h3>Thông báo:</h3>
+        <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
+        <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem được nội dung cuộc kiểm tra của mình. Không thể mở được của người khác!</p>
+        <p><b> Tác giả: Hoàng Ngọc Lâm </b></p>
       </div>
     </div>
 
@@ -148,131 +199,201 @@
     <div id="access_denied_msg" style="display:none; text-align:center; margin-top:50px;">
       <h2 style="color:#b91c1c;">⛔ TRUY CẬP BỊ TỪ CHỐI</h2>
       <p id="denied_reason" style="font-weight:bold;"></p>
-      <button class="modal-btn" onclick="hts_vui_doc_ban_fn()">ĐĂNG NHẬP LẠI</button>
+      <button class="modal-btn" onclick="hts_but_chi_den_fn()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    const hts_khoa_cua_sat_str = "e" + "m" + "a" + "i" + "l";
-    const hts_tu_lanh_to_str = "SKT_USER_" + hts_khoa_cua_sat_str.toUpperCase();
+    function hts_ghe_go_gay_fn() {
+      const hts_mua_xuan_den_date = new Date(2026, 1, 7); 
+      const hts_chim_en_bay_num = 14; 
+      
+      const hts_la_thu_vang_date = new Date(hts_mua_xuan_den_date);
+      hts_la_thu_vang_date.setDate(hts_mua_xuan_den_date.getDate() + hts_chim_en_bay_num);
+      const hts_hom_nay_sang_date = new Date();
 
-    window.hts_bo_nho_tam_obj = {};
-    function hts_ban_tra_da_fn(hts_chu_ngua_di_str, hts_bien_sau_ngu_str) {
-        window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] = hts_bien_sau_ngu_str;
-        try { 
-            sessionStorage.setItem(hts_chu_ngua_di_str, hts_bien_sau_ngu_str); 
-            if (hts_chu_ngua_di_str === "SKT_USER_ID") sessionStorage.setItem(hts_tu_lanh_to_str, hts_bien_sau_ngu_str); 
-        } catch(hts_loi_da_roi_obj) { }
+      const hts_hop_thoai_go_el = document.getElementById('trialModal');
+      const hts_nut_bam_xanh_el = document.getElementById('btnTrialOk');
+      const hts_tin_nhan_chao_el = document.getElementById('trialMessage');
+      const hts_tieu_de_sach_el = document.getElementById('trialTitle');
+
+      if (!hts_hop_thoai_go_el || !hts_nut_bam_xanh_el) return true;
+
+      if (hts_hom_nay_sang_date > hts_la_thu_vang_date) {
+        hts_tieu_de_sach_el.innerText = "Hết hạn dùng thử";
+        hts_tieu_de_sach_el.style.color = "#dc3545"; 
+        hts_tin_nhan_chao_el.innerHTML = "Thời gian dùng thử 14 ngày của bạn đã kết thúc.<br>Vui lòng liên hệ Admin (Hoàng Ngọc Lâm) để gia hạn phần mềm.";
+        
+        hts_nut_bam_xanh_el.innerText = 'Thoát hệ thống';
+        hts_nut_bam_xanh_el.classList.remove('btn-primary');
+        hts_nut_bam_xanh_el.classList.add('btn-danger');
+        hts_nut_bam_xanh_el.removeAttribute('data-bs-dismiss'); 
+        
+        hts_nut_bam_xanh_el.onclick = function() {
+          window.location.href = "https://www.google.com"; 
+        };
+        
+        const hts_khoi_tao_vong_obj = new bootstrap.Modal(hts_hop_thoai_go_el, { backdrop: 'static', keyboard: false });
+        hts_khoi_tao_vong_obj.show();
+        
+        const hts_man_hinh_chao_el = document.getElementById('welcome-screen');
+        if(hts_man_hinh_chao_el) hts_man_hinh_chao_el.style.display = 'none';
+        document.getElementById('main-app').style.display = 'none';
+        
+        return false; 
+      }
+      
+      const hts_khoi_tao_vong_obj = new bootstrap.Modal(hts_hop_thoai_go_el, { backdrop: 'static', keyboard: false });
+      hts_khoi_tao_vong_obj.show();
+      return true; 
     }
-    function hts_cuc_tay_nho_fn(hts_chu_ngua_di_str) {
+
+    const hts_khoa_thu_dien_str = "e" + "m" + "a" + "i" + "l";
+    const hts_khoa_phien_str = "SKT_USER_" + hts_khoa_thu_dien_str.toUpperCase();
+
+    window.HTS_VIRTUAL_STORAGE_OBJ = {};
+    function hts_tu_sat_dong_fn(key, value) {
+        window.HTS_VIRTUAL_STORAGE_OBJ[key] = value;
         try { 
-            let hts_may_tinh_ban_str = sessionStorage.getItem(hts_chu_ngua_di_str);
-            if (!hts_may_tinh_ban_str && hts_chu_ngua_di_str === "SKT_USER_ID") hts_may_tinh_ban_str = sessionStorage.getItem(hts_tu_lanh_to_str);
-            return hts_may_tinh_ban_str || window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] || null; 
-        } catch(hts_loi_da_roi_obj) { return window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str] || null; }
+            sessionStorage.setItem(key, value); 
+            if (key === "SKT_USER_ID") sessionStorage.setItem(hts_khoa_phien_str, value); 
+        } catch(hts_loi_bo_nho_obj) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
     }
-    function hts_dong_ho_tay_fn(hts_chu_ngua_di_str) {
-        delete window.hts_bo_nho_tam_obj[hts_chu_ngua_di_str];
+    function hts_den_sang_mo_fn(key) {
         try { 
-            sessionStorage.removeItem(hts_chu_ngua_di_str); 
-            if (hts_chu_ngua_di_str === "SKT_USER_ID") sessionStorage.removeItem(hts_tu_lanh_to_str);
-        } catch(hts_loi_da_roi_obj) { }
+            let hts_gia_tri_nhan_str = sessionStorage.getItem(key);
+            if (!hts_gia_tri_nhan_str && key === "SKT_USER_ID") hts_gia_tri_nhan_str = sessionStorage.getItem(hts_khoa_phien_str);
+            return hts_gia_tri_nhan_str || window.HTS_VIRTUAL_STORAGE_OBJ[key] || null; 
+        } catch(hts_loi_bo_nho_obj) { return window.HTS_VIRTUAL_STORAGE_OBJ[key] || null; }
+    }
+    function hts_quat_tran_quay_fn(key) {
+        delete window.HTS_VIRTUAL_STORAGE_OBJ[key];
+        try { 
+            sessionStorage.removeItem(key); 
+            if (key === "SKT_USER_ID") sessionStorage.removeItem(hts_khoa_phien_str);
+        } catch(hts_loi_bo_nho_obj) { console.warn("Chrome chặn xóa"); }
     }
 
     window.onload = function() {
-      const hts_xe_may_cu_str = hts_cuc_tay_nho_fn("SKT_USER_ID");
-      if(hts_xe_may_cu_str) {
-        window.hts_ngu_bay_xanh_str = hts_xe_may_cu_str; 
+      if (!hts_ghe_go_gay_fn()) return; 
+
+      const hts_id_luu_tru_str = hts_den_sang_mo_fn("SKT_USER_ID");
+      if(hts_id_luu_tru_str) {
+        window.hts_qua_tao_do_str = hts_id_luu_tru_str; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        hts_quan_ao_dep_fn();
+        hts_thuoc_ke_dai_fn();
       }
     };
 
-    function hts_mua_go_tinh_fn(hts_la_cay_roi_obj) {
+    function hts_giay_trang_tinh_fn(response) {
+      if (!hts_ghe_go_gay_fn()) return; 
+
       try {
-        const hts_meo_an_may_obj = hts_nha_cao_tang_fn(hts_la_cay_roi_obj.credential);
-        const hts_giay_trang_tinh_str = hts_meo_an_may_obj[hts_khoa_cua_sat_str]; 
-        hts_ban_tra_da_fn("SKT_USER_ID", hts_giay_trang_tinh_str);
-        window.hts_ngu_bay_xanh_str = hts_giay_trang_tinh_str; 
+        const hts_du_lieu_giai_ma_obj = hts_muc_xanh_dam_fn(response.credential);
+        const hts_gia_tri_dinh_danh_str = hts_du_lieu_giai_ma_obj[hts_khoa_thu_dien_str]; 
+        
+        hts_tu_sat_dong_fn("SKT_USER_ID", hts_gia_tri_dinh_danh_str);
+        window.hts_qua_tao_do_str = hts_gia_tri_dinh_danh_str; 
+        
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        hts_quan_ao_dep_fn();
-      } catch (hts_loi_da_roi_obj) {}
+        
+        hts_thuoc_ke_dai_fn();
+      } catch (hts_loi_ma_hoa_obj) {
+        alert("Lỗi giải mã Google: " + hts_loi_ma_hoa_obj.message);
+      }
     }
 
-    function hts_nha_cao_tang_fn(hts_chu_ngua_di_str) {
-      let hts_may_bay_giay_str = hts_chu_ngua_di_str.split('.')[1];
-      let hts_xe_dap_nhanh_str = hts_may_bay_giay_str.replace(/-/g, '+').replace(/_/g, '/');
-      let hts_tra_da_lanh_str = decodeURIComponent(atob(hts_xe_dap_nhanh_str).split('').map(function(hts_la_bay_nhay_str) {
-          return '%' + ('00' + hts_la_bay_nhay_str.charCodeAt(0).toString(16)).slice(-2);
+    function hts_muc_xanh_dam_fn(token) {
+      let hts_chuoi_cat_ghep_str = token.split('.')[1];
+      let hts_chuoi_nen_gon_str = hts_chuoi_cat_ghep_str.replace(/-/g, '+').replace(/_/g, '/');
+      let hts_chuoi_hoan_chinh_str = decodeURIComponent(atob(hts_chuoi_nen_gon_str).split('').map(function(hts_ky_tu_le_str) {
+          return '%' + ('00' + hts_ky_tu_le_str.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
-      return JSON.parse(hts_tra_da_lanh_str);
+      return JSON.parse(hts_chuoi_hoan_chinh_str);
     }
 
-    function hts_vui_doc_ban_fn() {
-      hts_dong_ho_tay_fn("SKT_USER_ID");
-      window.hts_ngu_bay_xanh_str = null;
+    function hts_but_chi_den_fn() {
+      hts_quat_tran_quay_fn("SKT_USER_ID");
+      window.hts_qua_tao_do_str = null;
       location.reload(); 
     }
 
-    function hts_quan_ao_dep_fn() {
-      let hts_cho_nhay_hoa_str = window.hts_ngu_bay_xanh_str || hts_cuc_tay_nho_fn("SKT_USER_ID") || "";
-      hts_cho_nhay_hoa_str = String(hts_cho_nhay_hoa_str).toLowerCase().trim();
+    function hts_thuoc_ke_dai_fn() {
+      let hts_id_hien_tai_str = window.hts_qua_tao_do_str || hts_den_sang_mo_fn("SKT_USER_ID") || "";
+      hts_id_hien_tai_str = String(hts_id_hien_tai_str).toLowerCase().trim();
 
       google.script.run
-        .withSuccessHandler(hts_la_cay_roi_obj => {
-          if (hts_la_cay_roi_obj.hasPermission === false) {
-            hts_dong_ho_tay_fn("SKT_USER_ID");
-            window.hts_ngu_bay_xanh_str = null;
+        .withSuccessHandler(data => {
+          if (data.hasPermission === false) {
+            hts_quat_tran_quay_fn("SKT_USER_ID");
+            window.hts_qua_tao_do_str = null;
+
             document.getElementById('instant-loader').style.display = 'none';
             document.getElementById('main-wrapper').style.display = 'block';
             setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
-            const hts_mua_roi_nhe_obj = document.querySelector('.school-header');
-            if (hts_mua_roi_nhe_obj) hts_mua_roi_nhe_obj.style.display = 'none';
+            
+            const hts_tieu_de_chinh_el = document.querySelector('.school-header');
+            if (hts_tieu_de_chinh_el) hts_tieu_de_chinh_el.style.display = 'none';
             document.getElementById('so_wrapper').style.display = 'none';
             document.getElementById('MinhChungContainer').style.display = 'none';
+            
             document.getElementById('access_denied_msg').style.display = 'block';
-            document.getElementById('denied_reason').innerText = hts_la_cay_roi_obj.message;
+            document.getElementById('denied_reason').innerText = data.message;
           } else {
-            let hts_ban_phim_den_bol = false;
-            if(hts_la_cay_roi_obj.giaoVienData && hts_la_cay_roi_obj.giaoVienData.some(hts_xe_may_cu_obj => String(hts_xe_may_cu_obj.uid || hts_xe_may_cu_obj[hts_khoa_cua_sat_str]).toLowerCase() === hts_cho_nhay_hoa_str)) hts_ban_phim_den_bol = true;
-            if(hts_la_cay_roi_obj.nguoiKTData && hts_la_cay_roi_obj.nguoiKTData.some(hts_xe_may_cu_obj => String(hts_xe_may_cu_obj.uid || hts_xe_may_cu_obj[hts_khoa_cua_sat_str]).toLowerCase() === hts_cho_nhay_hoa_str)) hts_ban_phim_den_bol = true;
-            window.hts_hoa_do_bay_bol = hts_ban_phim_den_bol; 
-            hts_mu_bao_hiem_fn();
+            let hts_la_nguoi_quen_bol = false;
+            if(data.giaoVienData && data.giaoVienData.some(hts_doi_tuong_check_obj => String(hts_doi_tuong_check_obj.uid || hts_doi_tuong_check_obj[hts_khoa_thu_dien_str]).toLowerCase() === hts_id_hien_tai_str)) hts_la_nguoi_quen_bol = true;
+            if(data.nguoiKTData && data.nguoiKTData.some(hts_doi_tuong_check_obj => String(hts_doi_tuong_check_obj.uid || hts_doi_tuong_check_obj[hts_khoa_thu_dien_str]).toLowerCase() === hts_id_hien_tai_str)) hts_la_nguoi_quen_bol = true;
+            
+            window.HTS_IS_AUTHORIZED_BOL = hts_la_nguoi_quen_bol; 
+            hts_cap_sach_moi_fn();
           }
         })
-        .withFailureHandler(hts_loi_da_roi_obj => {
+        .withFailureHandler(hts_loi_ket_noi_obj => {
            document.getElementById('instant-loader').style.display = 'none';
+           alert("Lỗi kết nối máy chủ Google: " + hts_loi_ket_noi_obj.message);
         })
-        .hts_bay_da_ngu_fn(hts_cho_nhay_hoa_str, new Date().getTime()); 
+        .SKT_getInitialData(hts_id_hien_tai_str, new Date().getTime()); 
     }
 
-    async function hts_mu_bao_hiem_fn() {
+    async function hts_cap_sach_moi_fn() {
       try {
-        const hts_may_anh_so_str = "?v=" + new Date().getTime(); 
-        const [hts_tivi_man_hinh_obj, hts_loa_phat_thanh_obj, hts_chuot_may_tinh_obj] = await Promise.all([
-            fetch('./SKT_NhapLieu.html' + hts_may_anh_so_str),
-            fetch('./SKT_TimKiem.html' + hts_may_anh_so_str),
-            fetch('./SKT_MinhChung.html' + hts_may_anh_so_str)
+        const hts_chong_bo_nho_str = "?v=" + new Date().getTime(); 
+        
+        const [hts_goi_nhap_lieu_obj, hts_goi_tim_kiem_obj, hts_goi_minh_chung_obj] = await Promise.all([
+            fetch('./SKT_NhapLieu.html' + hts_chong_bo_nho_str),
+            fetch('./SKT_TimKiem.html' + hts_chong_bo_nho_str),
+            fetch('./SKT_MinhChung.html' + hts_chong_bo_nho_str)
         ]);
-        document.getElementById('TabNhapLieu').innerHTML = await hts_tivi_man_hinh_obj.text();
-        document.getElementById('TabTimKiem').innerHTML = await hts_loa_phat_thanh_obj.text();
-        document.getElementById('MinhChungContainer').innerHTML = await hts_chuot_may_tinh_obj.text();
 
-        hts_kinh_ram_den_fn(document.getElementById('TabNhapLieu'));
-        hts_kinh_ram_den_fn(document.getElementById('TabTimKiem'));
-        hts_kinh_ram_den_fn(document.getElementById('MinhChungContainer'));
+        if (!hts_goi_nhap_lieu_obj.ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
+        if (!hts_goi_tim_kiem_obj.ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
+        if (!hts_goi_minh_chung_obj.ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
+
+        document.getElementById('TabNhapLieu').innerHTML = await hts_goi_nhap_lieu_obj.text();
+        document.getElementById('TabTimKiem').innerHTML = await hts_goi_tim_kiem_obj.text();
+        document.getElementById('MinhChungContainer').innerHTML = await hts_goi_minh_chung_obj.text();
+
+        hts_cua_so_mo_fn(document.getElementById('TabNhapLieu'));
+        hts_cua_so_mo_fn(document.getElementById('TabTimKiem'));
+        hts_cua_so_mo_fn(document.getElementById('MinhChungContainer'));
 
         setTimeout(() => {
-            try { if (typeof hts_coc_nuoc_loc_fn === 'function') hts_coc_nuoc_loc_fn(); } catch(hts_loi_da_roi_obj) {}
-            try { if (typeof hts_ghe_da_cu_fn === 'function') hts_ghe_da_cu_fn(); } catch(hts_loi_da_roi_obj) {}
-            try { if (typeof hts_tui_xach_da_fn === 'function' && document.getElementById('tableContent').rows.length === 0) hts_tui_xach_da_fn(); } catch(hts_loi_da_roi_obj) {}
-            if (window.hts_hoa_do_bay_bol === false) { hts_giay_the_thao_fn(); }
+            try { if (typeof hts_hat_mua_roi_fn === 'function') hts_hat_mua_roi_fn(); } catch(hts_loi_chay_obj) {}
+            try { if (typeof hts_may_bay_giay_fn === 'function') hts_may_bay_giay_fn(); } catch(hts_loi_chay_obj) {}
+            try { if (typeof hts_con_gio_nhe_fn === 'function' && document.getElementById('tableContent').rows.length === 0) hts_con_gio_nhe_fn(); } catch(hts_loi_chay_obj) {}
+            
+            if (window.HTS_IS_AUTHORIZED_BOL === false) {
+               hts_dong_ho_treo_fn();
+            }
         }, 800);
-      } catch (hts_loi_da_roi_obj) {}
+
+      } catch (hts_loi_tai_file_obj) {
+        alert("LỖI KẾT NỐI TỆP: " + hts_loi_tai_file_obj.message);
+      }
 
       setTimeout(function() { 
           document.getElementById('instant-loader').style.display = 'none'; 
@@ -281,32 +402,42 @@
       }, 500); 
     }
 
-    function hts_giay_the_thao_fn() {
+    function hts_dong_ho_treo_fn() {
         if (!document.getElementById('guest-lock-style')) {
-            const hts_cai_bat_an_obj = document.createElement('style');
-            hts_cai_bat_an_obj.id = 'guest-lock-style';
-            hts_cai_bat_an_obj.innerHTML = `#so_wrapper input, #so_wrapper textarea, #so_wrapper select, #so_wrapper button:not(.tab-button):not(.modal-btn) { pointer-events: none !important; background-color: #f1f5f9 !important; opacity: 0.6 !important; }`;
-            document.head.appendChild(hts_cai_bat_an_obj);
+            const hts_the_dinh_dang_el = document.createElement('style');
+            hts_the_dinh_dang_el.id = 'guest-lock-style';
+            hts_the_dinh_dang_el.innerHTML = `
+                #so_wrapper input, 
+                #so_wrapper textarea, 
+                #so_wrapper select, 
+                #so_wrapper button:not(.tab-button):not(.modal-btn) {
+                    pointer-events: none !important;
+                    background-color: #f1f5f9 !important;
+                    opacity: 0.6 !important;
+                }
+            `;
+            document.head.appendChild(hts_the_dinh_dang_el);
         }
-        document.getElementById('modal_message').innerHTML = "CHỈ XEM";
+        
+        document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>ĐỊNH DANH KHÁCH (CHỈ XEM)</span><br><br>Định danh của bạn không có trong hệ thống được cấp quyền. Bạn chỉ có thể đăng nhập, không có quyền tương tác trên ứng dụng.";
         document.getElementById('modal_overlay').style.display = 'flex';
     }
 
-    function hts_kinh_ram_den_fn(hts_la_cay_roi_obj) {
-        const hts_dua_hau_do_arr = hts_la_cay_roi_obj.querySelectorAll('script');
-        hts_dua_hau_do_arr.forEach(hts_xe_may_cu_obj => {
-            const hts_may_bay_giay_obj = document.createElement('script');
-            Array.from(hts_xe_may_cu_obj.attributes).forEach(hts_hop_but_bi_obj => hts_may_bay_giay_obj.setAttribute(hts_hop_but_bi_obj.name, hts_hop_but_bi_obj.value));
-            hts_may_bay_giay_obj.appendChild(document.createTextNode(hts_xe_may_cu_obj.innerHTML));
-            hts_xe_may_cu_obj.parentNode.replaceChild(hts_may_bay_giay_obj, hts_xe_may_cu_obj);
+    function hts_cua_so_mo_fn(element) {
+        const hts_danh_sach_ma_arr = element.querySelectorAll('script');
+        hts_danh_sach_ma_arr.forEach(hts_the_cu_el => {
+            const hts_the_moi_el = document.createElement('script');
+            Array.from(hts_the_cu_el.attributes).forEach(hts_thuoc_tinh_obj => hts_the_moi_el.setAttribute(hts_thuoc_tinh_obj.name, hts_thuoc_tinh_obj.value));
+            hts_the_moi_el.appendChild(document.createTextNode(hts_the_cu_el.innerHTML));
+            hts_the_cu_el.parentNode.replaceChild(hts_the_moi_el, hts_the_cu_el);
         });
     }
 
-    function hts_xanh_chay_am_fn(hts_chu_ngua_di_str, hts_ban_hoc_go_obj) {
-      document.querySelectorAll('.tab-content').forEach(hts_la_cay_roi_obj => hts_la_cay_roi_obj.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(hts_la_cay_roi_obj => hts_la_cay_roi_obj.classList.remove('active'));
-      document.getElementById(hts_chu_ngua_di_str).classList.add('active');
-      if(hts_ban_hoc_go_obj) hts_ban_hoc_go_obj.classList.add('active');
+    function hts_mai_nha_cao_fn(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(hts_noi_dung_tab_el => hts_noi_dung_tab_el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(hts_nut_tab_el => hts_nut_tab_el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if(btn) btn.classList.add('active');
     }
   </script>
 </body>
