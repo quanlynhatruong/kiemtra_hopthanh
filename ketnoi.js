@@ -41,7 +41,7 @@ function thuchmays(hdong, mtham, khitcong, khitba) {
     else if (hdong === "skt_taobc_vba") tso = { tchi: mtham[0] };
     else if (hdong === "skt_laydl_bda") tso = { taik: mtham[0], cnh: mtham[1] };
     else if (hdong === "skt_laytm_con") tso = {};
-    else if (hdong === "skt_laydl_loc_tk") tso = {};
+    else if (hdong === "skt_tk_laydl_loc") tso = {};
     else if (hdong === "skt_layds_mhs_cn") tso = {};
 
     fetch(ddungdwe, {
