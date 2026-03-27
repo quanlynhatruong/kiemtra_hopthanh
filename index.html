@@ -9,7 +9,7 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
-    /* --- CSS MÀN HÌNH ĐĂNG NHẬP VÀ LOADER --- */
+    /* CSS giữ nguyên cấu trúc */
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner-ring { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #1e3a8a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
     .loader-text { font-family: 'Segoe UI', sans-serif; font-weight: bold; color: #1e3a8a; letter-spacing: 1px; font-size: 14px; }
@@ -29,7 +29,6 @@
     .dev-role-label { font-size: 9px; color: #ffffff; opacity: 0.9; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 
-    /* --- CSS CẤU TRÚC CHÍNH --- */
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
     body { font-family: "Times New Roman", serif; background: #f3f4f6; padding: 16px; margin: 0; box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
@@ -137,7 +136,7 @@
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
-           data-callback="hts_giay_trang_tinh_fn"
+           data-callback="xu_ly_dangnh..."
            data-auto_prompt="false">
       </div>
       <div class="d-flex justify-content-center w-100 mt-2">
@@ -170,10 +169,10 @@
 
     <div id="so_wrapper">
       <div class="tab-container">
-        <button class="tab-button active" onclick="hts_mai_nha_cao_fn('TabNhapLieu', this)">📝 GHI SỔ</button>
-        <button class="tab-button" onclick="hts_mai_nha_cao_fn('TabTimKiem', this)">🔍 THỐNG KÊ</button>
-        <button class="tab-button" onclick="hts_mai_nha_cao_fn('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
-        <button class="tab-button" onclick="hts_but_chi_den_fn()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
+        <button class="tab-button active" onclick="chuyen_ta...('TabNhapLieu', this)">📝 GHI SỔ</button>
+        <button class="tab-button" onclick="chuyen_ta...('TabTimKiem', this)">🔍 THỐNG KÊ</button>
+        <button class="tab-button" onclick="chuyen_ta...('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
+        <button class="tab-button" onclick="dang_xu...()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
       </div>
       
       <div id="TabNhapLieu" class="tab-content active"></div>
@@ -199,205 +198,201 @@
     <div id="access_denied_msg" style="display:none; text-align:center; margin-top:50px;">
       <h2 style="color:#b91c1c;">⛔ TRUY CẬP BỊ TỪ CHỐI</h2>
       <p id="denied_reason" style="font-weight:bold;"></p>
-      <button class="modal-btn" onclick="hts_but_chi_den_fn()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
+      <button class="modal-btn" onclick="dang_xu...()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    function hts_ghe_go_gay_fn() {
-  // Thêm lệnh này để vô hiệu hóa hoàn toàn việc kiểm tra dùng thử
-  return true; 
-  
-  /* Các đoạn mã phía dưới được giữ nguyên để bảo toàn cấu trúc 
-     nhưng sẽ không bao giờ bị kích hoạt */
-  const hts_mua_xuan_den_date = new Date(2026, 2, 15); 
-  const hts_chim_en_bay_num = 14; 
-  
-  const hts_la_thu_vang_date = new Date(hts_mua_xuan_den_date);
-  hts_la_thu_vang_date.setDate(hts_mua_xuan_den_date.getDate() + hts_chim_en_bay_num);
-  const hts_hom_nay_sang_date = new Date();
+    function kiem_tra_dungth...() {
+      const ngay_bd_t... = new Date(2026, 1, 7); 
+      const songay_th... = 14; 
+      
+      const ngay_hethan_t... = new Date(ngay_bd_t...);
+      ngay_hethan_t....setDate(ngay_bd_t....getDate() + songay_th...);
+      const hn_t... = new Date();
 
-  const hts_hop_thoai_go_el = document.getElementById('trialModal');
-  const hts_nut_bam_xanh_el = document.getElementById('btnTrialOk');
-  const hts_tin_nhan_chao_el = document.getElementById('trialMessage');
-  const hts_tieu_de_sach_el = document.getElementById('trialTitle');
+      const hop_th... = document.getElementById('trialModal');
+      const nut_ok_th... = document.getElementById('btnTrialOk');
+      const msg_th... = document.getElementById('trialMessage');
+      const tieude_th... = document.getElementById('trialTitle');
 
-  if (!hts_hop_thoai_go_el || !hts_nut_bam_xanh_el) return true;
+      if (!hop_th... || !nut_ok_th...) return true;
 
-  if (hts_hom_nay_sang_date > hts_la_thu_vang_date) {
-    hts_tieu_de_sach_el.innerText = "Hết hạn dùng thử";
-    hts_tieu_de_sach_el.style.color = "#dc3545"; 
-    hts_tin_nhan_chao_el.innerHTML = "Thời gian dùng thử 14 ngày của bạn đã kết thúc.<br>Vui lòng liên hệ Admin (Hoàng Ngọc Lâm) để gia hạn phần mềm.";
-    
-    hts_nut_bam_xanh_el.innerText = 'Thoát hệ thống';
-    hts_nut_bam_xanh_el.classList.remove('btn-primary');
-    hts_nut_bam_xanh_el.classList.add('btn-danger');
-    hts_nut_bam_xanh_el.removeAttribute('data-bs-dismiss'); 
-    
-    hts_nut_bam_xanh_el.onclick = function() {
-      window.location.href = "https://www.google.com"; 
-    };
-    
-    const hts_khoi_tao_vong_obj = new bootstrap.Modal(hts_hop_thoai_go_el, { backdrop: 'static', keyboard: false });
-    hts_khoi_tao_vong_obj.show();
-    
-    const hts_man_hinh_chao_el = document.getElementById('welcome-screen');
-    if(hts_man_hinh_chao_el) hts_man_hinh_chao_el.style.display = 'none';
-    document.getElementById('main-app').style.display = 'none';
-    
-    return false; 
-  }
-  
-  const hts_khoi_tao_vong_obj = new bootstrap.Modal(hts_hop_thoai_go_el, { backdrop: 'static', keyboard: false });
-  hts_khoi_tao_vong_obj.show();
-  return true; 
-}
+      if (hn_t... > ngay_hethan_t...) {
+        tieude_th....innerText = "Hết hạn dùng thử";
+        tieude_th....style.color = "#dc3545"; 
+        msg_th....innerHTML = "Thời gian dùng thử 14 ngày của bạn đã kết thúc.<br>Vui lòng liên hệ Admin (Hoàng Ngọc Lâm) để gia hạn phần mềm.";
+        
+        nut_ok_th....innerText = 'Thoát hệ thống';
+        nut_ok_th....classList.remove('btn-primary');
+        nut_ok_th....classList.add('btn-danger');
+        nut_ok_th....removeAttribute('data-bs-dismiss'); 
+        
+        nut_ok_th....onclick = function() {
+          window.location.href = "https://www.google.com"; 
+        };
+        
+        const ht_th... = new bootstrap.Modal(hop_th..., { backdrop: 'static', keyboard: false });
+        ht_th....show();
+        
+        const mh_chao_t... = document.getElementById('welcome-screen');
+        const ungdung_t... = document.getElementById('main-app');
+        if(mh_chao_t...) mh_chao_t....style.display = 'none';
+        if(ungdung_t...) ungdung_t....style.display = 'none';
+        
+        return false; 
+      }
+      
+      const ht_th... = new bootstrap.Modal(hop_th..., { backdrop: 'static', keyboard: false });
+      ht_th....show();
+      return true; 
+    }
 
-    const hts_khoa_thu_dien_str = "e" + "m" + "a" + "i" + "l";
-    const hts_khoa_phien_str = "SKT_USER_" + hts_khoa_thu_dien_str.toUpperCase();
+    const b_thu_dient... = "e" + "m" + "a" + "i" + "l";
+    const tk_phien_dient... = "SKT_USER_" + b_thu_dient....toUpperCase();
 
-    window.HTS_VIRTUAL_STORAGE_OBJ = {};
-    function hts_tu_sat_dong_fn(key, value) {
-        window.HTS_VIRTUAL_STORAGE_OBJ[key] = value;
+    window.SKT_VIRTUAL_STORAGE = {};
+    function luu_tr_t... (key, value) {
+        window.SKT_VIRTUAL_STORAGE[key] = value;
         try { 
             sessionStorage.setItem(key, value); 
-            if (key === "SKT_USER_ID") sessionStorage.setItem(hts_khoa_phien_str, value); 
-        } catch(hts_loi_bo_nho_obj) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
+            if (key === "SKT_USER_ID") sessionStorage.setItem(tk_phien_dient..., value); 
+        } catch(loi...) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
     }
-    function hts_den_sang_mo_fn(key) {
+    function lay_tr_t...(key) {
         try { 
-            let hts_gia_tri_nhan_str = sessionStorage.getItem(key);
-            if (!hts_gia_tri_nhan_str && key === "SKT_USER_ID") hts_gia_tri_nhan_str = sessionStorage.getItem(hts_khoa_phien_str);
-            return hts_gia_tri_nhan_str || window.HTS_VIRTUAL_STORAGE_OBJ[key] || null; 
-        } catch(hts_loi_bo_nho_obj) { return window.HTS_VIRTUAL_STORAGE_OBJ[key] || null; }
+            let giatri... = sessionStorage.getItem(key);
+            if (!giatri... && key === "SKT_USER_ID") giatri... = sessionStorage.getItem(tk_phien_dient...);
+            return giatri... || window.SKT_VIRTUAL_STORAGE[key] || null; 
+        } catch(loi...) { return window.SKT_VIRTUAL_STORAGE[key] || null; }
     }
-    function hts_quat_tran_quay_fn(key) {
-        delete window.HTS_VIRTUAL_STORAGE_OBJ[key];
+    function xoa_tr_t...(key) {
+        delete window.SKT_VIRTUAL_STORAGE[key];
         try { 
             sessionStorage.removeItem(key); 
-            if (key === "SKT_USER_ID") sessionStorage.removeItem(hts_khoa_phien_str);
-        } catch(hts_loi_bo_nho_obj) { console.warn("Chrome chặn xóa"); }
+            if (key === "SKT_USER_ID") sessionStorage.removeItem(tk_phien_dient...);
+        } catch(loi...) { console.warn("Chrome chặn xóa"); }
     }
 
     window.onload = function() {
-      if (!hts_ghe_go_gay_fn()) return; 
+      if (!kiem_tra_dungth...()) return; 
 
-      const hts_id_luu_tru_str = hts_den_sang_mo_fn("SKT_USER_ID");
-      if(hts_id_luu_tru_str) {
-        window.hts_qua_tao_do_str = hts_id_luu_tru_str; 
+      const id_luu... = lay_tr_t...("SKT_USER_ID");
+      if(id_luu...) {
+        window.SKT_GLOBAL_ID = id_luu...; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        hts_thuoc_ke_dai_fn();
+        kiem_tra_quy...();
       }
     };
 
-    function hts_giay_trang_tinh_fn(response) {
-      if (!hts_ghe_go_gay_fn()) return; 
+    function xu_ly_dangnh...(response) {
+      if (!kiem_tra_dungth...()) return; 
 
       try {
-        const hts_du_lieu_giai_ma_obj = hts_muc_xanh_dam_fn(response.credential);
-        const hts_gia_tri_dinh_danh_str = hts_du_lieu_giai_ma_obj[hts_khoa_thu_dien_str]; 
+        const d_giai... = giai_ma_chu...(response.credential);
+        const id_vl... = d_giai...[b_thu_dient...]; 
         
-        hts_tu_sat_dong_fn("SKT_USER_ID", hts_gia_tri_dinh_danh_str);
-        window.hts_qua_tao_do_str = hts_gia_tri_dinh_danh_str; 
+        luu_tr_t...("SKT_USER_ID", id_vl...);
+        window.SKT_GLOBAL_ID = id_vl...; 
         
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
         
-        hts_thuoc_ke_dai_fn();
-      } catch (hts_loi_ma_hoa_obj) {
-        alert("Lỗi giải mã Google: " + hts_loi_ma_hoa_obj.message);
+        kiem_tra_quy...();
+      } catch (loi...) {
+        alert("Lỗi giải mã Google: " + loi....message);
       }
     }
 
-    function hts_muc_xanh_dam_fn(token) {
-      let hts_chuoi_cat_ghep_str = token.split('.')[1];
-      let hts_chuoi_nen_gon_str = hts_chuoi_cat_ghep_str.replace(/-/g, '+').replace(/_/g, '/');
-      let hts_chuoi_hoan_chinh_str = decodeURIComponent(atob(hts_chuoi_nen_gon_str).split('').map(function(hts_ky_tu_le_str) {
-          return '%' + ('00' + hts_ky_tu_le_str.charCodeAt(0).toString(16)).slice(-2);
+    function giai_ma_chu...(token) {
+      let b64_url... = token.split('.')[1];
+      let b64_ch... = b64_url....replace(/-/g, '+').replace(/_/g, '/');
+      let ch_json... = decodeURIComponent(atob(b64_ch...).split('').map(function(c_th...) {
+          return '%' + ('00' + c_th....charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
-      return JSON.parse(hts_chuoi_hoan_chinh_str);
+      return JSON.parse(ch_json...);
     }
 
-    function hts_but_chi_den_fn() {
-      hts_quat_tran_quay_fn("SKT_USER_ID");
-      window.hts_qua_tao_do_str = null;
+    function dang_xu...() {
+      xoa_tr_t...("SKT_USER_ID");
+      window.SKT_GLOBAL_ID = null;
       location.reload(); 
     }
 
-    function hts_thuoc_ke_dai_fn() {
-      let hts_id_hien_tai_str = window.hts_qua_tao_do_str || hts_den_sang_mo_fn("SKT_USER_ID") || "";
-      hts_id_hien_tai_str = String(hts_id_hien_tai_str).toLowerCase().trim();
+    function kiem_tra_quy...() {
+      let id_hien... = window.SKT_GLOBAL_ID || lay_tr_t...("SKT_USER_ID") || "";
+      id_hien... = String(id_hien...).toLowerCase().trim();
 
       google.script.run
-        .withSuccessHandler(data => {
-          if (data.hasPermission === false) {
-            hts_quat_tran_quay_fn("SKT_USER_ID");
-            window.hts_qua_tao_do_str = null;
+        .withSuccessHandler(kq_d... => {
+          if (kq_d....hasPermission === false) {
+            xoa_tr_t...("SKT_USER_ID");
+            window.SKT_GLOBAL_ID = null;
 
             document.getElementById('instant-loader').style.display = 'none';
             document.getElementById('main-wrapper').style.display = 'block';
             setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
             
-            const hts_tieu_de_chinh_el = document.querySelector('.school-header');
-            if (hts_tieu_de_chinh_el) hts_tieu_de_chinh_el.style.display = 'none';
+            const tieude_t... = document.querySelector('.school-header');
+            if (tieude_t...) tieude_t....style.display = 'none';
             document.getElementById('so_wrapper').style.display = 'none';
             document.getElementById('MinhChungContainer').style.display = 'none';
             
             document.getElementById('access_denied_msg').style.display = 'block';
-            document.getElementById('denied_reason').innerText = data.message;
+            document.getElementById('denied_reason').innerText = kq_d....message;
           } else {
-            let hts_la_nguoi_quen_bol = false;
-            if(data.giaoVienData && data.giaoVienData.some(hts_doi_tuong_check_obj => String(hts_doi_tuong_check_obj.uid || hts_doi_tuong_check_obj[hts_khoa_thu_dien_str]).toLowerCase() === hts_id_hien_tai_str)) hts_la_nguoi_quen_bol = true;
-            if(data.nguoiKTData && data.nguoiKTData.some(hts_doi_tuong_check_obj => String(hts_doi_tuong_check_obj.uid || hts_doi_tuong_check_obj[hts_khoa_thu_dien_str]).toLowerCase() === hts_id_hien_tai_str)) hts_la_nguoi_quen_bol = true;
+            let dk_nd... = false;
+            if(kq_d....giaoVienData && kq_d....giaoVienData.some(x_th... => String(x_th....uid || x_th...[b_thu_dient...]).toLowerCase() === id_hien...)) dk_nd... = true;
+            if(kq_d....nguoiKTData && kq_d....nguoiKTData.some(x_th... => String(x_th....uid || x_th...[b_thu_dient...]).toLowerCase() === id_hien...)) dk_nd... = true;
             
-            window.HTS_IS_AUTHORIZED_BOL = hts_la_nguoi_quen_bol; 
-            hts_cap_sach_moi_fn();
+            window.SKT_IS_AUTHORIZED = dk_nd...; 
+            tai_cac_modu...();
           }
         })
-        .withFailureHandler(hts_loi_ket_noi_obj => {
+        .withFailureHandler(loi... => {
            document.getElementById('instant-loader').style.display = 'none';
-           alert("Lỗi kết nối máy chủ Google: " + hts_loi_ket_noi_obj.message);
+           alert("Lỗi kết nối máy chủ Google: " + loi....message);
         })
-        .SKT_getInitialData(hts_id_hien_tai_str, new Date().getTime()); 
+        .lay_duli_dau...(id_hien..., new Date().getTime()); 
     }
 
-    async function hts_cap_sach_moi_fn() {
+    async function tai_cac_modu...() {
       try {
-        const hts_chong_bo_nho_str = "?v=" + new Date().getTime(); 
+        const tg_bo_n... = "?v=" + new Date().getTime(); 
         
-        const [hts_goi_nhap_lieu_obj, hts_goi_tim_kiem_obj, hts_goi_minh_chung_obj] = await Promise.all([
-            fetch('./SKT_NhapLieu.html' + hts_chong_bo_nho_str),
-            fetch('./SKT_TimKiem.html' + hts_chong_bo_nho_str),
-            fetch('./SKT_MinhChung.html' + hts_chong_bo_nho_str)
+        const [kq_nl..., kq_tk..., kq_mc...] = await Promise.all([
+            fetch('./SKT_NhapLieu.html' + tg_bo_n...),
+            fetch('./SKT_TimKiem.html' + tg_bo_n...),
+            fetch('./SKT_MinhChung.html' + tg_bo_n...)
         ]);
 
-        if (!hts_goi_nhap_lieu_obj.ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
-        if (!hts_goi_tim_kiem_obj.ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
-        if (!hts_goi_minh_chung_obj.ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
+        if (!kq_nl....ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
+        if (!kq_tk....ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
+        if (!kq_mc....ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
 
-        document.getElementById('TabNhapLieu').innerHTML = await hts_goi_nhap_lieu_obj.text();
-        document.getElementById('TabTimKiem').innerHTML = await hts_goi_tim_kiem_obj.text();
-        document.getElementById('MinhChungContainer').innerHTML = await hts_goi_minh_chung_obj.text();
+        document.getElementById('TabNhapLieu').innerHTML = await kq_nl....text();
+        document.getElementById('TabTimKiem').innerHTML = await kq_tk....text();
+        document.getElementById('MinhChungContainer').innerHTML = await kq_mc....text();
 
-        hts_cua_so_mo_fn(document.getElementById('TabNhapLieu'));
-        hts_cua_so_mo_fn(document.getElementById('TabTimKiem'));
-        hts_cua_so_mo_fn(document.getElementById('MinhChungContainer'));
+        thuc_thi_m...(document.getElementById('TabNhapLieu'));
+        thuc_thi_m...(document.getElementById('TabTimKiem'));
+        thuc_thi_m...(document.getElementById('MinhChungContainer'));
 
         setTimeout(() => {
-            try { if (typeof hts_hat_mua_roi_fn === 'function') hts_hat_mua_roi_fn(); } catch(hts_loi_chay_obj) {}
-            try { if (typeof hts_may_bay_giay_fn === 'function') hts_may_bay_giay_fn(); } catch(hts_loi_chay_obj) {}
-            try { if (typeof hts_con_gio_nhe_fn === 'function' && document.getElementById('tableContent').rows.length === 0) hts_con_gio_nhe_fn(); } catch(hts_loi_chay_obj) {}
+            try { if (typeof tai_duli... === 'function') tai_duli...(); } catch(loi...) {}
+            try { if (typeof tai_thu_m... === 'function') tai_thu_m...(); } catch(loi...) {}
+            try { if (typeof them_dong_mo... === 'function' && document.getElementById('tableContent').rows.length === 0) them_dong_mo...(); } catch(loi...) {}
             
-            if (window.HTS_IS_AUTHORIZED_BOL === false) {
-               hts_dong_ho_treo_fn();
+            if (window.SKT_IS_AUTHORIZED === false) {
+               khoa_nhap_kha...();
             }
         }, 800);
 
-      } catch (hts_loi_tai_file_obj) {
-        alert("LỖI KẾT NỐI TỆP: " + hts_loi_tai_file_obj.message);
+      } catch (loi...) {
+        alert("LỖI KẾT NỐI TỆP: " + loi....message);
       }
 
       setTimeout(function() { 
@@ -407,11 +402,11 @@
       }, 500); 
     }
 
-    function hts_dong_ho_treo_fn() {
+    function khoa_nhap_kha...() {
         if (!document.getElementById('guest-lock-style')) {
-            const hts_the_dinh_dang_el = document.createElement('style');
-            hts_the_dinh_dang_el.id = 'guest-lock-style';
-            hts_the_dinh_dang_el.innerHTML = `
+            const k_th... = document.createElement('style');
+            k_th....id = 'guest-lock-style';
+            k_th....innerHTML = `
                 #so_wrapper input, 
                 #so_wrapper textarea, 
                 #so_wrapper select, 
@@ -421,26 +416,26 @@
                     opacity: 0.6 !important;
                 }
             `;
-            document.head.appendChild(hts_the_dinh_dang_el);
+            document.head.appendChild(k_th...);
         }
         
         document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>ĐỊNH DANH KHÁCH (CHỈ XEM)</span><br><br>Định danh của bạn không có trong hệ thống được cấp quyền. Bạn chỉ có thể đăng nhập, không có quyền tương tác trên ứng dụng.";
         document.getElementById('modal_overlay').style.display = 'flex';
     }
 
-    function hts_cua_so_mo_fn(element) {
-        const hts_danh_sach_ma_arr = element.querySelectorAll('script');
-        hts_danh_sach_ma_arr.forEach(hts_the_cu_el => {
-            const hts_the_moi_el = document.createElement('script');
-            Array.from(hts_the_cu_el.attributes).forEach(hts_thuoc_tinh_obj => hts_the_moi_el.setAttribute(hts_thuoc_tinh_obj.name, hts_thuoc_tinh_obj.value));
-            hts_the_moi_el.appendChild(document.createTextNode(hts_the_cu_el.innerHTML));
-            hts_the_cu_el.parentNode.replaceChild(hts_the_moi_el, hts_the_cu_el);
+    function thuc_thi_m...(element) {
+        const ds_scr... = element.querySelectorAll('script');
+        ds_scr....forEach(sc_cu... => {
+            const sc_moi... = document.createElement('script');
+            Array.from(sc_cu....attributes).forEach(thuoc_t... => sc_moi....setAttribute(thuoc_t....name, thuoc_t....value));
+            sc_moi....appendChild(document.createTextNode(sc_cu....innerHTML));
+            sc_cu....parentNode.replaceChild(sc_moi..., sc_cu...);
         });
     }
 
-    function hts_mai_nha_cao_fn(id, btn) {
-      document.querySelectorAll('.tab-content').forEach(hts_noi_dung_tab_el => hts_noi_dung_tab_el.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(hts_nut_tab_el => hts_nut_tab_el.classList.remove('active'));
+    function chuyen_ta...(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(c_th... => c_th....classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(b_th... => b_th....classList.remove('active'));
       document.getElementById(id).classList.add('active');
       if(btn) btn.classList.add('active');
     }
