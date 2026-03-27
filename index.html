@@ -4,23 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sổ Kiểm Tra Nội Bộ - TH&THCS Hợp Thành</title>
-  
   <script src="ketnoi.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <style>
-    /* CSS giữ nguyên cấu trúc */
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner-ring { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #1e3a8a; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
     .loader-text { font-family: 'Segoe UI', sans-serif; font-weight: bold; color: #1e3a8a; letter-spacing: 1px; font-size: 14px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
     #main-wrapper { opacity: 0; transition: opacity 0.5s ease; display: none; } 
-    
     #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(240, 253, 244, 0.98); z-index: 1040; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: "Times New Roman", serif; }
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
-    
     .dev-badge-container { display: flex; align-items: center; background: linear-gradient(135deg, #1e3a8a 0%, #b91c1c 100%); padding: 4px 12px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s ease; cursor: default; position: relative; overflow: hidden; }
     .dev-badge-container:hover { transform: scale(1.02); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
     .dev-icon-fly { font-size: 16px; margin-right: 8px; animation: bounce 2s infinite; }
@@ -28,76 +22,61 @@
     .dev-name-label { font-weight: 800; font-size: 11px; color: #ffeb3b; text-transform: uppercase; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); }
     .dev-role-label { font-size: 9px; color: #ffffff; opacity: 0.9; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
     body { font-family: "Times New Roman", serif; background: #f3f4f6; padding: 16px; margin: 0; box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
-
     .school-header { display: flex; align-items: center; justify-content: space-between; width: 1550px; max-width: 99%; margin: 0 auto 10px auto !important; }
     .logo-group { display: flex; align-items: center; }
     .school-logo { width: 1cm; height: 1cm; object-fit: contain; margin-right: 10px; padding: 0px; }
     .school-name { font-weight: bold; font-size: 17px; color: var(--primary-blue); text-transform: uppercase; }
     .loading-spin { background-image: url('https://i.gifer.com/ZKZg.gif') !important; background-repeat: no-repeat !important; background-position: right 8px center !important; background-size: 16px !important; background-color: #fffde7 !important; }
-    
     #so_wrapper { width: 1550px; max-width: 99%; margin: auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    
     .table-container { overflow-x: auto; margin-top: 10px; border: 1px solid var(--grid-border) !important; }
     table { width: 100%; border-collapse: collapse !important; table-layout: fixed; }
     th, td { border: 1px solid var(--grid-border) !important; }
     th { background: #eff6ff; color: var(--primary-blue); padding: 8px 4px; font-size: 14px; text-align: center; }
     td { vertical-align: middle; background: #fff; padding: 0; position: relative; } 
-    
     .cell-input { width: 100%; border: none; padding: 8px 5px; font-family: "Times New Roman"; font-size: 15px; box-sizing: border-box; display: block; outline: none; resize: none; min-height: 35px; color: #000; }
     .cell-input:disabled { background-color: #f1f5f9; color: #334155 !important; opacity: 1; -webkit-text-fill-color: #334155; }
     .cell-input::placeholder { color: #94a3b8 !important; opacity: 0.5; font-style: italic; font-size: 13px; }
     #mainTable .cell-input::placeholder { opacity: 0.4; }
-
     textarea.cell-input { overflow: hidden; resize: none; padding-top: 5px; }
     .f-input { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
     .filter-section { display: grid; grid-template-columns: 220px 220px 220px 120px 1fr; gap: 15px; margin-top: 15px; }
     .f-item:nth-child(5) { grid-column: 5; display: flex; flex-direction: column; justify-self: end; text-align: right; }
     .f-item:nth-child(5) .f-input { width: 180px; margin-left: auto; }
     .f-item span { display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #333; }
-
     .btn-save { margin-top: 20px; padding: 12px 40px; background: var(--primary-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; float: right; }
     .btn-save:disabled { background-color: #ccc; cursor: not-allowed; }
     .btn-row { padding: 4px 12px; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 10px; }
     .btn-reset { background: var(--reset-color); }
     .btn-submit { background: var(--submit-green); }
     .refresh-btn { background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; margin-left: 5px; }
-
     .status-stepper { display: flex; align-items: center; margin-top: 10px; gap: 10px; font-size: 12px; border-top: 1px dashed #eee; padding-top: 3px; }
     .step { padding: 4px 15px; border-radius: 20px; border: 1px solid var(--step-gray); transition: 0.3s; }
     .step.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
     .step.completed { background: #10b981; color: white; border-color: #10b981; }
     #user_display { margin-left: auto; font-style: italic; color: #64748b; font-size: 13px; }
-
     .ma-ho-so-cell { font-size: 14px !important; font-weight: bold; text-align: center; vertical-align: middle; background: #f9fafb; padding: 8px 5px; }
     .link-view-btn { display: inline-block; padding: 6px 15px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-weight: bold; font-size: 14px; text-decoration: none; border-radius: 4px; transition: 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
     .link-view-btn:hover { background: #2563eb; color: white; border-color: #2563eb; }
-
     .link-edit-corner { position: absolute; bottom: 2px; right: 2px; font-size: 11px; color: #d97706; cursor: pointer; opacity: 0.8; padding: 2px 4px; background: #fffbeb; border-radius: 3px; }
     .link-edit-corner:hover { opacity: 1; font-weight: bold; background: #fef3c7; color: #b45309; }
     .link-edit-corner.disabled { pointer-events: none; opacity: 0; display: none; }
-
     .tab-container { display: flex; margin-bottom: 5px; border-bottom: 2px solid #e5e7eb; }
     .tab-button { padding: 6px; background: #f3f4f6; border: 1px solid #e5e7eb; border-bottom: none; border-radius: 8px 8px 0 0; margin-right: 5px; font-weight: bold; color: #6b7280; cursor: pointer; }
     .tab-button.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
     .tab-content { display: none; padding-top: 15px; }
     .tab-content.active { display: block; }
-
     #modal_overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1085; justify-content: center; align-items: center; }
     #modal_box { background: white; padding: 30px; border-radius: 10px; text-align: center; min-width: 300px; }
     .modal-btn { background: #2563eb; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-weight: bold; }
-
     .btn-icon-del { background: none; border: none; cursor: pointer; color: #ef4444; font-size: 16px; padding: 4px; border-radius: 4px; }
     .btn-icon-del:hover { background-color: #fee2e2; }
     .btn-icon-del:disabled { color: #d1d5db; cursor: not-allowed; pointer-events: none; }
-    
     .add-row-container { text-align: left; margin-top: 5px; padding-left: 5px; }
     .btn-add-row { background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
     .btn-add-row:hover { background-color: #059669; }
-
     .btn-upload-icon { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 14px; }
     .btn-upload-icon:disabled { opacity: 0.5; cursor: not-allowed; }
     .evidence-uploaded { background-color: #f0fdf4; }
@@ -115,7 +94,7 @@
         </div>
         <h5 class="fw-bold mb-3" style="font-family: 'Segoe UI', sans-serif;" id="trialTitle">Thông báo dùng thử</h5>
         <p class="fs-5 text-secondary" style="font-family: 'Segoe UI', sans-serif;" id="trialMessage">
-          Bạn đang trong thời gian dùng thử 14 ngày. Ngày bắt đầu: 07/02/2026.
+          Đang trong thời gian dùng thử 14 ngày. Bắt đầu: 07/02/2026.
         </p>
         <button type="button" id="btnTrialOk" class="btn btn-primary px-5 mt-3 fw-bold" data-bs-dismiss="modal">Đồng ý</button>
       </div>
@@ -127,22 +106,18 @@
       <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="login-logo">
       <h2 style="color: #b91c1c; margin-top: 0; text-transform: uppercase;">Sổ Kiểm Tra Nội Bộ</h2>
       <h3 style="color: #1e3a8a; margin-bottom: 25px;">Trường TH&THCS Hợp Thành</h3>
-      
       <div class="alert alert-success text-start" style="font-size: 12px; padding: 10px; margin-bottom: 20px; border-radius: 8px; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;">
-        <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ thông tin cá nhân của Thầy/Cô.
+        <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống an toàn tuyệt đối.
       </div>
-
-      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V2.4.2026</p1>
-      
+      <p style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V2.4.2026</p>
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
-           data-callback="xu_ly_dangnh..."
+           data-callback="xly_dangnhap"
            data-auto_prompt="false">
       </div>
       <div class="d-flex justify-content-center w-100 mt-2">
          <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="continue_with" data-shape="rectangular" data-logo_alignment="left"></div>
       </div>
-      
       <div style="margin-top: 30px; font-size: 12px; color: #999; font-weight: bold;">Nhà phát triển: HOÀNG NGỌC LÂM</div>
     </div>
   </div>
@@ -169,19 +144,17 @@
 
     <div id="so_wrapper">
       <div class="tab-container">
-        <button class="tab-button active" onclick="chuyen_ta...('TabNhapLieu', this)">📝 GHI SỔ</button>
-        <button class="tab-button" onclick="chuyen_ta...('TabTimKiem', this)">🔍 THỐNG KÊ</button>
-        <button class="tab-button" onclick="chuyen_ta...('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
-        <button class="tab-button" onclick="dang_xu...()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
+        <button class="tab-button active" onclick="chuyen_tab('TabNhapLieu', this)">📝 GHI SỔ</button>
+        <button class="tab-button" onclick="chuyen_tab('TabTimKiem', this)">🔍 THỐNG KÊ</button>
+        <button class="tab-button" onclick="chuyen_tab('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
+        <button class="tab-button" onclick="dang_xuat()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
       </div>
-      
       <div id="TabNhapLieu" class="tab-content active"></div>
       <div id="TabTimKiem" class="tab-content"></div>
       <div id="TabHuongDan" class="tab-content">
         <h3>Thông báo:</h3>
         <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
-        <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem được nội dung cuộc kiểm tra của mình. Không thể mở được của người khác!</p>
-        <p><b> Tác giả: Hoàng Ngọc Lâm </b></p>
+        <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem nội dung kiểm tra của mình.</p>
       </div>
     </div>
 
@@ -198,246 +171,138 @@
     <div id="access_denied_msg" style="display:none; text-align:center; margin-top:50px;">
       <h2 style="color:#b91c1c;">⛔ TRUY CẬP BỊ TỪ CHỐI</h2>
       <p id="denied_reason" style="font-weight:bold;"></p>
-      <button class="modal-btn" onclick="dang_xu...()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
+      <button class="modal-btn" onclick="dang_xuat()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    function kiem_tra_dungth...() {
-      const ngay_bd_t... = new Date(2026, 1, 7); 
-      const songay_th... = 14; 
-      
-      const ngay_hethan_t... = new Date(ngay_bd_t...);
-      ngay_hethan_t....setDate(ngay_bd_t....getDate() + songay_th...);
-      const hn_t... = new Date();
-
-      const hop_th... = document.getElementById('trialModal');
-      const nut_ok_th... = document.getElementById('btnTrialOk');
-      const msg_th... = document.getElementById('trialMessage');
-      const tieude_th... = document.getElementById('trialTitle');
-
-      if (!hop_th... || !nut_ok_th...) return true;
-
-      if (hn_t... > ngay_hethan_t...) {
-        tieude_th....innerText = "Hết hạn dùng thử";
-        tieude_th....style.color = "#dc3545"; 
-        msg_th....innerHTML = "Thời gian dùng thử 14 ngày của bạn đã kết thúc.<br>Vui lòng liên hệ Admin (Hoàng Ngọc Lâm) để gia hạn phần mềm.";
-        
-        nut_ok_th....innerText = 'Thoát hệ thống';
-        nut_ok_th....classList.remove('btn-primary');
-        nut_ok_th....classList.add('btn-danger');
-        nut_ok_th....removeAttribute('data-bs-dismiss'); 
-        
-        nut_ok_th....onclick = function() {
-          window.location.href = "https://www.google.com"; 
-        };
-        
-        const ht_th... = new bootstrap.Modal(hop_th..., { backdrop: 'static', keyboard: false });
-        ht_th....show();
-        
-        const mh_chao_t... = document.getElementById('welcome-screen');
-        const ungdung_t... = document.getElementById('main-app');
-        if(mh_chao_t...) mh_chao_t....style.display = 'none';
-        if(ungdung_t...) ungdung_t....style.display = 'none';
-        
+    function kt_dungthu() {
+      const d1 = new Date(2026, 1, 7); const d2 = 14; 
+      const d3 = new Date(d1); d3.setDate(d1.getDate() + d2); const hm = new Date();
+      const m1 = document.getElementById('trialModal'); const b1 = document.getElementById('btnTrialOk');
+      const m2 = document.getElementById('trialMessage'); const t1 = document.getElementById('trialTitle');
+      if (!m1 || !b1) return true;
+      if (hm > d3) {
+        t1.innerText = "Hết hạn dùng thử"; t1.style.color = "#dc3545"; 
+        m2.innerHTML = "Thời gian dùng thử 14 ngày đã kết thúc.<br>Vui lòng liên hệ Admin.";
+        b1.innerText = 'Thoát'; b1.classList.remove('btn-primary'); b1.classList.add('btn-danger'); b1.removeAttribute('data-bs-dismiss'); 
+        b1.onclick = function() { window.location.href = "https://www.google.com"; };
+        new bootstrap.Modal(m1, { backdrop: 'static', keyboard: false }).show();
+        const sc1 = document.getElementById('welcome-screen'); const sc2 = document.getElementById('main-app');
+        if(sc1) sc1.style.display = 'none'; if(sc2) sc2.style.display = 'none';
         return false; 
       }
-      
-      const ht_th... = new bootstrap.Modal(hop_th..., { backdrop: 'static', keyboard: false });
-      ht_th....show();
-      return true; 
+      new bootstrap.Modal(m1, { backdrop: 'static', keyboard: false }).show(); return true; 
     }
 
-    const b_thu_dient... = "e" + "m" + "a" + "i" + "l";
-    const tk_phien_dient... = "SKT_USER_" + b_thu_dient....toUpperCase();
-
-    window.SKT_VIRTUAL_STORAGE = {};
-    function luu_tr_t... (key, value) {
-        window.SKT_VIRTUAL_STORAGE[key] = value;
-        try { 
-            sessionStorage.setItem(key, value); 
-            if (key === "SKT_USER_ID") sessionStorage.setItem(tk_phien_dient..., value); 
-        } catch(loi...) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
-    }
-    function lay_tr_t...(key) {
-        try { 
-            let giatri... = sessionStorage.getItem(key);
-            if (!giatri... && key === "SKT_USER_ID") giatri... = sessionStorage.getItem(tk_phien_dient...);
-            return giatri... || window.SKT_VIRTUAL_STORAGE[key] || null; 
-        } catch(loi...) { return window.SKT_VIRTUAL_STORAGE[key] || null; }
-    }
-    function xoa_tr_t...(key) {
-        delete window.SKT_VIRTUAL_STORAGE[key];
-        try { 
-            sessionStorage.removeItem(key); 
-            if (key === "SKT_USER_ID") sessionStorage.removeItem(tk_phien_dient...);
-        } catch(loi...) { console.warn("Chrome chặn xóa"); }
-    }
+    const k_e = "e" + "m" + "a" + "i" + "l"; const k_p = "SKT_USER_" + k_e.toUpperCase();
+    window.luu_ao = {};
+    function luu_an_toan(k, v) { window.luu_ao[k] = v; try { sessionStorage.setItem(k, v); if (k === "SKT_USER_ID") sessionStorage.setItem(k_p, v); } catch(e) {} }
+    function lay_an_toan(k) { try { let v = sessionStorage.getItem(k); if (!v && k === "SKT_USER_ID") v = sessionStorage.getItem(k_p); return v || window.luu_ao[k] || null; } catch(e) { return window.luu_ao[k] || null; } }
+    function xoa_an_toan(k) { delete window.luu_ao[k]; try { sessionStorage.removeItem(k); if (k === "SKT_USER_ID") sessionStorage.removeItem(k_p); } catch(e) {} }
 
     window.onload = function() {
-      if (!kiem_tra_dungth...()) return; 
-
-      const id_luu... = lay_tr_t...("SKT_USER_ID");
-      if(id_luu...) {
-        window.SKT_GLOBAL_ID = id_luu...; 
+      if (!kt_dungthu()) return; 
+      const luu = lay_an_toan("SKT_USER_ID");
+      if(luu) {
+        window.SKT_GLOBAL_ID = luu; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        kiem_tra_quy...();
+        kt_quyen_tai();
       }
     };
 
-    function xu_ly_dangnh...(response) {
-      if (!kiem_tra_dungth...()) return; 
-
+    function xly_dangnhap(rp) {
+      if (!kt_dungthu()) return; 
       try {
-        const d_giai... = giai_ma_chu...(response.credential);
-        const id_vl... = d_giai...[b_thu_dient...]; 
-        
-        luu_tr_t...("SKT_USER_ID", id_vl...);
-        window.SKT_GLOBAL_ID = id_vl...; 
-        
+        const pl = giai_ma_jwt(rp.credential); const vi = pl[k_e]; 
+        luu_an_toan("SKT_USER_ID", vi); window.SKT_GLOBAL_ID = vi; 
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('instant-loader').style.display = 'flex';
-        
-        kiem_tra_quy...();
-      } catch (loi...) {
-        alert("Lỗi giải mã Google: " + loi....message);
-      }
+        kt_quyen_tai();
+      } catch (loi) { alert("Lỗi mã: " + loi.message); }
     }
 
-    function giai_ma_chu...(token) {
-      let b64_url... = token.split('.')[1];
-      let b64_ch... = b64_url....replace(/-/g, '+').replace(/_/g, '/');
-      let ch_json... = decodeURIComponent(atob(b64_ch...).split('').map(function(c_th...) {
-          return '%' + ('00' + c_th....charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(ch_json...);
+    function giai_ma_jwt(tk) {
+      let b1 = tk.split('.')[1]; let b2 = b1.replace(/-/g, '+').replace(/_/g, '/');
+      let b3 = decodeURIComponent(atob(b2).split('').map(function(c) { return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); }).join(''));
+      return JSON.parse(b3);
     }
 
-    function dang_xu...() {
-      xoa_tr_t...("SKT_USER_ID");
-      window.SKT_GLOBAL_ID = null;
-      location.reload(); 
-    }
+    function dang_xuat() { xoa_an_toan("SKT_USER_ID"); window.SKT_GLOBAL_ID = null; location.reload(); }
 
-    function kiem_tra_quy...() {
-      let id_hien... = window.SKT_GLOBAL_ID || lay_tr_t...("SKT_USER_ID") || "";
-      id_hien... = String(id_hien...).toLowerCase().trim();
+    function kt_quyen_tai() {
+      let idc = window.SKT_GLOBAL_ID || lay_an_toan("SKT_USER_ID") || "";
+      idc = String(idc).toLowerCase().trim();
 
       google.script.run
-        .withSuccessHandler(kq_d... => {
-          if (kq_d....hasPermission === false) {
-            xoa_tr_t...("SKT_USER_ID");
-            window.SKT_GLOBAL_ID = null;
-
-            document.getElementById('instant-loader').style.display = 'none';
-            document.getElementById('main-wrapper').style.display = 'block';
+        .withSuccessHandler(dt => {
+          if (dt.hasPermission === false) {
+            xoa_an_toan("SKT_USER_ID"); window.SKT_GLOBAL_ID = null;
+            document.getElementById('instant-loader').style.display = 'none'; document.getElementById('main-wrapper').style.display = 'block';
             setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
-            
-            const tieude_t... = document.querySelector('.school-header');
-            if (tieude_t...) tieude_t....style.display = 'none';
-            document.getElementById('so_wrapper').style.display = 'none';
-            document.getElementById('MinhChungContainer').style.display = 'none';
-            
-            document.getElementById('access_denied_msg').style.display = 'block';
-            document.getElementById('denied_reason').innerText = kq_d....message;
+            const hd = document.querySelector('.school-header'); if (hd) hd.style.display = 'none';
+            document.getElementById('so_wrapper').style.display = 'none'; document.getElementById('MinhChungContainer').style.display = 'none';
+            document.getElementById('access_denied_msg').style.display = 'block'; document.getElementById('denied_reason').innerText = dt.message;
           } else {
-            let dk_nd... = false;
-            if(kq_d....giaoVienData && kq_d....giaoVienData.some(x_th... => String(x_th....uid || x_th...[b_thu_dient...]).toLowerCase() === id_hien...)) dk_nd... = true;
-            if(kq_d....nguoiKTData && kq_d....nguoiKTData.some(x_th... => String(x_th....uid || x_th...[b_thu_dient...]).toLowerCase() === id_hien...)) dk_nd... = true;
-            
-            window.SKT_IS_AUTHORIZED = dk_nd...; 
-            tai_cac_modu...();
+            let ch = false;
+            if(dt.giaoVienData && dt.giaoVienData.some(x => String(x.uid || x[k_e]).toLowerCase() === idc)) ch = true;
+            if(dt.nguoiKTData && dt.nguoiKTData.some(x => String(x.uid || x[k_e]).toLowerCase() === idc)) ch = true;
+            window.SKT_IS_AUTHORIZED = ch; tai_hethong();
           }
         })
-        .withFailureHandler(loi... => {
-           document.getElementById('instant-loader').style.display = 'none';
-           alert("Lỗi kết nối máy chủ Google: " + loi....message);
-        })
-        .lay_duli_dau...(id_hien..., new Date().getTime()); 
+        .withFailureHandler(er => { document.getElementById('instant-loader').style.display = 'none'; alert("Lỗi mạng: " + er.message); })
+        .lay_dldau(idc, new Date().getTime()); 
     }
 
-    async function tai_cac_modu...() {
+    async function tai_hethong() {
       try {
-        const tg_bo_n... = "?v=" + new Date().getTime(); 
-        
-        const [kq_nl..., kq_tk..., kq_mc...] = await Promise.all([
-            fetch('./SKT_NhapLieu.html' + tg_bo_n...),
-            fetch('./SKT_TimKiem.html' + tg_bo_n...),
-            fetch('./SKT_MinhChung.html' + tg_bo_n...)
-        ]);
-
-        if (!kq_nl....ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
-        if (!kq_tk....ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
-        if (!kq_mc....ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
-
-        document.getElementById('TabNhapLieu').innerHTML = await kq_nl....text();
-        document.getElementById('TabTimKiem').innerHTML = await kq_tk....text();
-        document.getElementById('MinhChungContainer').innerHTML = await kq_mc....text();
-
-        thuc_thi_m...(document.getElementById('TabNhapLieu'));
-        thuc_thi_m...(document.getElementById('TabTimKiem'));
-        thuc_thi_m...(document.getElementById('MinhChungContainer'));
-
+        const cb = "?v=" + new Date().getTime(); 
+        const [r1, r2, r3] = await Promise.all([ fetch('./SKT_NhapLieu.html' + cb), fetch('./SKT_TimKiem.html' + cb), fetch('./SKT_MinhChung.html' + cb) ]);
+        if (!r1.ok || !r2.ok || !r3.ok) throw new Error("Không tìm thấy tệp.");
+        document.getElementById('TabNhapLieu').innerHTML = await r1.text();
+        document.getElementById('TabTimKiem').innerHTML = await r2.text();
+        document.getElementById('MinhChungContainer').innerHTML = await r3.text();
+        chay_ma(document.getElementById('TabNhapLieu')); chay_ma(document.getElementById('TabTimKiem')); chay_ma(document.getElementById('MinhChungContainer'));
         setTimeout(() => {
-            try { if (typeof tai_duli... === 'function') tai_duli...(); } catch(loi...) {}
-            try { if (typeof tai_thu_m... === 'function') tai_thu_m...(); } catch(loi...) {}
-            try { if (typeof them_dong_mo... === 'function' && document.getElementById('tableContent').rows.length === 0) them_dong_mo...(); } catch(loi...) {}
-            
-            if (window.SKT_IS_AUTHORIZED === false) {
-               khoa_nhap_kha...();
-            }
+            try { if (typeof tai_dl === 'function') tai_dl(); } catch(e) {}
+            try { if (typeof tai_tm === 'function') tai_tm(); } catch(e) {}
+            try { if (typeof them_dong === 'function' && document.getElementById('tableContent').rows.length === 0) them_dong(); } catch(e) {}
+            if (window.SKT_IS_AUTHORIZED === false) khoa_khach();
         }, 800);
-
-      } catch (loi...) {
-        alert("LỖI KẾT NỐI TỆP: " + loi....message);
-      }
-
+      } catch (e) { alert("LỖI: " + e.message); }
       setTimeout(function() { 
-          document.getElementById('instant-loader').style.display = 'none'; 
-          document.getElementById('main-wrapper').style.display = 'block';
+          document.getElementById('instant-loader').style.display = 'none'; document.getElementById('main-wrapper').style.display = 'block';
           setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
       }, 500); 
     }
 
-    function khoa_nhap_kha...() {
+    function khoa_khach() {
         if (!document.getElementById('guest-lock-style')) {
-            const k_th... = document.createElement('style');
-            k_th....id = 'guest-lock-style';
-            k_th....innerHTML = `
-                #so_wrapper input, 
-                #so_wrapper textarea, 
-                #so_wrapper select, 
-                #so_wrapper button:not(.tab-button):not(.modal-btn) {
-                    pointer-events: none !important;
-                    background-color: #f1f5f9 !important;
-                    opacity: 0.6 !important;
-                }
-            `;
-            document.head.appendChild(k_th...);
+            const st = document.createElement('style'); st.id = 'guest-lock-style';
+            st.innerHTML = `#so_wrapper input, #so_wrapper textarea, #so_wrapper select, #so_wrapper button:not(.tab-button):not(.modal-btn) { pointer-events: none !important; background-color: #f1f5f9 !important; opacity: 0.6 !important; }`;
+            document.head.appendChild(st);
         }
-        
-        document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>ĐỊNH DANH KHÁCH (CHỈ XEM)</span><br><br>Định danh của bạn không có trong hệ thống được cấp quyền. Bạn chỉ có thể đăng nhập, không có quyền tương tác trên ứng dụng.";
+        document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>ĐỊNH DANH KHÁCH</span><br><br>Định danh không có quyền tương tác.";
         document.getElementById('modal_overlay').style.display = 'flex';
     }
 
-    function thuc_thi_m...(element) {
-        const ds_scr... = element.querySelectorAll('script');
-        ds_scr....forEach(sc_cu... => {
-            const sc_moi... = document.createElement('script');
-            Array.from(sc_cu....attributes).forEach(thuoc_t... => sc_moi....setAttribute(thuoc_t....name, thuoc_t....value));
-            sc_moi....appendChild(document.createTextNode(sc_cu....innerHTML));
-            sc_cu....parentNode.replaceChild(sc_moi..., sc_cu...);
+    function chay_ma(el) {
+        const sc = el.querySelectorAll('script');
+        sc.forEach(os => {
+            const ns = document.createElement('script');
+            Array.from(os.attributes).forEach(a => ns.setAttribute(a.name, a.value));
+            ns.appendChild(document.createTextNode(os.innerHTML));
+            os.parentNode.replaceChild(ns, os);
         });
     }
 
-    function chuyen_ta...(id, btn) {
-      document.querySelectorAll('.tab-content').forEach(c_th... => c_th....classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(b_th... => b_th....classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if(btn) btn.classList.add('active');
+    function chuyen_tab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active'); if(btn) btn.classList.add('active');
     }
   </script>
 </body>
