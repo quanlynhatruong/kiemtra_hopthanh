@@ -1,62 +1,42 @@
-/* ==========================================================================
-   Tệp: ketnoi.js - Trạm kết nối Github Pages <-> Google Apps Script
-   ========================================================================== */
+const url_app = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec"; 
 
-const HTS_WEB_APP_URL_STR = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec"; 
+let tk_ngdu = "";
+try { tk_ngdu = sessionStorage.getItem("SKT_USER_ACCOUNT") || sessionStorage.getItem("SKT_USER_EMAIL") || ""; } catch(loi) {}
 
-let hts_tai_khoan_hien_tai_str = "";
-try { hts_tai_khoan_hien_tai_str = sessionStorage.getItem("SKT_USER_ACCOUNT") || sessionStorage.getItem("SKT_USER_EMAIL") || ""; } catch(e) { }
+const google = { script: { run: tao_dt() } };
 
-const google = {
-    script: {
-        run: hts_xe_dap_con_fn()
-    }
-};
-
-function hts_xe_dap_con_fn(successCb = null, failureCb = null) {
+function tao_dt(s_cb = null, f_cb = null) {
     return new Proxy({}, {
-        get: function(target, prop) {
-            if (prop === 'withSuccessHandler') return function(cb) { return hts_xe_dap_con_fn(cb, failureCb); };
-            if (prop === 'withFailureHandler') return function(cb) { return hts_xe_dap_con_fn(successCb, cb); };
-            
-            return function(...args) {
-                try {
-                    hts_tai_khoan_hien_tai_str = window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || sessionStorage.getItem("SKT_USER_EMAIL") || "";
-                } catch(e) {
-                    hts_tai_khoan_hien_tai_str = window.hts_qua_tao_do_str || "";
-                }
-                hts_tau_hoa_chay_fn(prop, args, successCb, failureCb);
+        get: function(t, p) {
+            if (p === 'withSuccessHandler') return function(cb) { return tao_dt(cb, f_cb); };
+            if (p === 'withFailureHandler') return function(cb) { return tao_dt(s_cb, cb); };
+            return function(...m_ts) {
+                try { tk_ngdu = window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || sessionStorage.getItem("SKT_USER_EMAIL") || ""; } catch(loi) { tk_ngdu = window.SKT_GLOBAL_ACCOUNT || ""; }
+                thuc_thi(p, m_ts, s_cb, f_cb);
             };
         }
     });
 }
 
-function hts_tau_hoa_chay_fn(action, argsArray, onSuccess, onFailure) {
-    let params = {};
-    if (action === "SKT_getRecordByMaHS") params = { maHS: argsArray[0] };
-    else if (action === "SKT_saveRecord") params = { dataArray: argsArray[0] };
-    else if (action === "SKT_submitFinalRecord") params = { dataArray: argsArray[0] };
-    else if (action === "SKT_deleteSingleRowNhatKy") params = { maHS: argsArray[0] };
-    else if (action === "SKT_uploadMultipleFilesToDrive") params = { filesData: argsArray[0], maHoSo: argsArray[1], folderId: argsArray[2], oldUrl: argsArray[3], writeMode: argsArray[4] };
-    else if (action === "SKT_uploadFolderEvidence") params = { parentId: argsArray[0], folderName: argsArray[1], filesData: argsArray[2], oldUrl: argsArray[3], writeMode: argsArray[4] };
-    else if (action === "SKT_searchRecords") params = { criteria: argsArray[0] };
-    else if (action === "SKT_createReportDoc") params = { criteria: argsArray[0] };
-    else if (action === "SKT_getInitialData") params = { account: argsArray[0], ts: argsArray[1] };
-    else if (action === "SKT_getSubFolders") params = {};
-    else if (action === "SKT_getSearchFilterData") params = {};
-    else if (action === "SKT_getUpdatedMaHoSoList") params = {};
+function thuc_thi(hd, m_ts, s_cb, f_cb) {
+    let ts = {};
+    if (hd === "lay_dldau") ts = { account: m_ts[0], cb: m_ts[1] };
+    else if (hd === "lay_hs") ts = { mhs: m_ts[0] };
+    else if (hd === "luu_bg") ts = { mng: m_ts[0] };
+    else if (hd === "nop_bg") ts = { mng: m_ts[0] };
+    else if (hd === "xoa_bg") ts = { mhs: m_ts[0] };
+    else if (hd === "tai_tep") ts = { dt: m_ts[0], mhs: m_ts[1], id: m_ts[2], url: m_ts[3], cd: m_ts[4] };
+    else if (hd === "tai_tmu") ts = { pid: m_ts[0], ten: m_ts[1], dt: m_ts[2], url: m_ts[3], cd: m_ts[4] };
+    else if (hd === "tim_kiem") ts = { tc: m_ts[0] };
+    else if (hd === "tao_bc") ts = { tc: m_ts[0] };
+    else if (hd === "lay_tmu") ts = {};
+    else if (hd === "lay_loc") ts = {};
+    else if (hd === "lay_mhs") ts = {};
 
-    fetch(HTS_WEB_APP_URL_STR, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: action, params: params, account: hts_tai_khoan_hien_tai_str, email: hts_tai_khoan_hien_tai_str })
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.status === "success") { if (onSuccess) onSuccess(res.data); } 
-        else { if (onFailure) onFailure(new Error(res.message)); else alert("Lỗi Server: " + res.message); }
-    })
-    .catch(err => {
-        if (onFailure) onFailure(err); else console.error("Lỗi Fetch:", err);
-    });
+    fetch(url_app, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: hd, params: ts, account: tk_ngdu, email: tk_ngdu })
+    }).then(r => r.json()).then(r => {
+        if (r.status === "success") { if (s_cb) s_cb(r.data); } else { if (f_cb) f_cb(new Error(r.message)); else alert("Lỗi Máy chủ: " + r.message); }
+    }).catch(l => { if (f_cb) f_cb(l); });
 }
