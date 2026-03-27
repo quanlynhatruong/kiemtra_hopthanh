@@ -9,563 +9,269 @@
   <div class="header-card">
    <h1 style="text-align:center; color:var(--brand-red); margin-top:0; font-family: 'Times New Roman', serif; font-size: 22px; font-weight: bold;">SỔ KIỂM TRA NỘI BỘ TRƯỜNG TH&THCS HỢP THÀNH</h1>
     <div class="filter-section">
-      <div class="f-item"><span>Giáo viên</span><select id="cbGiaoVien" class="f-input" onchange="hts_tia_chop_sang_fn('GV')"></select></div>
-      <div class="f-item"><span>Người kiểm tra</span><select id="cbNguoiKiemTra" class="f-input" onchange="hts_tia_chop_sang_fn('NKT')"></select></div>
-      <div class="f-item"><span>Bộ phận</span><select id="cbBoPhan" class="f-input" onchange="hts_sao_bang_bay_fn()"></select></div>
+      <div class="f-item"><span>Giáo viên</span><select id="cbGiaoVien" class="f-input" onchange="khi_ngdu_doi('GV')"></select></div>
+      <div class="f-item"><span>Người kiểm tra</span><select id="cbNguoiKiemTra" class="f-input" onchange="khi_ngdu_doi('NKT')"></select></div>
+      <div class="f-item"><span>Bộ phận</span><select id="cbBoPhan" class="f-input" onchange="cn_mbp()"></select></div>
       <div class="f-item"><span>Mã bộ phận</span><input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center;"></div>
       <div class="f-item">
-        <span>Mã hồ sơ (Lịch sử) <button id="btnRefreshMaHoSo" class="refresh-btn" title="Cập nhật danh sách" onclick="hts_ruby_do_tham_fn()">↻</button></span>
-        <select id="cbMaHoSo" class="f-input" onchange="hts_tia_chop_sang_fn('MAHS')"></select>
+        <span>Mã hồ sơ (Lịch sử) <button id="btnRefreshMaHoSo" class="refresh-btn" title="Cập nhật danh sách" onclick="lam_moi_mhs()">↻</button></span>
+        <select id="cbMaHoSo" class="f-input" onchange="khi_ngdu_doi('MAHS')"></select>
       </div>
     </div>
-    
     <div class="status-stepper">
-      <div id="step1" class="step active">1. CHỜ CHỌN</div>
-      <div id="step2" class="step">2. NẠP DỮ LIỆU</div>
-      <div id="step3" class="step">3. PHÂN QUYỀN</div>
-      <div id="step4" class="step">4. SẴN SÀNG</div>
-      <button id="btnReset" class="btn-row btn-reset" onclick="hts_kim_cuong_sang_fn()">LÀM MỚI</button>
-      <button id="btnSubmit" class="btn-row btn-submit" onclick="hts_tuyet_roi_day_fn()">NỘP KẾT QUẢ</button>
+      <div id="step1" class="step active">1. CHỜ CHỌN</div><div id="step2" class="step">2. NẠP DỮ LIỆU</div><div id="step3" class="step">3. PHÂN QUYỀN</div><div id="step4" class="step">4. SẴN SÀNG</div>
+      <button id="btnReset" class="btn-row btn-reset" onclick="dat_lai_bm()">LÀM MỚI</button>
+      <button id="btnSubmit" class="btn-row btn-submit" onclick="xly_nop()">NỘP KẾT QUẢ</button>
       <span id="user_display"></span>
     </div>
   </div>
-
   <div class="table-container">
     <table id="mainTable">
       <thead>
         <tr>
-          <th style="width:35px; text-align:center;">🗑️</th>
-          <th style="width:40px">STT</th>
-          <th style="width:110px">Thời gian</th>
-          <th style="width:140px">Nội dung</th>
-          <th style="width:205px">Ưu điểm</th>
-          <th style="width:195px">Tồn tại</th>
-          <th style="width:180px">Biện pháp</th>
-          <th style="width:55px">XL HS</th>
-          <th style="width:55px">XL GD</th>
-          <th style="width:55px">XL KS</th>
-          <th style="width:55px">XL khác</th>
-          <th style="width:180px">Ý kiến người được KT</th>
-          <th style="width:135px">Ký tên</th>
-          <th style="width:100px">Hồ sơ</th>
-          <th style="width:120px">Mã HS</th>
+          <th style="width:35px; text-align:center;">🗑️</th><th style="width:40px">STT</th><th style="width:110px">Thời gian</th><th style="width:140px">Nội dung</th><th style="width:205px">Ưu điểm</th><th style="width:195px">Tồn tại</th><th style="width:180px">Biện pháp</th><th style="width:55px">XL HS</th><th style="width:55px">XL GD</th><th style="width:55px">XL KS</th><th style="width:55px">XL khác</th><th style="width:180px">Ý kiến người được KT</th><th style="width:135px">Ký tên</th><th style="width:100px">Hồ sơ</th><th style="width:120px">Mã HS</th>
         </tr>
       </thead>
       <tbody id="tableContent"></tbody>
     </table>
-    <div class="add-row-container">
-        <button type="button" class="btn-add-row" onclick="hts_con_gio_nhe_fn()"><span>➕</span> Thêm dòng</button>
-    </div>
+    <div class="add-row-container"><button type="button" class="btn-add-row" onclick="them_dong()"><span>➕</span> Thêm dòng</button></div>
   </div>
-
-  <button id="btnSave" class="btn-save" onclick="hts_bao_to_lon_fn()">LƯU KẾT QUẢ</button>
+  <button id="btnSave" class="btn-save" onclick="xly_luu()">LƯU KẾT QUẢ</button>
   <div style="clear:both"></div>
 
   <div id="customConfirmModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
-      <div class="modal-title"><span style="font-size: 20px; margin-right: 2px;">⚠️</span><span>QUAN TRỌNG</span></div>
-      Bạn có chắc chắn muốn xóa?
-      <div class="modal-text">Dữ liệu dòng này (và các file đính kèm) trong <b>'NHATKY'</b> sẽ bị xóa vĩnh viễn!<br>Hành động này không thể hoàn tác.</div>
-      <div class="modal-actions">
-        <button class="btn-cancel" onclick="hts_ho_phach_cam_fn()">Không xóa</button>
-        <button class="btn-confirm" onclick="hts_da_quy_den_fn()">Có xóa</button>
-      </div>
+      <div class="modal-title"><span style="font-size: 20px; margin-right: 2px;">⚠️</span><span>QUAN TRỌNG</span></div>Bạn có chắc chắn muốn xóa?
+      <div class="modal-text">Dữ liệu dòng này trong <b>'NHATKY'</b> sẽ bị xóa vĩnh viễn!<br>Không thể hoàn tác.</div>
+      <div class="modal-actions"><button class="btn-cancel" onclick="dong_hop_xn()">Không</button><button class="btn-confirm" onclick="xly_xoa()">Xóa</button></div>
     </div>
   </div>
-  
   <div id="modal_overlay_nhap" class="modal-overlay" style="display: none;">
-    <div class="modal-box">
-      <div id="modal_message_nhap" class="modal-text" style="font-weight:bold; margin-top:15px; font-size:16px;"></div>
-      <button class="btn-cancel" onclick="hts_vu_tru_bao_fn()">ĐÓNG</button>
-    </div>
+    <div class="modal-box"><div id="modal_message_nhap" class="modal-text" style="font-weight:bold; margin-top:15px; font-size:16px;"></div><button class="btn-cancel" onclick="dong_hop()">ĐÓNG</button></div>
   </div>
 </div>
 
 <script>
-  let hts_tai_khoan_dang_nhap_str = window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || ""; 
-  let hts_du_lieu_gv_arr = [], hts_du_lieu_nkt_arr = [], hts_du_lieu_bp_obj = {}, hts_du_lieu_ma_hs_arr = [];
-  let hts_dong_tai_len_el = null; 
-  let hts_dong_can_xoa_el = null; 
+  let tk_ngdu_nl = window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || ""; 
+  let dl_gv = [], dl_nkt = [], dl_bp = {}, dl_mhs = [];
+  let dong_tai = null; let dong_xoa = null; 
 
-  function hts_rung_cay_ram_fn(str) {
-      if (!str) return "";
-      return String(str).normalize("NFC").toLowerCase().replace(/[\s\uFEFF\xA0]+/g, '');
+  function chuan_chuoi(st) { return !st ? "" : String(st).normalize("NFC").toLowerCase().replace(/[\s\uFEFF\xA0]+/g, ''); }
+
+  function dat_hop_chon(id, vl) {
+      const e = document.getElementById(id); if(!e) return; const tg = chuan_chuoi(vl);
+      for(let i = 0; i < e.options.length; i++) { if(chuan_chuoi(e.options[i].text) === tg || chuan_chuoi(e.options[i].value) === tg) { e.selectedIndex = i; return; } }
+      if(vl && vl.trim() !== "") { e.add(new Option(vl, vl)); e.selectedIndex = e.options.length - 1; }
   }
 
-  function hts_bai_co_xanh_fn(id, val) {
-      const el = document.getElementById(id);
-      if(!el) return;
-      const target = hts_rung_cay_ram_fn(val);
-      for(let i = 0; i < el.options.length; i++) {
-          if(hts_rung_cay_ram_fn(el.options[i].text) === target || hts_rung_cay_ram_fn(el.options[i].value) === target) {
-              el.selectedIndex = i;
-              return;
-          }
-      }
-      if(val && val.trim() !== "") {
-          el.add(new Option(val, val));
-          el.selectedIndex = el.options.length - 1; 
-      }
-  }
+  function lay_ngay() { const d = new Date(); return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`; }
 
-  function hts_bau_troi_sao_fn() {
-      const d = new Date();
-      return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-  }
-
-  function hts_mat_trang_sang_fn(url) {
-      if (hts_dong_tai_len_el) {
-          const cell = hts_dong_tai_len_el.querySelector('.evidence-cell');
-          const input = hts_dong_tai_len_el.querySelector('.link-input');
-          const displayArea = hts_dong_tai_len_el.querySelector('.link-display-area');
-          const uploadBtn = hts_dong_tai_len_el.querySelector('.btn-upload-icon');
-
-          if (url && url.trim()) {
-              input.value = url;
-              cell.classList.add('evidence-uploaded'); 
-              if(uploadBtn) uploadBtn.style.display = 'none';
-              
-              const links = url.split(',').map(l => l.trim()).filter(l => l !== "");
-              let htmlLinks = links.map((l, idx) => 
-                  `<a href="${l}" target="_blank" style="display:block; text-decoration:none; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; border-radius:4px; padding:4px; margin-bottom:4px; font-size:12px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Xem tài liệu ${idx + 1}">📎 Tài liệu ${idx + 1}</a>`
-              ).join('');
-
-              displayArea.innerHTML = `
-                <div style="max-height:85px; overflow-y:auto; padding:2px; text-align:left;" class="evidence-links-container">${htmlLinks}</div>
-                <div style="text-align:center; margin-top:2px;">
-                    <span class="link-edit-corner" onclick="hts_mat_troi_do_fn(this)" title="Sửa hoặc thêm tài liệu" style="cursor:pointer; color:#b45309; font-size:11px; font-weight:bold; padding:2px 5px; background:#fef3c7; border-radius:3px; border:1px solid #fde68a; display:inline-block; width:100%; box-sizing:border-box;">✏️ Sửa / Thêm</span>
-                </div>`;
+  function tra_lk_chinh(ul) {
+      if (dong_tai) {
+          const cl = dong_tai.querySelector('.evidence-cell'); const ip = dong_tai.querySelector('.link-input');
+          const ar = dong_tai.querySelector('.link-display-area'); const ub = dong_tai.querySelector('.btn-upload-icon');
+          if (ul && ul.trim()) {
+              ip.value = ul; cl.classList.add('evidence-uploaded'); if(ub) ub.style.display = 'none';
+              const ls = ul.split(',').map(l => l.trim()).filter(l => l !== "");
+              let ht = ls.map((l, i) => `<a href="${l}" target="_blank" style="display:block; text-decoration:none; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; border-radius:4px; padding:4px; margin-bottom:4px; font-size:12px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Xem tài liệu ${i + 1}">📎 Tài liệu ${i + 1}</a>`).join('');
+              ar.innerHTML = `<div style="max-height:85px; overflow-y:auto; padding:2px; text-align:left;" class="evidence-links-container">${ht}</div><div style="text-align:center; margin-top:2px;"><span class="link-edit-corner" onclick="goi_tai(this)" title="Sửa/Thêm" style="cursor:pointer; color:#b45309; font-size:11px; font-weight:bold; padding:2px 5px; background:#fef3c7; border-radius:3px; border:1px solid #fde68a; display:inline-block; width:100%; box-sizing:border-box;">✏️ Sửa / Thêm</span></div>`;
           } else {
-              input.value = "";
-              cell.classList.remove('evidence-uploaded');
-              if(uploadBtn) uploadBtn.style.display = 'inline-block';
-              displayArea.innerHTML = "";
+              ip.value = ""; cl.classList.remove('evidence-uploaded'); if(ub) ub.style.display = 'inline-block'; ar.innerHTML = "";
           }
-          hts_dam_may_trang_fn(hts_dong_tai_len_el);
-          if(typeof hts_vu_tru_bao_fn === 'function') hts_vu_tru_bao_fn(); 
-          if(typeof hts_duong_pho_rong_fn === 'function') hts_duong_pho_rong_fn(); 
+          kt_lai_quyen(dong_tai); if(typeof dong_hop === 'function') dong_hop(); if(typeof dong_hop_tai === 'function') dong_hop_tai(); 
       }
   }
 
-  function hts_mat_troi_do_fn(btn) {
-      const row = btn.closest('tr');
-      const contentInput = row.querySelectorAll('.cell-input')[1]; 
-      if (!contentInput || !contentInput.value.trim()) {
-          hts_sao_choi_sang_fn("⚠️ Vui lòng nhập 'Nội dung' kiểm tra trước khi đính kèm minh chứng!");
-          contentInput.focus(); return;
-      }
-      hts_dong_tai_len_el = row;
-      const linkInput = row.querySelector('.link-input'); 
-      if (typeof hts_o_to_do_fn === 'function') hts_o_to_do_fn(linkInput ? linkInput.value : ""); 
-      else hts_sao_choi_sang_fn("⚠️ Chưa tải được chức năng upload!"); 
+  function goi_tai(b) {
+      const rw = b.closest('tr'); const ci = rw.querySelectorAll('.cell-input')[1]; 
+      if (!ci || !ci.value.trim()) { hien_hop("⚠️ Nhập 'Nội dung' kiểm tra trước khi đính kèm!"); ci.focus(); return; }
+      dong_tai = rw; const li = rw.querySelector('.link-input'); 
+      if (typeof mo_hop_tai === 'function') mo_hop_tai(li ? li.value : ""); else hien_hop("⚠️ Lỗi upload!"); 
   }
 
-  function hts_dam_may_trang_fn(row) {
-      const myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-      const myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-      const nkt = document.getElementById('cbNguoiKiemTra').value;
-      const isNKT = (myNKTName && hts_rung_cay_ram_fn(myNKTName) === hts_rung_cay_ram_fn(nkt));
-      
-      const editBtn = row.querySelector('.link-edit-corner');
-      if(editBtn) {
-          if(!isNKT) {
-              editBtn.classList.add('disabled'); editBtn.style.pointerEvents = 'none'; editBtn.style.opacity = '0.5'; 
-          } else {
-              editBtn.classList.remove('disabled'); editBtn.style.pointerEvents = 'auto'; editBtn.style.opacity = '1';
-          }
-      }
+  function kt_lai_quyen(rw) {
+      const mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl);
+      const mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name;
+      const nk = document.getElementById('cbNguoiKiemTra').value;
+      const ik = (mn && chuan_chuoi(mn) === chuan_chuoi(nk));
+      const eb = rw.querySelector('.link-edit-corner');
+      if(eb) { if(!ik) { eb.classList.add('disabled'); eb.style.pointerEvents = 'none'; eb.style.opacity = '0.5'; } else { eb.classList.remove('disabled'); eb.style.pointerEvents = 'auto'; eb.style.opacity = '1'; } }
   }
 
-  function hts_hat_mua_roi_fn() {
-    hts_ve_tinh_nhan_fn('initial', true);
-    google.script.run.withSuccessHandler(data => {
-      if (data.hasPermission === false) {
-          document.getElementById('main_content').style.display = 'none';
-          document.getElementById('access_denied_msg').style.display = 'block';
-          document.getElementById('denied_reason').innerText = data.message;
-          hts_ve_tinh_nhan_fn('initial', false);
-          return; 
-      }
-      
-      if(data.currentUserAccount || data.currentUserEmail) hts_tai_khoan_dang_nhap_str = data.currentUserAccount || data.currentUserEmail; 
-      hts_du_lieu_gv_arr = data.giaoVienData; 
-      hts_du_lieu_nkt_arr = data.nguoiKTData; 
-      hts_du_lieu_bp_obj = data.boPhanData; 
-      hts_du_lieu_ma_hs_arr = data.maHoSoData;
-      document.getElementById('user_display').innerText = "Đăng nhập: " + hts_tai_khoan_dang_nhap_str;
-      hts_binh_minh_len_fn('cbGiaoVien', hts_du_lieu_gv_arr); 
-      hts_binh_minh_len_fn('cbNguoiKiemTra', hts_du_lieu_nkt_arr); 
-      hts_dem_khuya_vang_fn('cbBoPhan', Object.keys(hts_du_lieu_bp_obj)); 
-      hts_pha_le_trong_fn(); 
+  function tai_dl() {
+    bat_tat_xoay('initial', true);
+    google.script.run.withSuccessHandler(d => {
+      if (d.hasPermission === false) { document.getElementById('main_content').style.display = 'none'; document.getElementById('access_denied_msg').style.display = 'block'; document.getElementById('denied_reason').innerText = d.message; bat_tat_xoay('initial', false); return; }
+      if(d.currentUserAccount) tk_ngdu_nl = d.currentUserAccount; 
+      dl_gv = d.giaoVienData; dl_nkt = d.nguoiKTData; dl_bp = d.boPhanData; dl_mhs = d.maHoSoData;
+      document.getElementById('user_display').innerText = "Đăng nhập: " + tk_ngdu_nl;
+      dien_hop('cbGiaoVien', dl_gv); dien_hop('cbNguoiKiemTra', dl_nkt); dien_hop_dg('cbBoPhan', Object.keys(dl_bp)); cn_hop_mhs(); 
 
-      let myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-      let myGVName = hts_du_lieu_gv_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-      let myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-      
-      if (myGVName && !myNKTName) {
-          hts_bai_co_xanh_fn('cbGiaoVien', myGVName);
-          document.getElementById('cbGiaoVien').disabled = true; 
-          hts_thach_anh_tim_fn();
-          hts_cau_vong_sau_fn();
-      }
-
-      hts_ve_tinh_nhan_fn('initial', false); 
-      hts_ngoc_trai_quy_fn(1);
-    }).SKT_getInitialData();
+      let mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl);
+      let mg = dl_gv.find(x => chuan_chuoi(x.account) === mc)?.name; let mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name;
+      if (mg && !mn) { dat_hop_chon('cbGiaoVien', mg); document.getElementById('cbGiaoVien').disabled = true; cn_tt_dong(); ap_quyen(); }
+      bat_tat_xoay('initial', false); dat_tt(1);
+    }).lay_dldau();
   }
 
-  function hts_tia_chop_sang_fn(type) {
-    if ((type === 'GV' || type === 'NKT') && hts_nang_som_mai_fn(type)) return;
-    if (type === 'GV') hts_thach_anh_tim_fn();
+  function khi_ngdu_doi(tp) {
+    if ((tp === 'GV' || tp === 'NKT') && kt_trung_tk(tp)) return;
+    if (tp === 'GV') cn_tt_dong();
     const cb = document.getElementById('cbMaHoSo');
-    if (type === 'MAHS' && cb.value) {
-      hts_ve_tinh_nhan_fn('full', true); hts_ngoc_trai_quy_fn(2);
+    if (tp === 'MAHS' && cb.value) {
+      bat_tat_xoay('full', true); dat_tt(2);
       google.script.run.withSuccessHandler(r => {
-        hts_ve_tinh_nhan_fn('full', false);
+        bat_tat_xoay('full', false);
         if (r && r.length > 0) { 
-            const isMultiRow = Array.isArray(r[0]); 
-            const records = isMultiRow ? r : [r];
-
-            let myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-            let myGVName = hts_du_lieu_gv_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-            let myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-            const recordGV = String(records[0][0] || ""); 
-
-            if (myGVName && !myNKTName && hts_rung_cay_ram_fn(recordGV) !== hts_rung_cay_ram_fn(myGVName)) {
-                hts_sao_choi_sang_fn("⛔ BẠN CHỈ ĐƯỢC XEM VÀ KÝ NHẬN HỒ SƠ CỦA CHÍNH MÌNH!");
-                hts_kim_cuong_sang_fn(); 
-                return;
-            }
-
-            hts_topaz_vang_fn(records); 
-            hts_ngoc_trai_quy_fn(3); 
+            const im = Array.isArray(r[0]); const rc = im ? r : [r];
+            let mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl);
+            let mg = dl_gv.find(x => chuan_chuoi(x.account) === mc)?.name; let mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name;
+            const rg = String(rc[0][0] || ""); 
+            if (mg && !mn && chuan_chuoi(rg) !== chuan_chuoi(mg)) { hien_hop("⛔ CHỈ ĐƯỢC XEM VÀ KÝ HỒ SƠ CỦA CHÍNH MÌNH!"); dat_lai_bm(); return; }
+            dien_bg_web(rc); dat_tt(3); 
             ['cbGiaoVien','cbNguoiKiemTra','cbBoPhan'].forEach(id=>document.getElementById(id).disabled=true);
-            setTimeout(() => { hts_cau_vong_sau_fn(); hts_ngoc_trai_quy_fn(4); }, 300);
-        } else hts_ngoc_trai_quy_fn(1);
-      }).SKT_getRecordByMaHS(cb.value);
-    } else hts_cau_vong_sau_fn();
+            setTimeout(() => { ap_quyen(); dat_tt(4); }, 300);
+        } else dat_tt(1);
+      }).lay_hs(cb.value);
+    } else ap_quyen();
   }
 
-  function hts_cau_vong_sau_fn() {
-    const cbGV = document.getElementById('cbGiaoVien');
-    const cbNKT = document.getElementById('cbNguoiKiemTra');
+  function ap_quyen() {
+    const cg = document.getElementById('cbGiaoVien'); const cn = document.getElementById('cbNguoiKiemTra');
+    const gv = String(cg.options[cg.selectedIndex]?.text || cg.value || "").trim();
+    const nk = String(cn.options[cn.selectedIndex]?.text || cn.value || "").trim();
+    const bs = document.getElementById('btnSave'); const bt = document.getElementById('btnSubmit'); const bc = document.querySelector('.add-row-container'); 
     
-    const gv = String(cbGV.options[cbGV.selectedIndex]?.text || cbGV.value || "").trim();
-    const nkt = String(cbNKT.options[cbNKT.selectedIndex]?.text || cbNKT.value || "").trim();
-    
-    const btnSave = document.getElementById('btnSave');
-    const btnSubmit = document.getElementById('btnSubmit');
-    const btnAddContainer = document.querySelector('.add-row-container'); 
-    
-    const myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-    const myGVName = hts_du_lieu_gv_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-    const myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
+    const mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl);
+    const mg = dl_gv.find(x => chuan_chuoi(x.account) === mc)?.name; const mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name;
+    const ig = (mg && chuan_chuoi(mg) === chuan_chuoi(gv)); const ik = (mn && chuan_chuoi(mn) === chuan_chuoi(nk));
 
-    const isGV = (myGVName && hts_rung_cay_ram_fn(myGVName) === hts_rung_cay_ram_fn(gv));
-    const isNKT = (myNKTName && hts_rung_cay_ram_fn(myNKTName) === hts_rung_cay_ram_fn(nkt));
+    if (ik) { bt.disabled = false; bt.style.opacity = "1"; } else { bt.disabled = true; bt.style.opacity = "0.5"; }
+    if (ig || ik) { bs.disabled = false; bs.style.opacity = "1"; } else { bs.disabled = true; bs.style.opacity = "0.5"; }
+    if(bc) bc.style.display = ik ? 'block' : 'none';
 
-    if (isNKT) { btnSubmit.disabled = false; btnSubmit.style.opacity = "1"; } 
-    else { btnSubmit.disabled = true; btnSubmit.style.opacity = "0.5"; }
-
-    if (isGV || isNKT) { btnSave.disabled = false; btnSave.style.opacity = "1"; } 
-    else { btnSave.disabled = true; btnSave.style.opacity = "0.5"; }
-
-    if(btnAddContainer) btnAddContainer.style.display = isNKT ? 'block' : 'none';
-
-    document.querySelectorAll('#tableContent tr').forEach(row => {
-        const ins = row.querySelectorAll('.cell-input');
-        ins.forEach((c, i) => {
-            const isYkienHoacKyTen = (i === 9 || i === 10); 
-            
-            if (isGV && isNKT) {
-                c.removeAttribute('disabled');
-            } else if (isGV) {
-                if (isYkienHoacKyTen) c.removeAttribute('disabled');
-                else c.setAttribute('disabled', 'true');
-            } else if (isNKT) {
-                if (!isYkienHoacKyTen) c.removeAttribute('disabled');
-                else c.setAttribute('disabled', 'true');
-            } else {
-                c.setAttribute('disabled', 'true');
-            }
-        });
-        
-        const btnUp = row.querySelector('.btn-upload-icon');
-        const btnDel = row.querySelector('.btn-icon-del');
-        const btnEdit = row.querySelector('.link-edit-corner'); 
-
-        if(btnUp) btnUp.disabled = !isNKT;
-        if(btnDel) { btnDel.disabled = !isNKT; btnDel.style.visibility = isNKT ? 'visible' : 'hidden'; }
-        if(btnEdit) {
-            if(!isNKT) { btnEdit.classList.add('disabled'); btnEdit.style.pointerEvents = 'none'; btnEdit.style.opacity = '0.5'; } 
-            else { btnEdit.classList.remove('disabled'); btnEdit.style.pointerEvents = 'auto'; btnEdit.style.opacity = '1'; }
-        }
-
-        const linkDisplayArea = row.querySelector('.link-display-area');
-        if (linkDisplayArea) {
-            const links = linkDisplayArea.querySelectorAll('a');
-            let lockMsg = linkDisplayArea.querySelector('.locked-file-msg');
-            const linksContainer = linkDisplayArea.querySelector('.evidence-links-container');
-
-            if (!isGV && !isNKT) {
-                if(linksContainer) linksContainer.style.display = 'none';
-                if (links.length > 0 && !lockMsg) {
-                    linkDisplayArea.insertAdjacentHTML('afterbegin', '<div class="locked-file-msg" style="color:#dc3545; font-size:11px; font-weight:bold; text-align:center; padding: 4px; border: 1px dashed #dc3545; border-radius: 4px; background: #f8d7da; margin-bottom:4px;">🔒 Không có quyền xem</div>');
-                }
-            } else {
-                if(linksContainer) linksContainer.style.display = 'block';
-                if (lockMsg) lockMsg.remove();
-            }
-        }
-    });
-
-    if (!gv || !nkt) {
-        btnSave.disabled = true; btnSubmit.disabled = true;
-        btnSave.style.opacity = "0.5"; btnSubmit.style.opacity = "0.5";
-    }
-  }
-
-  function hts_con_gio_nhe_fn(data = null) {
-    const ts = new Date().getTime().toString().slice(-5);
-    const randomId = Math.floor(Math.random() * 1000); 
-    const tbody = document.getElementById('tableContent');
-    const tr = document.createElement('tr');
-    
-    const optHS = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option>';
-    const optGD = '<option value=""></option><option value="Giỏi">Giỏi</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Yếu">Yếu</option>';
-    const optKS = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="Đạt">Đạt</option><option value="Yếu">Yếu</option>';
-    const optKhac = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Chưa đạt">Chưa đạt</option>';
-
-    tr.innerHTML = `
-      <td style="text-align:center;vertical-align:middle"><button class="btn-icon-del" onclick="hts_ma_nao_hong_fn(this)" title="Xóa dòng">🗑️</button></td>
-      <td style="text-align:center;vertical-align:middle" class="stt-cell"></td>
-      <td><input class="cell-input text-center" value="${hts_bau_troi_sao_fn()}" oninput="hts_hanh_tinh_xa_fn(event)" placeholder="dd/mm/yyyy" disabled></td>
-      <td><textarea class="cell-input" rows="1" oninput="hts_thien_ha_rong_fn(this)" disabled></textarea></td>
-      <td><textarea class="cell-input" rows="1" oninput="hts_thien_ha_rong_fn(this)" disabled></textarea></td>
-      <td><textarea class="cell-input" rows="1" oninput="hts_thien_ha_rong_fn(this)" disabled></textarea></td>
-      <td><textarea class="cell-input" rows="1" oninput="hts_thien_ha_rong_fn(this)" disabled></textarea></td>
-      <td><select class="cell-input text-center" disabled>${optHS}</select></td>
-      <td><select class="cell-input text-center" disabled>${optGD}</select></td>
-      <td><select class="cell-input text-center" disabled>${optKS}</select></td>
-      <td><select class="cell-input text-center" disabled>${optKhac}</select></td>
-      <td><textarea class="cell-input text-center" rows="1" oninput="hts_thien_ha_rong_fn(this)" style="text-align:center; padding-top:10px;" placeholder="(Ý kiến của giáo viên)" disabled></textarea></td>
-      <td><textarea class="cell-input text-center" rows="1" oninput="hts_thien_ha_rong_fn(this)" style="text-align:center; padding-top:10px; overflow:hidden;" placeholder="(Ghi họ và tên)" disabled></textarea></td>
-      <td style="text-align:center;vertical-align:middle; padding:5px;" class="evidence-cell">
-          <input type="hidden" class="cell-input link-input">
-          <div class="link-display-area" style="width:100%;"></div>
-          <button class="btn-upload-icon" onclick="hts_mat_troi_do_fn(this)" title="Chèn minh chứng">📎 Đính kèm</button>
-      </td>
-      <td class="ma-ho-so-cell">MS-${ts}-${randomId}</td>
-    `;
-    tbody.appendChild(tr);
-    hts_hoang_hon_buong_fn(); hts_thach_anh_tim_fn();
-    
-    if(data) {
-       const ins = tr.querySelectorAll('.cell-input');
-       for(let j=0; j<=10; j++) ins[j].value = data[j+4] || ""; 
-       const linkUrl = data[15]||"";
-       if(linkUrl) { hts_dong_tai_len_el = tr; hts_mat_trang_sang_fn(linkUrl); }
-       tr.querySelector('.ma-ho-so-cell').innerText = data[16]||`MS-${ts}-${randomId}`;
-       tr.querySelectorAll('textarea').forEach(t => hts_thien_ha_rong_fn(t));
-    }
-    hts_cau_vong_sau_fn();
-  }
-
-  function hts_bao_to_lon_fn() { if(hts_sapphire_xanh_fn()) hts_suong_mu_day_fn("SKT_saveRecord", document.getElementById('btnSave'), "LƯU KẾT QUẢ"); }
-  function hts_tuyet_roi_day_fn() { if(hts_emerald_bui_fn()) hts_suong_mu_day_fn("SKT_submitFinalRecord", document.getElementById('btnSubmit'), "NỘP KẾT QUẢ"); }
-
-  function hts_suong_mu_day_fn(fn, btn, txt) {
-    const gv = document.getElementById('cbGiaoVien').value;
-    const nkt = document.getElementById('cbNguoiKiemTra').value;
-    const bp = document.getElementById('cbBoPhan').value;
-    const mabp = document.getElementById('txtMaBoPhan').value;
-    const dataToSend = [];
     document.querySelectorAll('#tableContent tr').forEach(r => {
-        const ins = r.querySelectorAll('.cell-input');
-        dataToSend.push([gv, nkt, bp, mabp, ins[0].value, ins[1].value, ins[2].value, ins[3].value, ins[4].value, ins[5].value, ins[6].value, ins[7].value, ins[8].value, ins[9].value, ins[10].value, ins[11].value, r.querySelector('.ma-ho-so-cell').innerText]);
+        const is = r.querySelectorAll('.cell-input');
+        is.forEach((c, i) => {
+            const iy = (i === 9 || i === 10); 
+            if (ig && ik) c.removeAttribute('disabled'); else if (ig) { if (iy) c.removeAttribute('disabled'); else c.setAttribute('disabled', 'true'); } else if (ik) { if (!iy) c.removeAttribute('disabled'); else c.setAttribute('disabled', 'true'); } else c.setAttribute('disabled', 'true');
+        });
+        const bu = r.querySelector('.btn-upload-icon'); const bd = r.querySelector('.btn-icon-del'); const be = r.querySelector('.link-edit-corner'); 
+        if(bu) bu.disabled = !ik; if(bd) { bd.disabled = !ik; bd.style.visibility = ik ? 'visible' : 'hidden'; }
+        if(be) { if(!ik) { be.classList.add('disabled'); be.style.pointerEvents = 'none'; be.style.opacity = '0.5'; } else { be.classList.remove('disabled'); be.style.pointerEvents = 'auto'; be.style.opacity = '1'; } }
+        const ld = r.querySelector('.link-display-area');
+        if (ld) {
+            const ls = ld.querySelectorAll('a'); let lm = ld.querySelector('.locked-file-msg'); const lk = ld.querySelector('.evidence-links-container');
+            if (!ig && !ik) { if(lk) lk.style.display = 'none'; if (ls.length > 0 && !lm) ld.insertAdjacentHTML('afterbegin', '<div class="locked-file-msg" style="color:#dc3545; font-size:11px; font-weight:bold; text-align:center; padding: 4px; border: 1px dashed #dc3545; background: #f8d7da;">🔒 Cấm xem</div>'); } 
+            else { if(lk) lk.style.display = 'block'; if (lm) lm.remove(); }
+        }
     });
-    btn.disabled = true; btn.innerText = "⏳ XỬ LÝ..."; btn.classList.add('loading-spin');
-    google.script.run.withSuccessHandler(r => {
-      btn.disabled = false; btn.innerText = txt; btn.classList.remove('loading-spin'); hts_sao_choi_sang_fn(r);
-      if(!r.includes("⚠️") && !r.includes("❌")) { setTimeout(hts_ruby_do_tham_fn, 500); hts_kim_cuong_sang_fn(); }
-    })[fn](dataToSend);
+    if (!gv || !nk) { bs.disabled = true; bt.disabled = true; bs.style.opacity = "0.5"; bt.style.opacity = "0.5"; }
   }
 
-  function hts_nang_som_mai_fn(type) {
-    const gv = document.getElementById('cbGiaoVien').value;
-    const nkt = document.getElementById('cbNguoiKiemTra').value;
-    if (!gv || !nkt) return false;
-    const aGV = hts_du_lieu_gv_arr.find(x => hts_rung_cay_ram_fn(x.name) === hts_rung_cay_ram_fn(gv))?.account;
-    const aNKT = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.name) === hts_rung_cay_ram_fn(nkt))?.account;
-    if (aGV && aNKT && aGV === aNKT) {
-      hts_sao_choi_sang_fn("⚠️ LỖI: Tài khoản người kiểm tra và giáo viên trùng nhau!");
-      document.getElementById(type === 'GV' ? 'cbGiaoVien' : 'cbNguoiKiemTra').value = ""; return true; 
-    }
-    return false;
+  function them_dong(dt = null) {
+    const ts = new Date().getTime().toString().slice(-5); const ri = Math.floor(Math.random() * 1000); 
+    const tb = document.getElementById('tableContent'); const tr = document.createElement('tr');
+    const o_hs = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option>';
+    const o_gd = '<option value=""></option><option value="Giỏi">Giỏi</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Yếu">Yếu</option>';
+    const o_ks = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="Đạt">Đạt</option><option value="Yếu">Yếu</option>';
+    const o_kh = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Chưa đạt">Chưa đạt</option>';
+
+    tr.innerHTML = `<td style="text-align:center;vertical-align:middle"><button class="btn-icon-del" onclick="xoa_dong(this)">🗑️</button></td><td style="text-align:center;vertical-align:middle" class="stt-cell"></td><td><input class="cell-input text-center" value="${lay_ngay()}" oninput="dinh_dang_ngay(event)" placeholder="dd/mm/yyyy" disabled></td><td><textarea class="cell-input" rows="1" oninput="tu_chinh_kt(this)" disabled></textarea></td><td><textarea class="cell-input" rows="1" oninput="tu_chinh_kt(this)" disabled></textarea></td><td><textarea class="cell-input" rows="1" oninput="tu_chinh_kt(this)" disabled></textarea></td><td><textarea class="cell-input" rows="1" oninput="tu_chinh_kt(this)" disabled></textarea></td><td><select class="cell-input text-center" disabled>${o_hs}</select></td><td><select class="cell-input text-center" disabled>${o_gd}</select></td><td><select class="cell-input text-center" disabled>${o_ks}</select></td><td><select class="cell-input text-center" disabled>${o_kh}</select></td><td><textarea class="cell-input text-center" rows="1" oninput="tu_chinh_kt(this)" style="padding-top:10px;" disabled></textarea></td><td><textarea class="cell-input text-center" rows="1" oninput="tu_chinh_kt(this)" style="padding-top:10px;" disabled></textarea></td><td style="text-align:center;vertical-align:middle; padding:5px;" class="evidence-cell"><input type="hidden" class="cell-input link-input"><div class="link-display-area" style="width:100%;"></div><button class="btn-upload-icon" onclick="goi_tai(this)">📎 Đính kèm</button></td><td class="ma-ho-so-cell">MS-${ts}-${ri}</td>`;
+    tb.appendChild(tr); cn_stt(); cn_tt_dong();
+    if(dt) { const is = tr.querySelectorAll('.cell-input'); for(let j=0; j<=10; j++) is[j].value = dt[j+4] || ""; const lu = dt[15]||""; if(lu) { dong_tai = tr; tra_lk_chinh(lu); } tr.querySelector('.ma-ho-so-cell').innerText = dt[16]||`MS-${ts}-${ri}`; tr.querySelectorAll('textarea').forEach(t => tu_chinh_kt(t)); }
+    ap_quyen();
   }
 
-  function hts_hoang_hon_buong_fn() { document.querySelectorAll('#tableContent tr').forEach((r, i) => r.querySelector('.stt-cell').innerText = i + 1); }
-  function hts_binh_minh_len_fn(id, d) { const e = document.getElementById(id); e.innerHTML='<option value="">-- Chọn --</option>'; d.forEach(i=>e.add(new Option(i.name,i.name))); }
-  function hts_dem_khuya_vang_fn(id, l) { const e = document.getElementById(id); e.innerHTML='<option value="">-- Chọn --</option>'; if(l) l.forEach(v=>v&&e.add(new Option(v,v))); }
-  function hts_sao_bang_bay_fn() { document.getElementById('txtMaBoPhan').value = hts_du_lieu_bp_obj[document.getElementById('cbBoPhan').value]||""; }
-  function hts_sao_choi_sang_fn(m) { document.getElementById('modal_message_nhap').innerText=m; document.getElementById('modal_overlay_nhap').style.display='flex'; }
-  function hts_vu_tru_bao_fn() { document.getElementById('modal_overlay_nhap').style.display='none'; }
-  function hts_thien_ha_rong_fn(e) { e.style.height='auto'; e.style.height=e.scrollHeight+'px'; }
-  function hts_hanh_tinh_xa_fn(e) { let v=e.target.value.replace(/\D/g,''); if(v.length>8)v=v.substring(0,8); let o=""; if(v.length>0)o+=v.substring(0,2); if(v.length>2)o+='/'+v.substring(2,4); if(v.length>4)o+='/'+v.substring(4,8); e.target.value=o; }
-  function hts_ve_tinh_nhan_fn(t,l) { document.querySelectorAll('.f-input, .cell-input').forEach(i=>i.classList[l?'add':'remove']('loading-spin')); }
-  function hts_ngoc_trai_quy_fn(s) { for(let i=1;i<=4;i++){ let e=document.getElementById('step'+i); if(e){ e.className='step'; if(i<s)e.classList.add('completed'); if(i===s)e.classList.add('active'); }}}
+  function xly_luu() { if(kt_luu()) chay_maychu("luu_bg", document.getElementById('btnSave'), "LƯU KẾT QUẢ"); }
+  function xly_nop() { if(kt_nop()) chay_maychu("nop_bg", document.getElementById('btnSubmit'), "NỘP KẾT QUẢ"); }
+
+  function chay_maychu(fn, bn, tx) {
+    const g = document.getElementById('cbGiaoVien').value; const n = document.getElementById('cbNguoiKiemTra').value;
+    const b = document.getElementById('cbBoPhan').value; const mb = document.getElementById('txtMaBoPhan').value; const dts = [];
+    document.querySelectorAll('#tableContent tr').forEach(r => { const is = r.querySelectorAll('.cell-input'); dts.push([g, n, b, mb, is[0].value, is[1].value, is[2].value, is[3].value, is[4].value, is[5].value, is[6].value, is[7].value, is[8].value, is[9].value, is[10].value, is[11].value, r.querySelector('.ma-ho-so-cell').innerText]); });
+    bn.disabled = true; bn.innerText = "⏳ XỬ LÝ..."; bn.classList.add('loading-spin');
+    google.script.run.withSuccessHandler(r => { bn.disabled = false; bn.innerText = tx; bn.classList.remove('loading-spin'); hien_hop(r); if(!r.includes("⚠️") && !r.includes("❌")) { setTimeout(lam_moi_mhs, 500); dat_lai_bm(); } })[fn](dts);
+  }
+
+  function kt_trung_tk(tp) {
+    const g = document.getElementById('cbGiaoVien').value; const n = document.getElementById('cbNguoiKiemTra').value; if (!g || !n) return false;
+    const ag = dl_gv.find(x => chuan_chuoi(x.name) === chuan_chuoi(g))?.account; const an = dl_nkt.find(x => chuan_chuoi(x.name) === chuan_chuoi(n))?.account;
+    if (ag && an && ag === an) { hien_hop("⚠️ Trùng tài khoản!"); document.getElementById(tp === 'GV' ? 'cbGiaoVien' : 'cbNguoiKiemTra').value = ""; return true; } return false;
+  }
+
+  function cn_stt() { document.querySelectorAll('#tableContent tr').forEach((r, i) => r.querySelector('.stt-cell').innerText = i + 1); }
+  function dien_hop(id, d) { const e = document.getElementById(id); e.innerHTML='<option value="">-- Chọn --</option>'; d.forEach(i=>e.add(new Option(i.name,i.name))); }
+  function dien_hop_dg(id, l) { const e = document.getElementById(id); e.innerHTML='<option value="">-- Chọn --</option>'; if(l) l.forEach(v=>v&&e.add(new Option(v,v))); }
+  function cn_mbp() { document.getElementById('txtMaBoPhan').value = dl_bp[document.getElementById('cbBoPhan').value]||""; }
+  function hien_hop(m) { document.getElementById('modal_message_nhap').innerText=m; document.getElementById('modal_overlay_nhap').style.display='flex'; }
+  function dong_hop() { document.getElementById('modal_overlay_nhap').style.display='none'; }
+  function tu_chinh_kt(e) { e.style.height='auto'; e.style.height=e.scrollHeight+'px'; }
+  function dinh_dang_ngay(e) { let v=e.target.value.replace(/\D/g,''); if(v.length>8)v=v.substring(0,8); let o=""; if(v.length>0)o+=v.substring(0,2); if(v.length>2)o+='/'+v.substring(2,4); if(v.length>4)o+='/'+v.substring(4,8); e.target.value=o; }
+  function bat_tat_xoay(t,l) { document.querySelectorAll('.f-input, .cell-input').forEach(i=>i.classList[l?'add':'remove']('loading-spin')); }
+  function dat_tt(s) { for(let i=1;i<=4;i++){ let e=document.getElementById('step'+i); if(e){ e.className='step'; if(i<s)e.classList.add('completed'); if(i===s)e.classList.add('active'); }}}
   
-  function hts_kim_cuong_sang_fn() {
-    ['cbNguoiKiemTra', 'cbBoPhan', 'cbMaHoSo'].forEach(id => {
-      const el = document.getElementById(id); if(el) { el.value = ""; el.disabled = false; }
-    });
-    
-    let myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-    let myGVName = hts_du_lieu_gv_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-    let myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-    const cbGV = document.getElementById('cbGiaoVien');
-
-    if (myGVName && !myNKTName) {
-        hts_bai_co_xanh_fn('cbGiaoVien', myGVName);
-        cbGV.disabled = true;
-    } else {
-        cbGV.value = "";
-        cbGV.disabled = false;
-    }
-
-    document.getElementById('txtMaBoPhan').value = "";
-    document.getElementById('tableContent').innerHTML = ""; 
-    hts_con_gio_nhe_fn(); hts_ngoc_trai_quy_fn(1);
+  function dat_lai_bm() {
+    ['cbNguoiKiemTra', 'cbBoPhan', 'cbMaHoSo'].forEach(id => { const el = document.getElementById(id); if(el) { el.value = ""; el.disabled = false; } });
+    let mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl);
+    let mg = dl_gv.find(x => chuan_chuoi(x.account) === mc)?.name; let mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name; const cg = document.getElementById('cbGiaoVien');
+    if (mg && !mn) { dat_hop_chon('cbGiaoVien', mg); cg.disabled = true; } else { cg.value = ""; cg.disabled = false; }
+    document.getElementById('txtMaBoPhan').value = ""; document.getElementById('tableContent').innerHTML = ""; them_dong(); dat_tt(1);
   }
 
-  function hts_pha_le_trong_fn() {
-    const cb = document.getElementById('cbMaHoSo'); const cur = cb.value;
-    cb.innerHTML = '<option value="">-- Chọn --</option>';
-    if (hts_du_lieu_ma_hs_arr && hts_du_lieu_ma_hs_arr.length > 0) {
-      const sorted = [...hts_du_lieu_ma_hs_arr].sort().reverse();
-      sorted.forEach(m => cb.add(new Option(m, m)));
-      if (cur) cb.value = cur;
-      document.getElementById('btnRefreshMaHoSo').title = `Danh sách (${sorted.length})`;
-    }
+  function cn_hop_mhs() {
+    const cb = document.getElementById('cbMaHoSo'); const cr = cb.value; cb.innerHTML = '<option value="">-- Chọn --</option>';
+    if (dl_mhs && dl_mhs.length > 0) { const sd = [...dl_mhs].sort().reverse(); sd.forEach(m => cb.add(new Option(m, m))); if (cr) cb.value = cr; document.getElementById('btnRefreshMaHoSo').title = `Danh sách (${sd.length})`; }
   }
 
-  function hts_ruby_do_tham_fn() {
-    const btn = document.getElementById('btnRefreshMaHoSo'); const txt = btn.innerHTML;
-    btn.disabled = true; btn.innerHTML = "⏳";
-    google.script.run.withSuccessHandler(r => {
-      btn.disabled = false; btn.innerHTML = txt;
-      if(r.success) { hts_du_lieu_ma_hs_arr = r.maHoSoData; hts_pha_le_trong_fn(); hts_sao_choi_sang_fn(`✅ Đã cập nhật ${r.maHoSoData.length} hồ sơ`); }
-      else hts_sao_choi_sang_fn("❌ Lỗi: " + r.message);
-    }).SKT_getUpdatedMaHoSoList();
+  function lam_moi_mhs() {
+    const b = document.getElementById('btnRefreshMaHoSo'); const tx = b.innerHTML; b.disabled = true; b.innerHTML = "⏳";
+    google.script.run.withSuccessHandler(r => { b.disabled = false; b.innerHTML = tx; if(r.success) { dl_mhs = r.maHoSoData; cn_hop_mhs(); hien_hop(`✅ Cập nhật ${r.maHoSoData.length} hồ sơ`); } else hien_hop("❌ Lỗi: " + r.message); }).lay_mhs();
   }
 
-  function hts_sapphire_xanh_fn() {
-    if (!document.getElementById('cbGiaoVien').value || !document.getElementById('cbNguoiKiemTra').value || !document.getElementById('cbBoPhan').value) { hts_sao_choi_sang_fn("⚠️ Chưa có đủ thông tin chung!"); return false; }
-    var firstContent = document.querySelectorAll('#tableContent tr')[0].querySelectorAll('.cell-input')[1]; 
-    if (!firstContent || !firstContent.value.trim()) { hts_sao_choi_sang_fn("⚠️ Chưa có nội dung kiểm tra ở dòng 1!"); return false; }
-    return true;
+  function kt_luu() {
+    if (!document.getElementById('cbGiaoVien').value || !document.getElementById('cbNguoiKiemTra').value || !document.getElementById('cbBoPhan').value) { hien_hop("⚠️ Thiếu thông tin chung!"); return false; }
+    var fc = document.querySelectorAll('#tableContent tr')[0].querySelectorAll('.cell-input')[1]; if (!fc || !fc.value.trim()) { hien_hop("⚠️ Thiếu nội dung dòng 1!"); return false; } return true;
   }
 
-  function hts_emerald_bui_fn() {
-    if (!hts_sapphire_xanh_fn()) return false;
-    let valid = true;
-    document.querySelectorAll('#tableContent tr').forEach((r, idx) => {
-        const ins = r.querySelectorAll('.cell-input');
-        if (!ins[9].value.trim()) { hts_sao_choi_sang_fn(`⚠️ Dòng ${idx+1}: Thiếu Ý kiến người được kiểm tra!`); ins[9].focus(); valid = false; return; }
-        if (!ins[10].value.trim()) { hts_sao_choi_sang_fn(`⚠️ Dòng ${idx+1}: Thiếu chữ ký xác nhận của người được kiểm tra!`); ins[10].focus(); valid = false; return; }
-    });
-    return valid;
+  function kt_nop() {
+    if (!kt_luu()) return false; let vd = true;
+    document.querySelectorAll('#tableContent tr').forEach((r, i) => { const is = r.querySelectorAll('.cell-input'); if (!is[9].value.trim()) { hien_hop(`⚠️ Dòng ${i+1}: Thiếu Ý kiến!`); is[9].focus(); vd = false; return; } if (!is[10].value.trim()) { hien_hop(`⚠️ Dòng ${i+1}: Thiếu Ký tên!`); is[10].focus(); vd = false; return; } });
+    return vd;
   }
 
-  function hts_topaz_vang_fn(records) {
-    if(!records || records.length === 0) return;
-    const r0 = records[0];
-    
-    hts_bai_co_xanh_fn('cbGiaoVien', r0[0]);
-    hts_bai_co_xanh_fn('cbNguoiKiemTra', r0[1]);
-    hts_bai_co_xanh_fn('cbBoPhan', r0[2]);
-    document.getElementById('txtMaBoPhan').value = String(r0[3]||"").trim();
-    
-    document.getElementById('tableContent').innerHTML = "";
-    records.forEach(rowData => hts_con_gio_nhe_fn(rowData));
-    document.querySelectorAll('textarea.cell-input').forEach(t => hts_thien_ha_rong_fn(t));
+  function dien_bg_web(rc) {
+    if(!rc || rc.length === 0) return; const r0 = rc[0]; dat_hop_chon('cbGiaoVien', r0[0]); dat_hop_chon('cbNguoiKiemTra', r0[1]); dat_hop_chon('cbBoPhan', r0[2]); document.getElementById('txtMaBoPhan').value = String(r0[3]||"").trim();
+    document.getElementById('tableContent').innerHTML = ""; rc.forEach(rd => them_dong(rd)); document.querySelectorAll('textarea.cell-input').forEach(t => tu_chinh_kt(t));
   }
 
-  function hts_thach_anh_tim_fn() { 
-    const n = document.getElementById('cbGiaoVien').value; if(!n) return;
-    const p = n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,'');
-    document.querySelectorAll('.ma-ho-so-cell').forEach(c => {
-        const currentText = c.innerText;
-        if(currentText.includes('-')) c.innerText = p + currentText.substring(currentText.indexOf('-'));
-    });
+  function cn_tt_dong() { 
+    const n = document.getElementById('cbGiaoVien').value; if(!n) return; const p = n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,'');
+    document.querySelectorAll('.ma-ho-so-cell').forEach(c => { const ct = c.innerText; if(ct.includes('-')) c.innerText = p + ct.substring(ct.indexOf('-')); });
   }
 
-  function hts_ma_nao_hong_fn(btn) {
-      const myAcc = hts_rung_cay_ram_fn(window.hts_qua_tao_do_str || sessionStorage.getItem("SKT_USER_ACCOUNT") || hts_tai_khoan_dang_nhap_str);
-      const myNKTName = hts_du_lieu_nkt_arr.find(x => hts_rung_cay_ram_fn(x.account || x.email || x["e" + "m" + "a" + "i" + "l"]) === myAcc)?.name;
-      const nkt = document.getElementById('cbNguoiKiemTra').value;
-      const isNKT = (myNKTName && hts_rung_cay_ram_fn(myNKTName) === hts_rung_cay_ram_fn(nkt));
-      
-      if (!isNKT) { hts_sao_choi_sang_fn("⚠️ Bạn không có quyền xóa dòng này!"); return; }
-      const tbody = document.getElementById('tableContent');
-      if(tbody.rows.length <= 1) { hts_sao_choi_sang_fn("⚠️ Phải giữ lại ít nhất một dòng!"); return; }
-      hts_dong_can_xoa_el = btn.closest('tr'); document.getElementById('customConfirmModal').style.display = 'flex';
+  function xoa_dong(b) {
+      const mc = chuan_chuoi(window.SKT_GLOBAL_ACCOUNT || sessionStorage.getItem("SKT_USER_ACCOUNT") || tk_ngdu_nl); const mn = dl_nkt.find(x => chuan_chuoi(x.account) === mc)?.name; const nk = document.getElementById('cbNguoiKiemTra').value;
+      if (!(mn && chuan_chuoi(mn) === chuan_chuoi(nk))) { hien_hop("⚠️ Không có quyền xóa!"); return; }
+      const tb = document.getElementById('tableContent'); if(tb.rows.length <= 1) { hien_hop("⚠️ Phải giữ lại ít nhất một dòng!"); return; }
+      dong_xoa = b.closest('tr'); document.getElementById('customConfirmModal').style.display = 'flex';
   }
 
-  function hts_ho_phach_cam_fn() { 
-      document.getElementById('customConfirmModal').style.display = 'none'; 
-  }
+  function dong_hop_xn() { document.getElementById('customConfirmModal').style.display = 'none'; }
   
-  function hts_da_quy_den_fn() {
-      if (!hts_dong_can_xoa_el) return;
-      
-      const targetRow = hts_dong_can_xoa_el; 
-      const maHS = targetRow.querySelector('.ma-ho-so-cell').innerText;
-      
-      const linkInput = targetRow.querySelector('.link-input');
-      const fileUrl = linkInput ? linkInput.value : "";
-      
-      const btnDel = targetRow.querySelector('.btn-icon-del');
-      if (btnDel) { btnDel.setAttribute('data-original', btnDel.innerHTML); btnDel.innerHTML = '⏳'; btnDel.disabled = true; }
-      
-      hts_ho_phach_cam_fn(); 
-      
-      hts_sao_choi_sang_fn("⏳ Đang xử lý xóa dữ liệu trên hệ thống. Vui lòng chờ...");
-      const btnCloseModal = document.querySelector('#modal_overlay_nhap .btn-cancel');
-      if (btnCloseModal) btnCloseModal.style.display = 'none'; 
-      
-      const payload = maHS + (fileUrl ? "|||" + fileUrl : "");
-      
-      google.script.run.withSuccessHandler(function(response) {
-          if (btnCloseModal) btnCloseModal.style.display = 'inline-block'; 
-
-          if (response === "SUCCESS" || response === "NOT_FOUND" || response.includes("Không tìm thấy")) {
-              hts_vu_tru_bao_fn(); 
-              targetRow.style.transition = "all 0.5s ease"; 
-              targetRow.style.opacity = "0"; 
-              targetRow.style.transform = "translateX(50px)";
-              setTimeout(() => { 
-                  targetRow.remove(); 
-                  hts_hoang_hon_buong_fn(); 
-                  hts_dong_can_xoa_el = null; 
-                  if(document.getElementById('tableContent').rows.length === 0) hts_con_gio_nhe_fn(); 
-              }, 500);
-          } else if (response === "NO_PERMISSION") { 
-              hts_sao_choi_sang_fn("⛔ Bạn không có quyền xóa dữ liệu này!"); 
-              hts_vang_muoi_bon_fn(btnDel);
-          } else { 
-              hts_sao_choi_sang_fn("❌ " + response); 
-              hts_vang_muoi_bon_fn(btnDel); 
-          }
-      }).withFailureHandler(function(err) { 
-          if (btnCloseModal) btnCloseModal.style.display = 'inline-block';
-          hts_sao_choi_sang_fn("❌ Lỗi kết nối: " + err); 
-          hts_vang_muoi_bon_fn(btnDel); 
-      }).SKT_deleteSingleRowNhatKy(payload);
+  function xly_xoa() {
+      if (!dong_xoa) return; const tr = dong_xoa; const mhs = tr.querySelector('.ma-ho-so-cell').innerText;
+      const li = tr.querySelector('.link-input'); const fu = li ? li.value : ""; const bd = tr.querySelector('.btn-icon-del');
+      if (bd) { bd.setAttribute('data-original', bd.innerHTML); bd.innerHTML = '⏳'; bd.disabled = true; } dong_hop_xn(); hien_hop("⏳ Đang xử lý xóa...");
+      const bc = document.querySelector('#modal_overlay_nhap .btn-cancel'); if (bc) bc.style.display = 'none'; const pl = mhs + (fu ? "|||" + fu : "");
+      google.script.run.withSuccessHandler(function(rp) {
+          if (bc) bc.style.display = 'inline-block'; 
+          if (rp === "SUCCESS" || rp === "NOT_FOUND" || rp.includes("Không tìm thấy")) {
+              dong_hop(); tr.style.transition = "all 0.5s ease"; tr.style.opacity = "0"; tr.style.transform = "translateX(50px)";
+              setTimeout(() => { tr.remove(); cn_stt(); dong_xoa = null; if(document.getElementById('tableContent').rows.length === 0) them_dong(); }, 500);
+          } else if (rp === "NO_PERMISSION") { hien_hop("⛔ Không có quyền xóa!"); dat_lai_nut_xoa(bd); } else { hien_hop("❌ " + rp); dat_lai_nut_xoa(bd); }
+      }).withFailureHandler(function(er) { if (bc) bc.style.display = 'inline-block'; hien_hop("❌ Lỗi mạng: " + er); dat_lai_nut_xoa(bd); }).xoa_bg(pl);
   }
 
-  function hts_vang_muoi_bon_fn(btn) { 
-      if(btn) { btn.innerHTML = btn.getAttribute('data-original') || '🗑️'; btn.disabled = false; } 
-      hts_dong_can_xoa_el = null; 
-  }
+  function dat_lai_nut_xoa(b) { if(b) { b.innerHTML = b.getAttribute('data-original') || '🗑️'; b.disabled = false; } dong_xoa = null; }
 </script>
