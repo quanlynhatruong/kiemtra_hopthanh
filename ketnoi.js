@@ -1,60 +1,65 @@
-/* ========================================================================== */
+/**
+ * INTERNAL API BRIDGE - TRƯỜNG TH&THCS HỢP THÀNH
+ * Hệ thống: Sổ Kiểm Tra Nội Bộ (SKT)
+ * Mục đích: Cầu nối giao tiếp (Fetch API) giữa giao diện Web App (GitHub) và Google Apps Script.
+ * Phiên bản: An toàn hóa định danh V3
+ */
 
-const ddungdwe = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec"; 
+// THẦY HÃY THAY ĐƯỜNG LINK DƯỚI ĐÂY BẰNG LINK WEB APP (đuôi /exec) CỦA DỰ ÁN SỔ KIỂM TRA NÀY:
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec";
 
-let taikngd = "";
-try { taikngd = sessionStorage.getItem("SKT_USER_TAIK") || ""; } catch(loie) { console.warn("Chrome chặn Storage khởi tạo"); }
+function createRunner(onSuccess, onFailure) {
+    return {
+        withSuccessHandler: function(cb) {
+            return createRunner(cb, onFailure);
+        },
+        withFailureHandler: function(cb) {
+            return createRunner(onSuccess, cb);
+        },
+        _call: function(hdong, tso) {
+            const sysId = window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || ""; 
+
+            fetch(GAS_URL, {
+                method: 'POST',
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ hdong: hdong, tso: tso, taik: sysId })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.trth === "tcon") {
+                    if (onSuccess) onSuccess(res.dliu);
+                } else {
+                    if (onFailure) onFailure(new Error(res.tbao));
+                    else console.error("Lỗi từ máy chủ Google:", res.tbao);
+                }
+            })
+            .catch(err => {
+                if (onFailure) onFailure(err);
+                else console.error("Lỗi mất kết nối:", err);
+            });
+        },
+        
+        // DANH SÁCH API CỦA HỆ THỐNG SỔ KIỂM TRA
+        skt_laydl_bda: function(taik, cnh) { this._call('skt_laydl_bda', { cnh: cnh }); },
+        skt_laybg_mahs: function(mhso) { this._call('skt_laybg_mahs', { mhso: mhso }); },
+        skt_luubg_nha: function(mdl) { this._call('skt_luubg_nha', { mdl: mdl }); },
+        skt_nopbg_cuo: function(mdl) { this._call('skt_nopbg_cuo', { mdl: mdl }); },
+        skt_layds_mhs_cn: function() { this._call('skt_layds_mhs_cn', {}); },
+        skt_xoadon_nki_thc: function(mhso) { this._call('skt_xoadon_nki_thc', { mhso: mhso }); },
+        skt_laytm_con: function() { this._call('skt_laytm_con', {}); },
+        skt_tainhiu_tep: function(dltep, mhso, idtm, ddcu, cdghi) { this._call('skt_tainhiu_tep', { dltep: dltep, mhso: mhso, idtm: idtm, ddcu: ddcu, cdghi: cdghi }); },
+        skt_taitm_minhc: function(idcha, tentmu, dltep, ddcu, cdghi) { this._call('skt_taitm_minhc', { idcha: idcha, tentmu: tentmu, dltep: dltep, ddcu: ddcu, cdghi: cdghi }); },
+        skt_tk_laydl_loc: function() { this._call('skt_tk_laydl_loc', {}); },
+        skt_timbg_kq: function(tchi) { this._call('skt_timbg_kq', { tchi: tchi }); },
+        skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi }); },
+        skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); }
+    };
+}
 
 const google = {
     script: {
-        run: taodoitcha()
+        get run() {
+            return createRunner(null, null);
+        }
     }
 };
-
-function taodoitcha(khitcong = null, khitba = null) {
-    return new Proxy({}, {
-        get: function(doit, thuoct) {
-            if (thuoct === 'withSuccessHandler') return function(cb1) { return taodoitcha(cb1, khitba); };
-            if (thuoct === 'withFailureHandler') return function(cb1) { return taodoitcha(khitcong, cb1); };
-            
-            return function(...mtham) {
-                try {
-                    taikngd = window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || "";
-                } catch(loie) {
-                    taikngd = window.skttktoanc || "";
-                }
-                thuchmays(thuoct, mtham, khitcong, khitba);
-            };
-        }
-    });
-}
-
-function thuchmays(hdong, mtham, khitcong, khitba) {
-    let tso = {};
-    if (hdong === "skt_laybg_mahs") tso = { mhso: mtham[0] };
-    else if (hdong === "skt_luubg_nha") tso = { mdl: mtham[0] };
-    else if (hdong === "skt_nopbg_cuo") tso = { mdl: mtham[0] };
-    else if (hdong === "skt_xoadon_nki_thc") tso = { mhso: mtham[0] };
-    else if (hdong === "skt_tainhiu_tep") tso = { dltep: mtham[0], mhso: mtham[1], idtm: mtham[2], ddcu: mtham[3], cdghi: mtham[4] };
-    else if (hdong === "skt_taitm_minhc") tso = { idcha: mtham[0], tentmu: mtham[1], dltep: mtham[2], ddcu: mtham[3], cdghi: mtham[4] };
-    else if (hdong === "skt_timbg_kq") tso = { tchi: mtham[0] };
-    else if (hdong === "skt_taobc_vba") tso = { tchi: mtham[0] };
-    else if (hdong === "skt_laydl_bda") tso = { taik: mtham[0], cnh: mtham[1] };
-    else if (hdong === "skt_laytm_con") tso = {};
-    else if (hdong === "skt_tk_laydl_loc") tso = {};
-    else if (hdong === "skt_layds_mhs_cn") tso = {};
-
-    fetch(ddungdwe, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ hdong: hdong, tso: tso, taik: taikngd })
-    })
-    .then(ph => ph.json())
-    .then(ph => {
-        if (ph.trth === "tcon") { if (khitcong) khitcong(ph.dliu); } 
-        else { if (khitba) khitba(new Error(ph.tbao)); else alert("Lỗi Server: " + ph.tbao); }
-    })
-    .catch(loie => {
-        if (khitba) khitba(loie); else console.error("Lỗi Fetch:", loie);
-    });
-}
