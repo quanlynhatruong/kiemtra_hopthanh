@@ -4,6 +4,15 @@
   select.cell-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231e3a8a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 5px top 50%; background-size: 8px auto; padding-right: 15px; text-align-last: center; }
   
   th { text-align: center !important; vertical-align: middle !important; }
+  
+  /* Cố định hiển thị nút để không bị che lấp */
+  .link-edit-corner { font-size: 11px; color: #d97706; cursor: pointer; padding: 6px; background: #fffbeb; border-radius: 4px; border: 1px solid #fde68a; display: block; text-align: center; font-weight: bold; width: 100%; box-sizing: border-box; text-decoration: none; }
+  .link-edit-corner:hover { background: #fef3c7; color: #b45309; }
+  .link-edit-corner.disabled { pointer-events: none; opacity: 0.5; }
+  
+  .btn-ai-nhanxet { background: #2563eb; color: white; border: none; border-radius: 4px; font-size: 11px; font-weight: bold; width: 100%; padding: 7px; cursor: pointer; text-align: center; box-sizing: border-box; transition: 0.2s; }
+  .btn-ai-nhanxet:hover { background: #1e40af; }
+  .btn-ai-nhanxet:disabled { background: #94a3b8; cursor: not-allowed; opacity: 0.6; }
 </style>
 
 <div id="main_content">
@@ -48,7 +57,7 @@
           <th style="width:55px">XL khác</th>
           <th style="width:180px">Ý kiến người được KT</th>
           <th style="width:135px">Ký tên</th>
-          <th style="width:100px">Hồ sơ</th>
+          <th style="width:115px">Hồ sơ</th>
           <th style="width:120px">Mã HS</th>
         </tr>
       </thead>
@@ -80,6 +89,27 @@
       <button class="btn-cancel" onclick="donghth()">ĐÓNG</button>
     </div>
   </div>
+
+  <div id="ai_prompt_modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="width: 480px; text-align: left;">
+      <div class="modal-title" style="text-align: center; margin-bottom: 15px;"><span style="font-size: 22px; margin-right: 5px;">🤖</span><span style="font-weight:bold; color: #1e3a8a;">GIAO VIỆC CHO TRỢ LÝ AI</span></div>
+      
+      <div style="font-size: 13px; margin-bottom: 15px; color: #334155; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px dashed #cbd5e1;">
+        <b style="color: #b91c1c;">💡 Hướng dẫn ra lệnh:</b><br>
+        <ul style="margin-top: 5px; margin-bottom: 0; padding-left: 20px;">
+            <li><b>Mặc định (bỏ trống):</b> AI phân tích và ghi nhận xét vào cả 3 cột Ưu điểm, Tồn tại, Biện pháp.</li>
+            <li><b>Chỉ định cột:</b> Viết ví dụ: "Chỉ ghi nhận xét vào cột ưu điểm".</li>
+        </ul>
+      </div>
+      
+      <textarea id="ai_prompt_input" class="cell-input" style="width: 100%; height: 90px; border: 1px solid #94a3b8; border-radius: 4px; padding: 10px; font-family: 'Times New Roman';" placeholder="Nhập yêu cầu cụ thể (có thể để trống)..."></textarea>
+      
+      <div class="modal-actions" style="margin-top: 20px; text-align: center;">
+        <button class="btn-cancel" onclick="dong_ai_modal()">Hủy bỏ</button>
+        <button class="btn-confirm" style="background: #2563eb;" onclick="xac_nhan_ai()">Bắt đầu quét</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -87,6 +117,7 @@
   let dlgvi = [], dlnktra = [], dlbpha = {}, dlmhso = [];
   let donghtta = null; 
   let dongcxoa = null; 
+  let btn_ai_dang_cho = null; 
 
   function chuanhchu(ch) {
       if (!ch) return "";
@@ -114,6 +145,72 @@
       return `${String(ng.getDate()).padStart(2, '0')}/${String(ng.getMonth() + 1).padStart(2, '0')}/${ng.getFullYear()}`;
   }
 
+  function dien_ai_nhanxet(uu, ton, bp) {
+      if (donghtta) {
+          const cacn = donghtta.querySelectorAll('.cell-input');
+          // Ưu điểm: ô [2], Tồn tại: ô [3], Biện pháp: ô [4]
+          if(uu && uu.trim() !== "") cacn[2].value = uu;
+          if(ton && ton.trim() !== "") cacn[3].value = ton;
+          if(bp && bp.trim() !== "") cacn[4].value = bp;
+          
+          tudochk(cacn[2]); 
+          tudochk(cacn[3]); 
+          tudochk(cacn[4]);
+      }
+  }
+
+  function goi_ai_nhanxet(btn) {
+      donghtta = btn.closest('tr');
+      const nhlk = donghtta.querySelector('.link-input');
+      const lk = nhlk ? nhlk.value : "";
+      
+      if (!lk) { hienhth("⚠️ Dòng này chưa có link minh chứng!"); return; }
+      
+      btn_ai_dang_cho = btn;
+      document.getElementById('ai_prompt_input').value = ""; 
+      document.getElementById('ai_prompt_modal').style.display = 'flex';
+  }
+
+  function dong_ai_modal() {
+      document.getElementById('ai_prompt_modal').style.display = 'none';
+      btn_ai_dang_cho = null;
+  }
+
+  function xac_nhan_ai() {
+      if (!btn_ai_dang_cho) return;
+      const btn = btn_ai_dang_cho;
+      const prompt = document.getElementById('ai_prompt_input').value.trim();
+      
+      dong_ai_modal(); 
+
+      const nhlk = donghtta.querySelector('.link-input');
+      const lk = nhlk ? nhlk.value : "";
+
+      const originalText = btn.innerHTML;
+      btn.innerHTML = "⏳ Quét...";
+      btn.disabled = true;
+
+      google.script.run
+      .withSuccessHandler(aikq => {
+          if (aikq.tcon) {
+              dien_ai_nhanxet(aikq.uudiem, aikq.tontai, aikq.bienphap);
+              btn.innerHTML = "✅ Xong";
+              btn.style.background = "#059669";
+          } else {
+              hienhth("⚠️ Lỗi AI: " + aikq.tbao);
+              btn.innerHTML = originalText;
+          }
+          btn.disabled = false;
+          setTimeout(() => { if(btn.innerHTML === "✅ Xong") { btn.innerHTML = originalText; btn.style.background = "#2563eb"; } }, 3000);
+      })
+      .withFailureHandler(err => {
+          hienhth("❌ Lỗi kết nối AI: " + err.message);
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+      })
+      .skt_pt_mc_ai(lk, prompt);
+  }
+
   function trallkch(ddn) {
       if (donghtta) {
           const oo = donghtta.querySelector('.evidence-cell');
@@ -128,13 +225,14 @@
               
               const clk = ddn.split(',').map(l1 => l1.trim()).filter(l1 => l1 !== "");
               let htlk = clk.map((l1, c1) => 
-                  `<a href="${l1}" target="_blank" style="display:block; text-decoration:none; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; border-radius:4px; padding:4px; margin-bottom:4px; font-size:12px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Xem tài liệu ${c1 + 1}">📎 Tài liệu ${c1 + 1}</a>`
+                  `<a href="${l1}" target="_blank" style="display:block; text-decoration:none; color:#0369a1; background:#f0f9ff; border:1px solid #bae6fd; border-radius:4px; padding:5px; margin-bottom:5px; font-size:12px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Tài liệu ${c1 + 1}">📎 Tài liệu ${c1 + 1}</a>`
               ).join('');
 
               vg.innerHTML = `
-                <div style="max-height:85px; overflow-y:auto; padding:2px; text-align:left;" class="evidence-links-container">${htlk}</div>
-                <div style="text-align:center; margin-top:2px;">
-                    <span class="link-edit-corner" onclick="kichhta(this)" title="Sửa hoặc thêm tài liệu" style="cursor:pointer; color:#b45309; font-size:11px; font-weight:bold; padding:2px 5px; background:#fef3c7; border-radius:3px; border:1px solid #fde68a; display:inline-block; width:100%; box-sizing:border-box;">✏️ Sửa / Thêm</span>
+                <div style="max-height:85px; overflow-y:auto; padding:2px; text-align:left; border-bottom: 1px solid #f3f4f6; margin-bottom: 8px;" class="evidence-links-container">${htlk}</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; box-sizing: border-box;">
+                    <span class="link-edit-corner" onclick="kichhta(this)" title="Sửa hoặc thêm tài liệu">✏️ Sửa / Thêm</span>
+                    <button class="btn-ai-nhanxet" onclick="goi_ai_nhanxet(this)" title="Dùng AI phân tích">🤖 AI Nhận xét</button>
                 </div>`;
           } else {
               nh.value = "";
@@ -152,13 +250,13 @@
       const dg = nt.closest('tr');
       const npnd = dg.querySelectorAll('.cell-input')[1]; 
       if (!npnd || !npnd.value.trim()) {
-          hienhth("⚠️ Vui lòng nhập 'Nội dung' kiểm tra trước khi đính kèm minh chứng!");
+          hienhth("⚠️ Nhập 'Nội dung' trước khi đính kèm!");
           npnd.focus(); return;
       }
       donghtta = dg;
       const nplk = dg.querySelector('.link-input'); 
       if (typeof mohopthta === 'function') mohopthta(nplk ? nplk.value : ""); 
-      else hienhth("⚠️ Chưa tải được chức năng upload!"); 
+      else hienhth("⚠️ Lỗi tải bộ upload!"); 
   }
 
   function kiemtlqsu(dg) {
@@ -168,11 +266,15 @@
       const lank = (tnktc && chuanhchu(tnktc) === chuanhchu(nkt));
       
       const nts = dg.querySelector('.link-edit-corner');
+      const ntai = dg.querySelector('.btn-ai-nhanxet');
+      
       if(nts) {
           if(!lank) {
               nts.classList.add('disabled'); nts.style.pointerEvents = 'none'; nts.style.opacity = '0.5'; 
+              if(ntai) { ntai.disabled = true; ntai.style.opacity = '0.5'; }
           } else {
               nts.classList.remove('disabled'); nts.style.pointerEvents = 'auto'; nts.style.opacity = '1';
+              if(ntai) { ntai.disabled = false; ntai.style.opacity = '1'; }
           }
       }
   }
@@ -184,34 +286,16 @@
           document.getElementById('main_content').style.display = 'none';
           document.getElementById('access_denied_msg').style.display = 'block';
           document.getElementById('denied_reason').innerText = kq.tbao;
-          chuyentxo('initial', false);
-          return; 
+          chuyentxo('initial', false); return; 
       }
-      
-      if(kq.tkngd) tknd = kq.tkngd; 
-      dlgvi = kq.dlgv; 
-      dlnktra = kq.dlnk; 
-      dlbpha = kq.dlbp; 
-      dlmhso = kq.dlmh;
+      if(kq.tkngd) tknd = kq.tkngd; dlgvi = kq.dlgv; dlnktra = kq.dlnk; dlbpha = kq.dlbp; dlmhso = kq.dlmh;
       document.getElementById('user_display').innerText = "Đăng nhập: " + tknd;
-      dienho('cbGiaoVien', dlgvi); 
-      dienho('cbNguoiKiemTra', dlnktra); 
-      dienhopd('cbBoPhan', Object.keys(dlbpha)); 
-      capnhopm(); 
-
+      dienho('cbGiaoVien', dlgvi); dienho('cbNguoiKiemTra', dlnktra); dienhopd('cbBoPhan', Object.keys(dlbpha)); capnhopm(); 
       let emcan = chuanhchu(window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || tknd);
       let tgvc = dlgvi.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
       let tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-      
-      if (tgvc && !tnktc) {
-          dathopc('cbGiaoVien', tgvc);
-          document.getElementById('cbGiaoVien').disabled = true; 
-          capnticd();
-          apdquye();
-      }
-
-      chuyentxo('initial', false); 
-      dattr(1);
+      if (tgvc && !tnktc) { dathopc('cbGiaoVien', tgvc); document.getElementById('cbGiaoVien').disabled = true; capnticd(); apdquye(); }
+      chuyentxo('initial', false); dattr(1);
     }).skt_laydl_bda();
   }
 
@@ -224,23 +308,12 @@
       google.script.run.withSuccessHandler(kq => {
         chuyentxo('full', false);
         if (kq && kq.length > 0) { 
-            const ndg = Array.isArray(kq[0]); 
-            const bg = ndg ? kq : [kq];
-
+            const bg = Array.isArray(kq[0]) ? kq : [kq];
             let emcan = chuanhchu(window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || tknd);
             let tgvc = dlgvi.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
             let tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-            const bggv = String(bg[0][0] || ""); 
-
-            if (tgvc && !tnktc && chuanhchu(bggv) !== chuanhchu(tgvc)) {
-                hienhth("⛔ BẠN CHỈ ĐƯỢC XEM VÀ KÝ NHẬN HỒ SƠ CỦA CHÍNH MÌNH!");
-                datlbie(); 
-                return;
-            }
-
-            dienbgw(bg); 
-            dattr(3); 
-            ['cbGiaoVien','cbNguoiKiemTra','cbBoPhan'].forEach(idd=>document.getElementById(idd).disabled=true);
+            if (tgvc && !tnktc && chuanhchu(bg[0][0] || "") !== chuanhchu(tgvc)) { hienhth("⛔ CHỈ XEM HỒ SƠ CỦA MÌNH!"); datlbie(); return; }
+            dienbgw(bg); dattr(3); ['cbGiaoVien','cbNguoiKiemTra','cbBoPhan'].forEach(idd=>document.getElementById(idd).disabled=true);
             setTimeout(() => { apdquye(); dattr(4); }, 300);
         } else dattr(1);
       }).skt_laybg_mahs(hp.value);
@@ -248,95 +321,40 @@
   }
 
   function apdquye() {
-    const hpg = document.getElementById('cbGiaoVien');
-    const hpn = document.getElementById('cbNguoiKiemTra');
-    
+    const hpg = document.getElementById('cbGiaoVien'), hpn = document.getElementById('cbNguoiKiemTra');
     const gv = String(hpg.options[hpg.selectedIndex]?.text || hpg.value || "").trim();
     const nkt = String(hpn.options[hpn.selectedIndex]?.text || hpn.value || "").trim();
-    
-    const ntl = document.getElementById('btnSave');
-    const ntn = document.getElementById('btnSubmit');
-    const vtd = document.querySelector('.add-row-container'); 
-    
+    const ntl = document.getElementById('btnSave'), ntn = document.getElementById('btnSubmit'), vtd = document.querySelector('.add-row-container'); 
     const emcan = chuanhchu(window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || tknd);
-    const tgvc = dlgvi.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-    const tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-
-    const lgv = (tgvc && chuanhchu(tgvc) === chuanhchu(gv));
-    const lnk = (tnktc && chuanhchu(tnktc) === chuanhchu(nkt));
-
-    if (lnk) { ntn.disabled = false; ntn.style.opacity = "1"; } 
-    else { ntn.disabled = true; ntn.style.opacity = "0.5"; }
-
-    if (lgv || lnk) { ntl.disabled = false; ntl.style.opacity = "1"; } 
-    else { ntl.disabled = true; ntl.style.opacity = "0.5"; }
-
+    const tgvc = dlgvi.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn, tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
+    const lgv = (tgvc && chuanhchu(tgvc) === chuanhchu(gv)), lnk = (tnktc && chuanhchu(tnktc) === chuanhchu(nkt));
+    ntn.disabled = !lnk; ntn.style.opacity = lnk ? "1" : "0.5";
+    ntl.disabled = !(lgv || lnk); ntl.style.opacity = (lgv || lnk) ? "1" : "0.5";
     if(vtd) vtd.style.display = lnk ? 'block' : 'none';
-
     document.querySelectorAll('#tableContent tr').forEach(dg => {
         const cacn = dg.querySelectorAll('.cell-input');
         cacn.forEach((o1, c1) => {
             const layk = (c1 === 9 || c1 === 10); 
-            
-            if (lgv && lnk) {
-                o1.removeAttribute('disabled');
-            } else if (lgv) {
-                if (layk) o1.removeAttribute('disabled');
-                else o1.setAttribute('disabled', 'true');
-            } else if (lnk) {
-                if (!layk) o1.removeAttribute('disabled');
-                else o1.setAttribute('disabled', 'true');
-            } else {
-                o1.setAttribute('disabled', 'true');
-            }
+            if (lgv && lnk) o1.removeAttribute('disabled');
+            else if (lgv) { if (layk) o1.removeAttribute('disabled'); else o1.setAttribute('disabled', 'true'); }
+            else if (lnk) { if (!layk) o1.removeAttribute('disabled'); else o1.setAttribute('disabled', 'true'); }
+            else o1.setAttribute('disabled', 'true');
         });
-        
-        const ntta = dg.querySelector('.btn-upload-icon');
-        const ntxo = dg.querySelector('.btn-icon-del');
-        const ntsu = dg.querySelector('.link-edit-corner'); 
-
+        const ntta = dg.querySelector('.btn-upload-icon'), ntxo = dg.querySelector('.btn-icon-del'), ntsu = dg.querySelector('.link-edit-corner'), ntai = dg.querySelector('.btn-ai-nhanxet');
         if(ntta) ntta.disabled = !lnk;
         if(ntxo) { ntxo.disabled = !lnk; ntxo.style.visibility = lnk ? 'visible' : 'hidden'; }
-        if(ntsu) {
-            if(!lnk) { ntsu.classList.add('disabled'); ntsu.style.pointerEvents = 'none'; ntsu.style.opacity = '0.5'; } 
-            else { ntsu.classList.remove('disabled'); ntsu.style.pointerEvents = 'auto'; ntsu.style.opacity = '1'; }
-        }
-
-        const vhtl = dg.querySelector('.link-display-area');
-        if (vhtl) {
-            const clk = vhtl.querySelectorAll('a');
-            let tbkh = vhtl.querySelector('.locked-file-msg');
-            const vgcl = vhtl.querySelector('.evidence-links-container');
-
-            if (!lgv && !lnk) {
-                if(vgcl) vgcl.style.display = 'none';
-                if (clk.length > 0 && !tbkh) {
-                    vhtl.insertAdjacentHTML('afterbegin', '<div class="locked-file-msg" style="color:#dc3545; font-size:11px; font-weight:bold; text-align:center; padding: 4px; border: 1px dashed #dc3545; border-radius: 4px; background: #f8d7da; margin-bottom:4px;">🔒 Không có quyền xem</div>');
-                }
-            } else {
-                if(vgcl) vgcl.style.display = 'block';
-                if (tbkh) tbkh.remove();
-            }
-        }
+        if(ntsu) { ntsu.style.display = lnk ? "block" : "none"; }
+        if(ntai) { ntai.disabled = !lnk; ntai.style.opacity = lnk ? "1" : "0.5"; }
     });
-
-    if (!gv || !nkt) {
-        ntl.disabled = true; ntn.disabled = true;
-        ntl.style.opacity = "0.5"; ntn.style.opacity = "0.5";
-    }
+    if (!gv || !nkt) { ntl.disabled = true; ntn.disabled = true; ntl.style.opacity = "0.5"; ntn.style.opacity = "0.5"; }
   }
 
   function themdongmo(dld = null) {
-    const datg = new Date().getTime().toString().slice(-5);
-    const idng = Math.floor(Math.random() * 1000); 
-    const tbg = document.getElementById('tableContent');
-    const dmo = document.createElement('tr');
-    
+    const datg = new Date().getTime().toString().slice(-5), idng = Math.floor(Math.random() * 1000), tbg = document.getElementById('tableContent'), dmo = document.createElement('tr');
     const tchs = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option>';
     const tcgd = '<option value=""></option><option value="Giỏi">Giỏi</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Yếu">Yếu</option>';
     const tcks = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="Đạt">Đạt</option><option value="Yếu">Yếu</option>';
     const tckh = '<option value=""></option><option value="Tốt">Tốt</option><option value="Khá">Khá</option><option value="TB">TB</option><option value="Chưa đạt">Chưa đạt</option>';
-
     dmo.innerHTML = `
       <td style="text-align:center;vertical-align:middle"><button class="btn-icon-del" onclick="xoado(this)" title="Xóa dòng">🗑️</button></td>
       <td style="text-align:center;vertical-align:middle" class="stt-cell"></td>
@@ -349,23 +367,20 @@
       <td><select class="cell-input text-center" disabled>${tcgd}</select></td>
       <td><select class="cell-input text-center" disabled>${tcks}</select></td>
       <td><select class="cell-input text-center" disabled>${tckh}</select></td>
-      <td><textarea class="cell-input text-center" rows="1" oninput="tudochk(this)" style="text-align:center; padding-top:10px;" placeholder="(Ý kiến của giáo viên)" disabled></textarea></td>
-      <td><textarea class="cell-input text-center" rows="1" oninput="tudochk(this)" style="text-align:center; padding-top:10px; overflow:hidden;" placeholder="(Ghi họ và tên)" disabled></textarea></td>
+      <td><textarea class="cell-input text-center" rows="1" oninput="tudochk(this)" style="text-align:center; padding-top:10px;" placeholder="(Ý kiến)" disabled></textarea></td>
+      <td><textarea class="cell-input text-center" rows="1" oninput="tudochk(this)" style="text-align:center; padding-top:10px; overflow:hidden;" placeholder="(Ký tên)" disabled></textarea></td>
       <td style="text-align:center;vertical-align:middle; padding:5px;" class="evidence-cell">
           <input type="hidden" class="cell-input link-input">
           <div class="link-display-area" style="width:100%;"></div>
-          <button class="btn-upload-icon" onclick="kichhta(this)" title="Chèn minh chứng">📎 Đính kèm</button>
+          <button class="btn-upload-icon" onclick="kichhta(this)" title="Minh chứng">📎 Đính kèm</button>
       </td>
       <td class="ma-ho-so-cell">MS-${datg}-${idng}</td>
     `;
-    tbg.appendChild(dmo);
-    capnst(); capnticd();
-    
+    tbg.appendChild(dmo); capnst(); capnticd();
     if(dld) {
        const cacn = dmo.querySelectorAll('.cell-input');
-       for(let iso = 0; iso <= 10; iso++) cacn[iso].value = dld[iso+4] || ""; 
-       const ddnlk = dld[15]||"";
-       if(ddnlk) { donghtta = dmo; trallkch(ddnlk); }
+       cacn[0].value = dld[4]||layngayh(); cacn[1].value = dld[5]||""; cacn[2].value = dld[6]||""; cacn[3].value = dld[7]||""; cacn[4].value = dld[8]||""; cacn[5].value = dld[9]||""; cacn[6].value = dld[10]||""; cacn[7].value = dld[11]||""; cacn[8].value = dld[12]||""; cacn[9].value = dld[13]||""; cacn[10].value = dld[14]||"";
+       const ddnlk = dld[15]||""; if(ddnlk) { donghtta = dmo; trallkch(ddnlk); }
        dmo.querySelector('.ma-ho-so-cell').innerText = dld[16]||`MS-${datg}-${idng}`;
        dmo.querySelectorAll('textarea').forEach(t1 => tudochk(t1));
     }
@@ -376,32 +391,19 @@
   function xulyno() { if(hoplno()) thuchms("skt_nopbg_cuo", document.getElementById('btnSubmit'), "NỘP KẾT QUẢ"); }
 
   function thuchms(ha, nt, ch) {
-    const gv = document.getElementById('cbGiaoVien').value;
-    const nkt = document.getElementById('cbNguoiKiemTra').value;
-    const bp = document.getElementById('cbBoPhan').value;
-    const mbp = document.getElementById('txtMaBoPhan').value;
-    const dlg = [];
+    const gv = document.getElementById('cbGiaoVien').value, nkt = document.getElementById('cbNguoiKiemTra').value, bp = document.getElementById('cbBoPhan').value, mbp = document.getElementById('txtMaBoPhan').value, dlg = [];
     document.querySelectorAll('#tableContent tr').forEach(dg => {
         const cacn = dg.querySelectorAll('.cell-input');
-        dlg.push([gv, nkt, bp, mbp, cacn[0].value, cacn[1].value, cacn[2].value, cacn[3].value, cacn[4].value, cacn[5].value, cacn[6].value, cacn[7].value, cacn[8].value, cacn[9].value, cacn[10].value, cacn[11].value, dg.querySelector('.ma-ho-so-cell').innerText]);
+        dlg.push([gv, nkt, bp, mbp, cacn[0].value, cacn[1].value, cacn[2].value, cacn[3].value, cacn[4].value, cacn[5].value, cacn[6].value, cacn[7].value, cacn[8].value, cacn[9].value, cacn[10].value, dg.querySelector('.link-input').value, dg.querySelector('.ma-ho-so-cell').innerText]);
     });
     nt.disabled = true; nt.innerText = "⏳ XỬ LÝ..."; nt.classList.add('loading-spin');
-    google.script.run.withSuccessHandler(kq => {
-      nt.disabled = false; nt.innerText = ch; nt.classList.remove('loading-spin'); hienhth(kq);
-      if(!kq.includes("⚠️") && !kq.includes("❌")) { setTimeout(lammdsm, 500); datlbie(); }
-    })[ha](dlg);
+    google.script.run.withSuccessHandler(kq => { nt.disabled = false; nt.innerText = ch; nt.classList.remove('loading-spin'); hienhth(kq); if(!kq.includes("⚠️") && !kq.includes("❌")) { setTimeout(lammdsm, 500); datlbie(); } })[ha](dlg);
   }
 
   function kiemttrem(lo) {
-    const gv = document.getElementById('cbGiaoVien').value;
-    const nkt = document.getElementById('cbNguoiKiemTra').value;
+    const gv = document.getElementById('cbGiaoVien').value, nkt = document.getElementById('cbNguoiKiemTra').value;
     if (!gv || !nkt) return false;
-    const egv = dlgvi.find(x1 => chuanhchu(x1.tenn) === chuanhchu(gv))?.taik;
-    const enk = dlnktra.find(x1 => chuanhchu(x1.tenn) === chuanhchu(nkt))?.taik;
-    if (egv && enk && egv === enk) {
-      hienhth("⚠️ LỖI: Tài khoản người kiểm tra và giáo viên trùng nhau!");
-      document.getElementById(lo === 'GV' ? 'cbGiaoVien' : 'cbNguoiKiemTra').value = ""; return true; 
-    }
+    if (dlgvi.find(x1 => chuanhchu(x1.tenn) === chuanhchu(gv))?.taik === dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.taik) { hienhth("⚠️ Tài khoản KT và GV trùng nhau!"); document.getElementById(lo === 'GV' ? 'cbGiaoVien' : 'cbNguoiKiemTra').value = ""; return true; }
     return false;
   }
 
@@ -417,156 +419,47 @@
   function dattr(tt) { for(let iso=1;iso<=4;iso++){ let p1=document.getElementById('step'+iso); if(p1){ p1.className='step'; if(iso<tt)p1.classList.add('completed'); if(iso===tt)p1.classList.add('active'); }}}
   
   function datlbie() {
-    ['cbNguoiKiemTra', 'cbBoPhan', 'cbMaHoSo'].forEach(idd => {
-      const p1 = document.getElementById(idd); if(p1) { p1.value = ""; p1.disabled = false; }
-    });
-    
+    ['cbNguoiKiemTra', 'cbBoPhan', 'cbMaHoSo'].forEach(idd => { const p1 = document.getElementById(idd); if(p1) { p1.value = ""; p1.disabled = false; } });
     let emcan = chuanhchu(window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || tknd);
     let tgvc = dlgvi.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-    let tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-    const hpgv = document.getElementById('cbGiaoVien');
-
-    if (tgvc && !tnktc) {
-        dathopc('cbGiaoVien', tgvc);
-        hpgv.disabled = true;
-    } else {
-        hpgv.value = "";
-        hpgv.disabled = false;
-    }
-
-    document.getElementById('txtMaBoPhan').value = "";
-    document.getElementById('tableContent').innerHTML = ""; 
-    themdongmo(); dattr(1);
+    if (tgvc && !dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn) { dathopc('cbGiaoVien', tgvc); document.getElementById('cbGiaoVien').disabled = true; }
+    else { document.getElementById('cbGiaoVien').value = ""; document.getElementById('cbGiaoVien').disabled = false; }
+    document.getElementById('txtMaBoPhan').value = ""; document.getElementById('tableContent').innerHTML = ""; themdongmo(); dattr(1);
   }
 
-  function capnhopm() {
-    const hp = document.getElementById('cbMaHoSo'); const ht = hp.value;
-    hp.innerHTML = '<option value="">-- Chọn --</option>';
-    if (dlmhso && dlmhso.length > 0) {
-      const sx = [...dlmhso].sort().reverse();
-      sx.forEach(m1 => hp.add(new Option(m1, m1)));
-      if (ht) hp.value = ht;
-      document.getElementById('btnRefreshMaHoSo').title = `Danh sách (${sx.length})`;
-    }
-  }
-
-  function lammdsm() {
-    const nt = document.getElementById('btnRefreshMaHoSo'); const t1 = nt.innerHTML;
-    nt.disabled = true; nt.innerHTML = "⏳";
-    google.script.run.withSuccessHandler(kq => {
-      nt.disabled = false; nt.innerHTML = t1;
-      if(kq.tcon) { dlmhso = kq.dlmh; capnhopm(); hienhth(`✅ Đã cập nhật ${kq.dlmh.length} hồ sơ`); }
-      else hienhth("❌ Lỗi: " + kq.tbao);
-    }).skt_layds_mhs_cn();
-  }
+  function capnhopm() { const hp = document.getElementById('cbMaHoSo'); const ht = hp.value; hp.innerHTML = '<option value="">-- Chọn --</option>'; if (dlmhso && dlmhso.length > 0) { [...dlmhso].sort().reverse().forEach(m1 => hp.add(new Option(m1, m1))); if (ht) hp.value = ht; document.getElementById('btnRefreshMaHoSo').title = `Danh sách (${dlmhso.length})`; } }
+  function lammdsm() { const nt = document.getElementById('btnRefreshMaHoSo'); const t1 = nt.innerHTML; nt.disabled = true; nt.innerHTML = "⏳"; google.script.run.withSuccessHandler(kq => { nt.disabled = false; nt.innerHTML = t1; if(kq.tcon) { dlmhso = kq.dlmh; capnhopm(); hienhth(`✅ Đã cập nhật ${kq.dlmh.length} hồ sơ`); } else hienhth("❌ Lỗi: " + kq.tbao); }).skt_layds_mhs_cn(); }
 
   function hopllu() {
     if (!document.getElementById('cbGiaoVien').value || !document.getElementById('cbNguoiKiemTra').value || !document.getElementById('cbBoPhan').value) { hienhth("⚠️ Chưa có đủ thông tin chung!"); return false; }
-    var nd = document.querySelectorAll('#tableContent tr')[0].querySelectorAll('.cell-input')[1]; 
-    if (!nd || !nd.value.trim()) { hienhth("⚠️ Chưa có nội dung kiểm tra ở dòng 1!"); return false; }
+    var rows = document.querySelectorAll('#tableContent tr');
+    if (rows.length === 0) return false;
+    if (!rows[0].querySelectorAll('.cell-input')[1].value.trim()) { hienhth("⚠️ Chưa có nội dung kiểm tra!"); return false; }
     return true;
   }
 
   function hoplno() {
     if (!hopllu()) return false;
     let hl = true;
-    document.querySelectorAll('#tableContent tr').forEach((dg, iso) => {
-        const cn = dg.querySelectorAll('.cell-input');
-        if (!cn[9].value.trim()) { hienhth(`⚠️ Dòng ${iso+1}: Thiếu Ý kiến người được kiểm tra!`); cn[9].focus(); hl = false; return; }
-        if (!cn[10].value.trim()) { hienhth(`⚠️ Dòng ${iso+1}: Thiếu chữ ký xác nhận của người được kiểm tra!`); cn[10].focus(); hl = false; return; }
-    });
+    document.querySelectorAll('#tableContent tr').forEach((dg, iso) => { const cn = dg.querySelectorAll('.cell-input'); if (!cn[9].value.trim()) { hienhth(`⚠️ Dòng ${iso+1}: Thiếu Ý kiến!`); cn[9].focus(); hl = false; return; } if (!cn[10].value.trim()) { hienhth(`⚠️ Dòng ${iso+1}: Thiếu chữ ký!`); cn[10].focus(); hl = false; return; } });
     return hl;
   }
 
-  function dienbgw(ds) {
-    if(!ds || ds.length === 0) return;
-    const bg0 = ds[0];
-    
-    dathopc('cbGiaoVien', bg0[0]);
-    dathopc('cbNguoiKiemTra', bg0[1]);
-    dathopc('cbBoPhan', bg0[2]);
-    document.getElementById('txtMaBoPhan').value = String(bg0[3]||"").trim();
-    
-    document.getElementById('tableContent').innerHTML = "";
-    ds.forEach(dl => themdongmo(dl));
-    document.querySelectorAll('textarea.cell-input').forEach(t1 => tudochk(t1));
-  }
-
-  function capnticd() { 
-    const t1 = document.getElementById('cbGiaoVien').value; if(!t1) return;
-    const ch = t1.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,'');
-    document.querySelectorAll('.ma-ho-so-cell').forEach(o1 => {
-        const ct = o1.innerText;
-        if(ct.includes('-')) o1.innerText = ch + ct.substring(ct.indexOf('-'));
-    });
-  }
+  function dienbgw(ds) { if(!ds || ds.length === 0) return; dathopc('cbGiaoVien', ds[0][0]); dathopc('cbNguoiKiemTra', ds[0][1]); dathopc('cbBoPhan', ds[0][2]); document.getElementById('txtMaBoPhan').value = String(ds[0][3]||"").trim(); document.getElementById('tableContent').innerHTML = ""; ds.forEach(dl => themdongmo(dl)); document.querySelectorAll('textarea.cell-input').forEach(t1 => tudochk(t1)); }
+  function capnticd() { const t1 = document.getElementById('cbGiaoVien').value; if(!t1) return; const ch = t1.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,''); document.querySelectorAll('.ma-ho-so-cell').forEach(o1 => { const ct = o1.innerText; if(ct.includes('-')) o1.innerText = ch + ct.substring(ct.indexOf('-')); }); }
 
   function xoado(nt) {
       const emcan = chuanhchu(window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || tknd);
-      const tnktc = dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn;
-      const nkt = document.getElementById('cbNguoiKiemTra').value;
-      const lnk = (tnktc && chuanhchu(tnktc) === chuanhchu(nkt));
-      
-      if (!lnk) { hienhth("⚠️ Bạn không có quyền xóa dòng này!"); return; }
-      const tb = document.getElementById('tableContent');
-      if(tb.rows.length <= 1) { hienhth("⚠️ Phải giữ lại ít nhất một dòng!"); return; }
+      if (!(dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn && chuanhchu(dlnktra.find(x1 => chuanhchu(x1.taik) === emcan)?.tenn) === chuanhchu(document.getElementById('cbNguoiKiemTra').value))) { hienhth("⚠️ Bạn không có quyền xóa!"); return; }
+      if(document.getElementById('tableContent').rows.length <= 1) { hienhth("⚠️ Phải giữ lại ít nhất một dòng!"); return; }
       dongcxoa = nt.closest('tr'); document.getElementById('customConfirmModal').style.display = 'flex';
   }
-
-  function donghthx() { 
-      document.getElementById('customConfirmModal').style.display = 'none'; 
-  }
-  
+  function donghthx() { document.getElementById('customConfirmModal').style.display = 'none'; }
   function xulyxo() {
       if (!dongcxoa) return;
-      
-      const dgd = dongcxoa; 
-      const mh = dgd.querySelector('.ma-ho-so-cell').innerText;
-      
-      const nhlk = dgd.querySelector('.link-input');
-      const dl = nhlk ? nhlk.value : "";
-      
-      const ntx = dgd.querySelector('.btn-icon-del');
+      const dgd = dongcxoa, mh = dgd.querySelector('.ma-ho-so-cell').innerText, dl = dgd.querySelector('.link-input').value, ntx = dgd.querySelector('.btn-icon-del');
       if (ntx) { ntx.setAttribute('data-original', ntx.innerHTML); ntx.innerHTML = '⏳'; ntx.disabled = true; }
-      
-      donghthx(); 
-      
-      hienhth("⏳ Đang xử lý xóa dữ liệu trên hệ thống. Vui lòng chờ...");
-      const ntd = document.querySelector('#modal_overlay_nhap .btn-cancel');
-      if (ntd) ntd.style.display = 'none'; 
-      
-      const tl = mh + (dl ? "|||" + dl : "");
-      
-      google.script.run.withSuccessHandler(function(kq) {
-          if (ntd) ntd.style.display = 'inline-block'; 
-
-          if (kq === "SUCCESS" || kq === "NOT_FOUND" || kq.includes("Không tìm thấy")) {
-              donghth(); 
-              dgd.style.transition = "all 0.5s ease"; 
-              dgd.style.opacity = "0"; 
-              dgd.style.transform = "translateX(50px)";
-              setTimeout(() => { 
-                  dgd.remove(); 
-                  capnst(); 
-                  dongcxoa = null; 
-                  if(document.getElementById('tableContent').rows.length === 0) themdongmo(); 
-              }, 500);
-          } else if (kq === "NO_PERMISSION") { 
-              hienhth("⛔ Bạn không có quyền xóa dữ liệu này!"); 
-              datlntxo(ntx);
-          } else { 
-              hienhth("❌ " + kq); 
-              datlntxo(ntx); 
-          }
-      }).withFailureHandler(function(lo) { 
-          if (ntd) ntd.style.display = 'inline-block';
-          hienhth("❌ Lỗi kết nối: " + lo); 
-          datlntxo(ntx); 
-      }).skt_xoadon_nki_thc(tl);
-  }
-
-  function datlntxo(nt) { 
-      if(nt) { nt.innerHTML = nt.getAttribute('data-original') || '🗑️'; nt.disabled = false; } 
-      dongcxoa = null; 
+      donghthx(); hienhth("⏳ Đang xử lý xóa...");
+      google.script.run.withSuccessHandler(function(kq) { if (kq === "SUCCESS" || kq === "NOT_FOUND" || kq.includes("Không tìm thấy")) { donghth(); dgd.style.transition = "all 0.5s ease"; dgd.style.opacity = "0"; dgd.style.transform = "translateX(50px)"; setTimeout(() => { dgd.remove(); capnst(); dongcxoa = null; if(document.getElementById('tableContent').rows.length === 0) themdongmo(); }, 500); } else { hienhth("❌ " + kq); if(ntx) { ntx.innerHTML = ntx.getAttribute('data-original') || '🗑️'; ntx.disabled = false; } } }).skt_xoadon_nki_thc(mh + (dl ? "|||" + dl : ""));
   }
 </script>
