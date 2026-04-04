@@ -2,7 +2,7 @@
  * INTERNAL API BRIDGE - TRƯỜNG TH&THCS HỢP THÀNH
  * Hệ thống: Sổ Kiểm Tra Nội Bộ (SKT)
  * Mục đích: Cầu nối giao tiếp (Fetch API) giữa giao diện Web App (GitHub) và Google Apps Script.
- * Phiên bản: An toàn hóa định danh V3
+ * Phiên bản: An toàn hóa định danh V3 + NotebookLM Cố định
  */
 
 // THẦY HÃY THAY ĐƯỜNG LINK DƯỚI ĐÂY BẰNG LINK WEB APP (đuôi /exec) CỦA DỰ ÁN SỔ KIỂM TRA NÀY:
@@ -52,7 +52,8 @@ function createRunner(onSuccess, onFailure) {
         skt_tk_laydl_loc: function() { this._call('skt_tk_laydl_loc', {}); },
         skt_timbg_kq: function(tchi) { this._call('skt_timbg_kq', { tchi: tchi }); },
         skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi }); },
-        skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); }
+        skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
+        skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); }
     };
 }
 
