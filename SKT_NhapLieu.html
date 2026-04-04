@@ -13,7 +13,7 @@
       <div class="f-item"><span>Giáo viên</span><select id="cbGiaoVien" class="f-input" onchange="khindthd('GV')"></select></div>
       <div class="f-item"><span>Người kiểm tra</span><select id="cbNguoiKiemTra" class="f-input" onchange="khindthd('NKT')"></select></div>
       <div class="f-item"><span>Bộ phận</span><select id="cbBoPhan" class="f-input" onchange="capnmab()"></select></div>
-      <div class="f-item"><span>Mã bộ phận</span><input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center;"></div>
+      <div class="f-item"><span>Mã bộ phận <button type="button" onclick="mo_notebooklm()" style="margin-left: 2px; background: #10b981; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 11px; padding: 2px 4px; font-weight: bold;" title="Hỏi đáp NotebookLM">🤖 AI</button></span><input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center;"></div>
       <div class="f-item">
         <span>Mã hồ sơ (Lịch sử) <button id="btnRefreshMaHoSo" class="refresh-btn" title="Cập nhật danh sách" onclick="lammdsm()">↻</button></span>
         <select id="cbMaHoSo" class="f-input" onchange="khindthd('MAHS')"></select>
@@ -102,6 +102,28 @@
       </div>
     </div>
   </div>
+
+  <div id="notebooklm_modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box" style="width: 600px; text-align: left;">
+      <div class="modal-title" style="text-align: center; margin-bottom: 15px;">
+         <span style="font-size: 22px; margin-right: 5px;">📚</span><span style="font-weight:bold; color: #1e3a8a;">HỎI ĐÁP NOTEBOOKLM</span>
+      </div>
+      
+      <div style="margin-bottom: 15px; display: flex; gap: 8px;">
+         <input type="text" id="nl_question" class="cell-input" placeholder="Nhập câu hỏi tra cứu nội quy, quy chế..." style="flex: 1; border: 1px solid #94a3b8; border-radius: 4px; padding: 10px;" onkeydown="if(event.key === 'Enter') hoi_notebooklm(document.getElementById('btn_hoi_ai'))">
+         <button id="btn_hoi_ai" class="btn-confirm" style="background: #2563eb; margin: 0; padding: 0 20px; white-space: nowrap;" onclick="hoi_notebooklm(this)">🔍 Hỏi</button>
+      </div>
+      
+      <div>
+         <label style="font-size: 13px; font-weight: bold; color: #b91c1c;">Kết quả phản hồi:</label>
+         <textarea id="nl_answer" class="cell-input" readonly placeholder="Kết quả AI trả lời sẽ được hiển thị tại ô này..." style="min-height: 250px; border: 1px solid #94a3b8; border-radius: 4px; background: #f8fafc; padding: 10px; margin-top: 5px; font-size: 14px; line-height: 1.4;"></textarea>
+      </div>
+      
+      <div class="modal-actions" style="margin-top: 15px; text-align: center;">
+        <button class="btn-cancel" onclick="dong_notebooklm()">Đóng cửa sổ</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -141,8 +163,6 @@
   function dien_ai_nhanxet(uu, ton, bp) {
       if (donghtta) {
           const cacn = donghtta.querySelectorAll('.cell-input');
-          // cacn[0]: Thời gian | cacn[1]: Nội dung
-          // cacn[2]: Ưu điểm   | cacn[3]: Tồn tại | cacn[4]: Biện pháp
           if(uu && uu.trim() !== "")  cacn[2].value = uu;
           if(ton && ton.trim() !== "") cacn[3].value = ton;
           if(bp && bp.trim() !== "")  cacn[4].value = bp;
@@ -158,12 +178,12 @@
       const nhlk = donghtta.querySelector('.link-input');
       const lk = nhlk ? nhlk.value : "";
       
-      if (!lk) { hienhth("⚠️ Dòng này chưa có minh chứng để AI đọc!"); return; }
+      if (!lk) { hienhth("⚠️ Dòng này chưa có link minh chứng để AI đọc!"); return; }
       
       btn_ai_dang_cho = btn;
       let promptInput = document.getElementById('ai_prompt_input');
       promptInput.value = ""; 
-      tudochk(promptInput); // Reset chiều cao khung nhập liệu
+      tudochk(promptInput); 
       document.getElementById('ai_prompt_modal').style.display = 'flex';
   }
 
@@ -213,6 +233,45 @@
           btn.disabled = false;
       })
       .skt_pt_mc_ai(lk, prompt);
+  }
+
+  function mo_notebooklm() {
+      document.getElementById('nl_question').value = "";
+      document.getElementById('nl_answer').value = "";
+      document.getElementById('notebooklm_modal').style.display = 'flex';
+  }
+  
+  function dong_notebooklm() {
+      document.getElementById('notebooklm_modal').style.display = 'none';
+  }
+
+  function hoi_notebooklm(btn) {
+      const qs = document.getElementById('nl_question').value.trim();
+      const ans = document.getElementById('nl_answer');
+
+      if (!qs) { hienhth("⚠️ Thầy/Cô vui lòng nhập câu hỏi cần tra cứu!"); return; }
+
+      const oldText = btn.innerText;
+      btn.innerText = "⏳ Đang xử lý...";
+      btn.disabled = true;
+      ans.value = "⏳ NotebookLM đang truy xuất và phân tích dữ liệu...";
+
+      google.script.run
+      .withSuccessHandler(kq => {
+          btn.innerText = oldText;
+          btn.disabled = false;
+          if (kq.tcon) {
+              ans.value = kq.kqua;
+          } else {
+              ans.value = "❌ " + kq.tbao;
+          }
+      })
+      .withFailureHandler(err => {
+          btn.innerText = oldText;
+          btn.disabled = false;
+          ans.value = "❌ Có lỗi xảy ra trong quá trình xử lý: " + err.message;
+      })
+      .skt_notebooklm_qa(qs);
   }
 
   function trallkch(ddn) {
