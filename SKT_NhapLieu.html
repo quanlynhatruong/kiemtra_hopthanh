@@ -267,7 +267,8 @@
           btn.innerText = oldText;
           btn.disabled = false;
           if (kq.tcon) {
-              ans.value = kq.kqua;
+              // Thêm lệnh .replace(/\*/g, '') để loại bỏ toàn bộ dấu * trong chuỗi kết quả
+              ans.value = kq.kqua.replace(/\*/g, '');
           } else {
               ans.value = "❌ " + kq.tbao;
           }
