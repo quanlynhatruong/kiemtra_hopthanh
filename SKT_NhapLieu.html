@@ -117,11 +117,11 @@
       </div>
 
       <div style="margin-bottom: 10px;">
-         <input type="text" id="nl_doc_scope" class="cell-input" placeholder="Tên văn bản cụ thể (Ví dụ: Thông tư 27, Kế hoạch 01...) để khoanh vùng AI" style="width: 100%; border: 1px dashed #10b981; border-radius: 4px; padding: 8px 10px; box-sizing: border-box; font-size: 13px; color: #047857; background: #ecfdf5;" title="Nhập thông tin này nếu muốn AI chỉ trả lời dựa trên 1 tài liệu cụ thể">
+         <input type="text" id="nl_doc_scope" class="cell-input" placeholder="Tên văn bản cụ thể (Ví dụ: Thông tư 27, Kế hoạch 01...) để AI trả lời trọng tâm nhất" style="width: 100%; border: 1px dashed #10b981; border-radius: 4px; padding: 8px 10px; box-sizing: border-box; font-size: 13px; color: #047857; background: #ecfdf5;" title="Nhập thông tin này nếu muốn AI chỉ trả lời dựa trên 1 tài liệu cụ thể">
       </div>
       
       <div style="margin-bottom: 15px; display: flex; gap: 8px;">
-         <input type="text" id="nl_question" class="cell-input" placeholder="Nhập câu hỏi cần tra cứu thuộc lĩnh vực kiểm tra, giám sát..." style="flex: 1; border: 1px solid #94a3b8; border-radius: 4px; padding: 10px;" onkeydown="if(event.key === 'Enter') hoi_notebooklm(document.getElementById('btn_hoi_ai'))">
+         <input type="text" id="nl_question" class="cell-input" placeholder="Nhập câu hỏi cần tra cứu thuộc lĩnh vực kiểm tra, đánh giá..." style="flex: 1; border: 1px solid #94a3b8; border-radius: 4px; padding: 10px;" onkeydown="if(event.key === 'Enter') hoi_notebooklm(document.getElementById('btn_hoi_ai'))">
          <button id="btn_hoi_ai" class="btn-confirm" style="background: #2563eb; margin: 0; padding: 0 20px; white-space: nowrap;" onclick="hoi_notebooklm(this)">🔍 Hỏi</button>
       </div>
       
@@ -273,7 +273,7 @@
       const oldText = btn.innerText;
       btn.innerText = "⏳ Đang xử lý...";
       btn.disabled = true;
-      ans.value = "⏳ NotebookLM đang truy xuất và phân tích dữ liệu...";
+      ans.value = "⏳ AI đang truy xuất và phân tích dữ liệu...";
 
       google.script.run
       .withSuccessHandler(kq => {
