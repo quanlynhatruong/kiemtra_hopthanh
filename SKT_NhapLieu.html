@@ -18,7 +18,7 @@
         <span>Mã bộ phận</span>
         <div style="display: flex; gap: 4px;">
             <input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center; flex: 1; min-width: 0;">
-            <button type="button" onclick="mo_notebooklm()" style="background: #10b981; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 13px; padding: 0 10px; font-weight: bold; white-space: nowrap;" title="Hỏi đáp NotebookLM">🤖 AI HỎI ĐÁP</button>
+            <button type="button" onclick="mo_notebooklm()" style="background: #10b981; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 13px; padding: 0 10px; font-weight: bold; white-space: nowrap;" title="Hỏi đáp NotebookLM">🤖 AI hỏi đáp</button>
         </div>
       </div>
       <div class="f-item">
@@ -114,6 +114,10 @@
     <div class="modal-box" style="width: 600px; text-align: left;">
       <div class="modal-title" style="text-align: center; margin-bottom: 15px;">
          <span style="font-size: 22px; margin-right: 5px;">📚</span><span style="font-weight:bold; color: #1e3a8a;">HỎI ĐÁP AI</span>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+         <input type="text" id="nl_doc_scope" class="cell-input" placeholder="Tên văn bản cụ thể (Ví dụ: Thông tư 27, Kế hoạch 01...) để khoanh vùng AI" style="width: 100%; border: 1px dashed #10b981; border-radius: 4px; padding: 8px 10px; box-sizing: border-box; font-size: 13px; color: #047857; background: #ecfdf5;" title="Nhập thông tin này nếu muốn AI chỉ trả lời dựa trên 1 tài liệu cụ thể">
       </div>
       
       <div style="margin-bottom: 15px; display: flex; gap: 8px;">
@@ -242,6 +246,8 @@
   }
 
   function mo_notebooklm() {
+      const docScope = document.getElementById('nl_doc_scope');
+      if (docScope) docScope.value = "";
       document.getElementById('nl_question').value = "";
       document.getElementById('nl_answer').value = "";
       document.getElementById('notebooklm_modal').style.display = 'flex';
@@ -252,22 +258,28 @@
   }
 
   function hoi_notebooklm(btn) {
+      const scope = document.getElementById('nl_doc_scope').value.trim();
       const qs = document.getElementById('nl_question').value.trim();
       const ans = document.getElementById('nl_answer');
 
       if (!qs) { hienhth("⚠️ Thầy/Cô vui lòng nhập câu hỏi cần tra cứu!"); return; }
 
+      // Ghép phạm vi văn bản vào câu hỏi để ép buộc AI
+      let final_query = qs;
+      if (scope !== "") {
+          final_query = `Chỉ dựa vào văn bản có tên hoặc chủ đề là: "${scope}". Tuyệt đối không lấy dữ liệu từ văn bản khác. Yêu cầu: ${qs}`;
+      }
+
       const oldText = btn.innerText;
       btn.innerText = "⏳ Đang xử lý...";
       btn.disabled = true;
-      ans.value = "⏳ AI đang truy xuất và phân tích dữ liệu...";
+      ans.value = "⏳ NotebookLM đang truy xuất và phân tích dữ liệu...";
 
       google.script.run
       .withSuccessHandler(kq => {
           btn.innerText = oldText;
           btn.disabled = false;
           if (kq.tcon) {
-              // Thêm lệnh .replace(/\*/g, '') để loại bỏ toàn bộ dấu * trong chuỗi kết quả
               ans.value = kq.kqua.replace(/\*/g, '');
           } else {
               ans.value = "❌ " + kq.tbao;
@@ -278,7 +290,7 @@
           btn.disabled = false;
           ans.value = "❌ Có lỗi xảy ra trong quá trình xử lý: " + err.message;
       })
-      .skt_notebooklm_qa(qs);
+      .skt_notebooklm_qa(final_query);
   }
 
   function trallkch(ddn) {
