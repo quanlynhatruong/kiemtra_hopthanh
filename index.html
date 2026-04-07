@@ -265,13 +265,21 @@
       }
     }
 
-    function thucHienDangNhap(emailScanned) {
-      const tk = String(emailScanned).toLowerCase().trim();
+  function thucHienDangNhap(emailScanned) {
+      // 1. Làm sạch chuỗi: chuyển chữ thường, xóa khoảng trắng thừa ở hai đầu
+      let tk = String(emailScanned).toLowerCase().trim();
+      
+      // 2. Tự động cắt bỏ tiền tố "mailto:" nếu trình tạo QR tự ý chèn vào
+      tk = tk.replace('mailto:', '');
+      
+      // 3. Kiểm tra tính hợp lệ (bắt buộc phải có @)
       if (!tk.includes("@")) {
-          alert("Mã QR không hợp lệ (Không phải Email chuẩn).");
+          // Báo lỗi chi tiết để quản trị viên đối chiếu dữ liệu
+          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
           return;
       }
       
+      // 4. Tiến hành quy trình đăng nhập nếu hợp lệ
       luutrant("SKT_USER_TAIK", tk);
       window.skttktoanc = tk; 
       
