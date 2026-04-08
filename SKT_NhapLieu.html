@@ -14,13 +14,7 @@
       <div class="f-item"><span>Giáo viên</span><select id="cbGiaoVien" class="f-input" onchange="khindthd('GV')"></select></div>
       <div class="f-item"><span>Người kiểm tra</span><select id="cbNguoiKiemTra" class="f-input" onchange="khindthd('NKT')"></select></div>
       <div class="f-item"><span>Bộ phận</span><select id="cbBoPhan" class="f-input" onchange="capnmab()"></select></div>
-      <div class="f-item">
-        <span>Mã bộ phận</span>
-        <div style="display: flex; gap: 4px;">
-            <input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center; flex: 1; min-width: 0;">
-            <button type="button" onclick="mo_notebooklm()" style="background: #10b981; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 13px; padding: 0 10px; font-weight: bold; white-space: nowrap;" title="Hỏi đáp NotebookLM">🤖 AI hỏi đáp</button>
-        </div>
-      </div>
+      <div class="f-item"><span>Mã bộ phận</span><input type="text" id="txtMaBoPhan" class="f-input" readonly style="background:#f3f4f6; text-align:center;"></div>
       <div class="f-item">
         <span>Mã hồ sơ (Lịch sử) <button id="btnRefreshMaHoSo" class="refresh-btn" title="Cập nhật danh sách" onclick="lammdsm()">↻</button></span>
         <select id="cbMaHoSo" class="f-input" onchange="khindthd('MAHS')"></select>
@@ -106,32 +100,6 @@
       <div class="modal-actions" style="margin-top: 20px; text-align: center;">
         <button class="btn-cancel" onclick="dong_ai_modal()">Hủy bỏ</button>
         <button class="btn-confirm" style="background: #10b981;" onclick="xac_nhan_ai()">Bắt đầu phân tích tài liệu</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="notebooklm_modal" class="modal-overlay" style="display: none;">
-    <div class="modal-box" style="width: 600px; text-align: left;">
-      <div class="modal-title" style="text-align: center; margin-bottom: 15px;">
-         <span style="font-size: 22px; margin-right: 5px;">📚</span><span style="font-weight:bold; color: #1e3a8a;">HỎI ĐÁP AI</span>
-      </div>
-
-      <div style="margin-bottom: 10px;">
-         <input type="text" id="nl_doc_scope" class="cell-input" placeholder="Tên văn bản cụ thể (Ví dụ: Thông tư 27, Kế hoạch 01...) để AI trả lời trọng tâm nhất" style="width: 100%; border: 1px dashed #10b981; border-radius: 4px; padding: 8px 10px; box-sizing: border-box; font-size: 13px; color: #047857; background: #ecfdf5;" title="Nhập thông tin này nếu muốn AI chỉ trả lời dựa trên 1 tài liệu cụ thể">
-      </div>
-      
-      <div style="margin-bottom: 15px; display: flex; gap: 8px;">
-         <input type="text" id="nl_question" class="cell-input" placeholder="Nhập câu hỏi cần tra cứu thuộc lĩnh vực kiểm tra, đánh giá..." style="flex: 1; border: 1px solid #94a3b8; border-radius: 4px; padding: 10px;" onkeydown="if(event.key === 'Enter') hoi_notebooklm(document.getElementById('btn_hoi_ai'))">
-         <button id="btn_hoi_ai" class="btn-confirm" style="background: #2563eb; margin: 0; padding: 0 20px; white-space: nowrap;" onclick="hoi_notebooklm(this)">🔍 Hỏi</button>
-      </div>
-      
-      <div>
-         <label style="font-size: 13px; font-weight: bold; color: #b91c1c;">Kết quả phản hồi:</label>
-         <textarea id="nl_answer" class="cell-input" readonly placeholder="Kết quả AI trả lời sẽ được hiển thị tại ô này..." style="min-height: 250px; max-height: 400px; overflow-y: auto; border: 1px solid #94a3b8; border-radius: 4px; background: #f8fafc; padding: 10px; margin-top: 5px; font-size: 14px; line-height: 1.4;"></textarea>
-      </div>
-      
-      <div class="modal-actions" style="margin-top: 15px; text-align: center;">
-        <button class="btn-cancel" onclick="dong_notebooklm()">Đóng cửa sổ</button>
       </div>
     </div>
   </div>
@@ -243,54 +211,6 @@
           btn.disabled = false;
       })
       .skt_pt_mc_ai(lk, prompt);
-  }
-
-  function mo_notebooklm() {
-      const docScope = document.getElementById('nl_doc_scope');
-      if (docScope) docScope.value = "";
-      document.getElementById('nl_question').value = "";
-      document.getElementById('nl_answer').value = "";
-      document.getElementById('notebooklm_modal').style.display = 'flex';
-  }
-  
-  function dong_notebooklm() {
-      document.getElementById('notebooklm_modal').style.display = 'none';
-  }
-
-  function hoi_notebooklm(btn) {
-      const scope = document.getElementById('nl_doc_scope').value.trim();
-      const qs = document.getElementById('nl_question').value.trim();
-      const ans = document.getElementById('nl_answer');
-
-      if (!qs) { hienhth("⚠️ Thầy/Cô vui lòng nhập câu hỏi cần tra cứu!"); return; }
-
-      // Ghép phạm vi văn bản vào câu hỏi để ép buộc AI
-      let final_query = qs;
-      if (scope !== "") {
-          final_query = `Chỉ dựa vào văn bản có tên hoặc chủ đề là: "${scope}". Tuyệt đối không lấy dữ liệu từ văn bản khác. Yêu cầu: ${qs}`;
-      }
-
-      const oldText = btn.innerText;
-      btn.innerText = "⏳ Đang xử lý...";
-      btn.disabled = true;
-      ans.value = "⏳ AI đang truy xuất và phân tích dữ liệu...";
-
-      google.script.run
-      .withSuccessHandler(kq => {
-          btn.innerText = oldText;
-          btn.disabled = false;
-          if (kq.tcon) {
-              ans.value = kq.kqua.replace(/\*/g, '');
-          } else {
-              ans.value = "❌ " + kq.tbao;
-          }
-      })
-      .withFailureHandler(err => {
-          btn.innerText = oldText;
-          btn.disabled = false;
-          ans.value = "❌ Có lỗi xảy ra trong quá trình xử lý: " + err.message;
-      })
-      .skt_notebooklm_qa(final_query);
   }
 
   function trallkch(ddn) {
