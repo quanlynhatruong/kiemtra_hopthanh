@@ -112,6 +112,27 @@
     .btn-upload-icon { background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 14px; }
     .btn-upload-icon:disabled { opacity: 0.5; cursor: not-allowed; }
     .evidence-uploaded { background-color: #f0fdf4; }
+
+    /* Nút kích hoạt AI Trợ giúp */
+    .btn-ai-trigger {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white; border: none; padding: 8px 18px; border-radius: 25px;
+        font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        display: flex; align-items: center; gap: 8px; transition: 0.3s; font-family: "Segoe UI", sans-serif;
+    }
+    .btn-ai-trigger:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+    
+    /* Giao diện Chatbot AI */
+    #ai-chat-box {
+        display: none; position: fixed; bottom: 20px; right: 20px; width: 380px; max-width: 90%;
+        background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        z-index: 1100; flex-direction: column; overflow: hidden; border: 1px solid #e5e7eb; font-family: "Segoe UI", sans-serif;
+    }
+    .ai-chat-header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 12px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    #ai-chat-history { height: 350px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; font-size: 14px; }
+    .ai-msg-bot { align-self: flex-start; background: #e0f2fe; padding: 12px; border-radius: 12px 12px 12px 0; max-width: 85%; color: #0c4a6e; border: 1px solid #bae6fd; white-space: pre-wrap; line-height: 1.4; }
+    .ai-msg-user { align-self: flex-end; background: #1e3a8a; color: white; padding: 12px; border-radius: 12px 12px 0 12px; max-width: 85%; word-wrap: break-word; line-height: 1.4; }
+    .ai-msg-loading { align-self: flex-start; background: #f1f5f9; padding: 10px 15px; border-radius: 12px 12px 12px 0; color: #64748b; font-style: italic; display: flex; align-items: center; gap: 8px; }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -181,11 +202,17 @@
         <img src="https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png" class="school-logo">
         <span class="school-name">Trường TH&THCS Hợp Thành</span>
       </div>
-      <div class="dev-badge-container">
-        <div class="dev-icon-fly">🚀</div>
-        <div class="dev-text-group">
-          <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
-          <div class="dev-role-label">System Developer</div>
+      
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <button class="btn-ai-trigger" onclick="toggleAIChat()">
+            <i class="bi bi-robot"></i> AI Trợ Giúp
+        </button>
+        <div class="dev-badge-container">
+          <div class="dev-icon-fly">🚀</div>
+          <div class="dev-text-group">
+            <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
+            <div class="dev-role-label">System Developer</div>
+          </div>
         </div>
       </div>
     </div>
@@ -223,11 +250,97 @@
       <p id="denied_reason" style="font-weight:bold;"></p>
       <button class="modal-btn" onclick="dangxg()" style="background:#b91c1c; border:none; margin-top:20px;">ĐĂNG NHẬP LẠI</button>
     </div>
+    
+    <div id="ai-chat-box">
+       <div class="ai-chat-header">
+          <span>🤖 Trợ lý AI Hợp Thành</span>
+          <button onclick="toggleAIChat()" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1;">&times;</button>
+       </div>
+       <div id="ai-chat-history">
+          <div class="ai-msg-bot">
+             Kính chào Thầy/Cô! Đây là hệ thống Hỏi - Đáp thông minh tự động đọc tài liệu của dự án. Thầy/Cô cần hỗ trợ thông tin gì về quy trình, hướng dẫn sử dụng hay phân quyền ạ?
+          </div>
+       </div>
+       <div style="padding: 12px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">
+          <input type="text" id="ai-chat-input" placeholder="Nhập câu hỏi tại đây..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
+          <button onclick="guiCauHoiAI()" id="btn-send-ai" style="background: #1e3a8a; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;">Gửi</button>
+       </div>
+    </div>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    // --- KHỐI XỬ LÝ CHAT AI HỎI ĐÁP ---
+    function toggleAIChat() {
+        const hopChat = document.getElementById('ai-chat-box');
+        hopChat.style.display = (hopChat.style.display === 'none' || hopChat.style.display === '') ? 'flex' : 'none';
+        if(hopChat.style.display === 'flex') {
+            document.getElementById('ai-chat-input').focus();
+        }
+    }
+
+    function guiCauHoiAI() {
+        const phanTuNhap = document.getElementById('ai-chat-input');
+        const cauHoi = phanTuNhap.value.trim();
+        if(!cauHoi) return;
+
+        const lichSuChat = document.getElementById('ai-chat-history');
+        const nutGui = document.getElementById('btn-send-ai');
+        
+        // Hiển thị câu hỏi của người dùng
+        const tinNhanNguoiDung = document.createElement('div');
+        tinNhanNguoiDung.className = "ai-msg-user";
+        tinNhanNguoiDung.innerText = cauHoi;
+        lichSuChat.appendChild(tinNhanNguoiDung);
+        
+        phanTuNhap.value = "";
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
+
+        // Hiển thị trạng thái đang xử lý
+        const tinNhanCho = document.createElement('div');
+        tinNhanCho.id = "ai-loading-msg";
+        tinNhanCho.className = "ai-msg-loading";
+        tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang đọc code và phân tích...';
+        lichSuChat.appendChild(tinNhanCho);
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
+        
+        phanTuNhap.disabled = true;
+        nutGui.disabled = true;
+
+        // Gọi hàm Apps Script
+        google.script.run
+            .withSuccessHandler(kq => {
+                document.getElementById('ai-loading-msg').remove();
+                phanTuNhap.disabled = false;
+                nutGui.disabled = false;
+                phanTuNhap.focus();
+                
+                const tinNhanBot = document.createElement('div');
+                tinNhanBot.className = "ai-msg-bot";
+                tinNhanBot.innerText = kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao;
+                lichSuChat.appendChild(tinNhanBot);
+                lichSuChat.scrollTop = lichSuChat.scrollHeight;
+            })
+            .withFailureHandler(loi => {
+                document.getElementById('ai-loading-msg').remove();
+                phanTuNhap.disabled = false;
+                nutGui.disabled = false;
+                
+                const tinNhanLoi = document.createElement('div');
+                tinNhanLoi.className = "ai-msg-bot";
+                tinNhanLoi.style.backgroundColor = "#fee2e2";
+                tinNhanLoi.style.color = "#991b1b";
+                tinNhanLoi.style.borderColor = "#fecaca";
+                tinNhanLoi.innerText = "Mất kết nối máy chủ: " + loi.message;
+                lichSuChat.appendChild(tinNhanLoi);
+                lichSuChat.scrollTop = lichSuChat.scrollHeight;
+            })
+            .skt_notebooklm_qa(cauHoi);
+    }
+    // --- KẾT THÚC KHỐI XỬ LÝ CHAT AI ---
+
     // --- KHỐI XỬ LÝ NHẬN DIỆN QR ---
     let html5QrCode = null;
 
@@ -242,7 +355,6 @@
         { facingMode: "environment" }, 
         config,
         (decodedText) => {
-          // Thành công: decodedText chính là Email giáo viên trên thẻ
           huyQuetQR();
           thucHienDangNhap(decodedText);
         },
@@ -266,20 +378,14 @@
     }
 
   function thucHienDangNhap(emailScanned) {
-      // 1. Làm sạch chuỗi: chuyển chữ thường, xóa khoảng trắng thừa ở hai đầu
       let tk = String(emailScanned).toLowerCase().trim();
-      
-      // 2. Tự động cắt bỏ tiền tố "mailto:" nếu trình tạo QR tự ý chèn vào
       tk = tk.replace('mailto:', '');
       
-      // 3. Kiểm tra tính hợp lệ (bắt buộc phải có @)
       if (!tk.includes("@")) {
-          // Báo lỗi chi tiết để quản trị viên đối chiếu dữ liệu
           alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
           return;
       }
       
-      // 4. Tiến hành quy trình đăng nhập nếu hợp lệ
       luutrant("SKT_USER_TAIK", tk);
       window.skttktoanc = tk; 
       
