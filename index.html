@@ -379,22 +379,34 @@
     }
 
   function thucHienDangNhap(emailScanned) {
-      let tk = String(emailScanned).toLowerCase().trim();
-      tk = tk.replace('mailto:', '');
-      
-      if (!tk.includes("@")) {
-          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
-          return;
-      }
-      
-      luutrant("SKT_USER_TAIK", tk);
-      window.skttktoanc = tk; 
-      
-      document.getElementById('login-overlay').style.display = 'none';
-      document.getElementById('instant-loader').style.display = 'flex';
-      
-      kiemtqvata();
+    let tk = String(emailScanned).toLowerCase().trim();
+    tk = tk.replace('mailto:', '');
+    
+    if (!tk.includes("@")) {
+        alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
+        return;
     }
+
+    // LỚP BẢO MẬT BỔ SUNG: Xác thực bằng mã PIN nội bộ để chống mạo danh QR
+    let maPinXacNhan = prompt("HỆ THỐNG XÁC THỰC QR\n----------------------------\nĐang đăng nhập cho: " + tk + "\n\nVui lòng nhập mã PIN bảo mật của nhà trường:");
+    
+    // Thầy có thể thay đổi chuỗi "HT2026" thành mã PIN riêng của thầy
+    if (maPinXacNhan !== "HT2026" && maPinXacNhan !== null) {
+        alert("⛔ ĐĂNG NHẬP THẤT BẠI: Mã PIN xác thực không chính xác. Hệ thống đã ngăn chặn truy cập mạo danh!");
+        return;
+    }
+    
+    if (maPinXacNhan === null) return; // Người dùng bấm Hủy (Cancel)
+
+    // Nếu vượt qua xác thực, tiến hành lưu phiên và nạp dữ liệu
+    luutrant("SKT_USER_TAIK", tk);
+    window.skttktoanc = tk; 
+    
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('instant-loader').style.display = 'flex';
+    
+    kiemtqvata();
+  }
     // --- KẾT THÚC KHỐI QR ---
 
     function kiemtdt() {
