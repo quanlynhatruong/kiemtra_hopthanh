@@ -131,7 +131,6 @@
     .ai-chat-header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 15px 18px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
     #ai-chat-history { height: 450px; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 15px; background: #f8fafc; font-size: 14.5px; }
     
-    /* Cập nhật phần max-width thành 100% để cân lề trái - phải */
     .ai-msg-bot { align-self: flex-start; background: #e0f2fe; padding: 14px 18px; border-radius: 12px 12px 12px 0; max-width: 100%; color: #0c4a6e; border: 1px solid #bae6fd; white-space: pre-line; text-align: justify; line-height: 1.5; }
     
     .ai-msg-user { align-self: flex-end; background: #1e3a8a; color: white; padding: 14px 18px; border-radius: 12px 12px 0 12px; max-width: 90%; word-wrap: break-word; line-height: 1.5; }
@@ -340,9 +339,8 @@
             })
             .skt_notebooklm_qa(cauHoi);
     }
-    // --- KẾT THÚC KHỐI XỬ LÝ CHAT AI ---
 
-    // --- KHỐI XỬ LÝ NHẬN DIỆN QR ---
+    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ BẢO MẬT 2 LỚP ---
     let html5QrCode = null;
 
     function batDauQuetQR() {
@@ -387,43 +385,82 @@
           return;
       }
 
-      // 1. Tạm ẩn giao diện đăng nhập và bật màn hình chờ
       document.getElementById('login-overlay').style.display = 'none';
       document.getElementById('instant-loader').style.display = 'flex';
 
-      // 2. Gọi máy chủ lấy mã PIN trước khi xác thực
+      // Chuyển toàn bộ luồng kiểm tra trạng thái lên Máy chủ Google
       google.script.run
-        .withSuccessHandler(maPinHeThong => {
-            // Tạm ẩn vòng xoay, hiển thị hộp nhập thông tin
+        .withSuccessHandler(kq_trangthai => {
             document.getElementById('instant-loader').style.display = 'none';
 
-            let maPinXacNhan = prompt("HỆ THỐNG XÁC THỰC QR\n----------------------------\nĐang đăng nhập cho: " + tk + "\n\nVui lòng nhập mã PIN bảo mật của nhà trường:");
-
-            if (maPinXacNhan !== maPinHeThong && maPinXacNhan !== null) {
-                alert("⛔ ĐĂNG NHẬP THẤT BẠI: Mã PIN xác thực không chính xác. Hệ thống đã ngăn chặn truy cập mạo danh!");
-                document.getElementById('login-overlay').style.display = 'flex'; // Trả về giao diện gốc
+            if (kq_trangthai.loai === 'KHONG_TON_TAI') {
+                alert("⛔ LỖI ĐỊNH DANH: Tài khoản [" + tk + "] chưa được khai báo phân quyền truy cập trong hệ thống Sổ Kiểm Tra.");
+                document.getElementById('login-overlay').style.display = 'flex';
                 return;
             }
 
-            if (maPinXacNhan === null) {
-                document.getElementById('login-overlay').style.display = 'flex'; // Trả về nếu bấm Hủy
-                return; 
+            if (kq_trangthai.loai === 'LOI') {
+                alert("⛔ LỖI HỆ THỐNG: " + kq_trangthai.tbao);
+                document.getElementById('login-overlay').style.display = 'flex';
+                return;
             }
 
-            // Nếu người dùng nhập mã PIN hợp lệ với hệ thống
-            luutrant("SKT_USER_TAIK", tk);
-            window.skttktoanc = tk; 
-            
-            // Tiếp tục vòng xoay để phân quyền
-            document.getElementById('instant-loader').style.display = 'flex';
-            kiemtqvata();
+            if (kq_trangthai.loai === 'DA_TAO') {
+                let khoa_nhap = prompt("HỆ THỐNG ĐỊNH DANH CÁ NHÂN\n----------------------------\nTài khoản: " + tk + "\n\nVui lòng nhập Mã PIN cá nhân của Thầy/Cô:");
+                if (khoa_nhap === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
+                
+                tiepTucXacThucQR(tk, khoa_nhap, 'DA_TAO', "");
+                
+            } else if (kq_trangthai.loai === 'CHUA_TAO') {
+                let khoa_goc = prompt("HỆ THỐNG ĐỊNH DANH - LẦN TRUY CẬP ĐẦU TIÊN\n----------------------------\nTài khoản: " + tk + "\n\nVui lòng nhập Mã PIN cấp phát của nhà trường (Mã mặc định):");
+                if (khoa_goc === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
+
+                let khoa_moi = prompt("TẠO MÃ PIN ĐỊNH DANH CÁ NHÂN\n----------------------------\nVui lòng tạo một Mã PIN mới (Từ 4 đến 6 ký tự/số) để sử dụng bảo mật cho các lần sau. Hãy ghi nhớ kỹ mã này:");
+                if (khoa_moi === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
+                if (khoa_moi.length < 4) {
+                    alert("⛔ MÃ BẢO MẬT QUÁ NGẮN: Mã PIN cá nhân phải có ít nhất 4 ký tự!");
+                    document.getElementById('login-overlay').style.display = 'flex';
+                    return;
+                }
+
+                tiepTucXacThucQR(tk, khoa_goc, 'CHUA_TAO', khoa_moi);
+            }
         })
         .withFailureHandler(loi => {
-            alert("Mất kết nối với máy chủ khi lấy dữ liệu: " + loi.message);
+            alert("Mất kết nối với máy chủ khi kiểm tra định danh: " + loi.message);
             document.getElementById('instant-loader').style.display = 'none';
             document.getElementById('login-overlay').style.display = 'flex';
         })
-        .skt_lay_mapin_qr();
+        .skt_ktra_trangthai_qr(tk);
+  }
+
+  function tiepTucXacThucQR(tk, khoa_nhap, kieu_xthuc, khoa_moi) {
+      document.getElementById('instant-loader').style.display = 'flex';
+
+      google.script.run
+        .withSuccessHandler(kq_xacthuc => {
+            if (!kq_xacthuc.tcon) {
+                document.getElementById('instant-loader').style.display = 'none';
+                alert("⛔ TỪ CHỐI TRUY CẬP: " + kq_xacthuc.tbao);
+                document.getElementById('login-overlay').style.display = 'flex';
+                return;
+            }
+
+            if (kq_xacthuc.tbao) {
+                alert("✅ HOÀN TẤT: " + kq_xacthuc.tbao);
+            }
+
+            luutrant("SKT_USER_TAIK", tk);
+            window.skttktoanc = tk; 
+            
+            kiemtqvata();
+        })
+        .withFailureHandler(loi => {
+            alert("Mất kết nối với máy chủ khi xác thực: " + loi.message);
+            document.getElementById('instant-loader').style.display = 'none';
+            document.getElementById('login-overlay').style.display = 'flex';
+        })
+        .skt_xacthuc_qr(tk, khoa_nhap, kieu_xthuc, khoa_moi);
   }
     // --- KẾT THÚC KHỐI QR ---
 
