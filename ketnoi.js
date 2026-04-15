@@ -53,7 +53,8 @@ function createRunner(onSuccess, onFailure) {
         skt_timbg_kq: function(tchi) { this._call('skt_timbg_kq', { tchi: tchi }); },
         skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi }); },
         skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
-        skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); }
+        skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); },
+        skt_lay_mapin_qr: function() { this._call('skt_lay_mapin_qr', {}); }
     };
 }
 
