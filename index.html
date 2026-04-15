@@ -22,6 +22,7 @@
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
     
+    /* Cấu trúc các lựa chọn đăng nhập */
     .lua-chon-group { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
     .label-lua-chon { font-size: 13px; color: #666; margin-bottom: 15px; display: block; font-style: italic; }
     
@@ -146,11 +147,11 @@
       <p id="pin-modal-desc" style="font-size: 15px; color: #475569; margin-bottom: 20px;"></p>
 
       <div id="pin-step-1">
-          <input type="password" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 20px; text-align: center; letter-spacing: 5px; margin-bottom: 15px; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="password" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div id="pin-step-2" style="display: none;">
-          <input type="password" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 20px; text-align: center; letter-spacing: 5px; margin-bottom: 20px; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="password" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div style="display: flex; gap: 10px; justify-content: center;">
