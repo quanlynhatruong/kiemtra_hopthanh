@@ -439,12 +439,12 @@
       }
     }
 
-  function thucHienDangNhap(emailScanned) {
-      let tk = String(emailScanned).toLowerCase().trim();
+  function thucHienDangNhap(chuoiMaQR) {
+      let tk = String(chuoiMaQR).toLowerCase().trim();
       tk = tk.replace('mailto:', '');
       
       if (!tk.includes("@")) {
-          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
+          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một chuỗi định danh chuẩn.");
           return;
       }
 
