@@ -379,33 +379,51 @@
     }
 
   function thucHienDangNhap(emailScanned) {
-    let tk = String(emailScanned).toLowerCase().trim();
-    tk = tk.replace('mailto:', '');
-    
-    if (!tk.includes("@")) {
-        alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
-        return;
-    }
+      let tk = String(emailScanned).toLowerCase().trim();
+      tk = tk.replace('mailto:', '');
+      
+      if (!tk.includes("@")) {
+          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + tk + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một Email chuẩn.");
+          return;
+      }
 
-    // LỚP BẢO MẬT BỔ SUNG: Xác thực bằng mã PIN nội bộ để chống mạo danh QR
-    let maPinXacNhan = prompt("HỆ THỐNG XÁC THỰC QR\n----------------------------\nĐang đăng nhập cho: " + tk + "\n\nVui lòng nhập mã PIN bảo mật của nhà trường:");
-    
-    // Thầy có thể thay đổi chuỗi "HT2026" thành mã PIN riêng của thầy
-    if (maPinXacNhan !== "HT2026" && maPinXacNhan !== null) {
-        alert("⛔ ĐĂNG NHẬP THẤT BẠI: Mã PIN xác thực không chính xác. Hệ thống đã ngăn chặn truy cập mạo danh!");
-        return;
-    }
-    
-    if (maPinXacNhan === null) return; // Người dùng bấm Hủy (Cancel)
+      // 1. Tạm ẩn giao diện đăng nhập và bật màn hình chờ
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('instant-loader').style.display = 'flex';
 
-    // Nếu vượt qua xác thực, tiến hành lưu phiên và nạp dữ liệu
-    luutrant("SKT_USER_TAIK", tk);
-    window.skttktoanc = tk; 
-    
-    document.getElementById('login-overlay').style.display = 'none';
-    document.getElementById('instant-loader').style.display = 'flex';
-    
-    kiemtqvata();
+      // 2. Gọi máy chủ lấy mã PIN trước khi xác thực
+      google.script.run
+        .withSuccessHandler(maPinHeThong => {
+            // Tạm ẩn vòng xoay, hiển thị hộp nhập thông tin
+            document.getElementById('instant-loader').style.display = 'none';
+
+            let maPinXacNhan = prompt("HỆ THỐNG XÁC THỰC QR\n----------------------------\nĐang đăng nhập cho: " + tk + "\n\nVui lòng nhập mã PIN bảo mật của nhà trường:");
+
+            if (maPinXacNhan !== maPinHeThong && maPinXacNhan !== null) {
+                alert("⛔ ĐĂNG NHẬP THẤT BẠI: Mã PIN xác thực không chính xác. Hệ thống đã ngăn chặn truy cập mạo danh!");
+                document.getElementById('login-overlay').style.display = 'flex'; // Trả về giao diện gốc
+                return;
+            }
+
+            if (maPinXacNhan === null) {
+                document.getElementById('login-overlay').style.display = 'flex'; // Trả về nếu bấm Hủy
+                return; 
+            }
+
+            // Nếu người dùng nhập mã PIN hợp lệ với hệ thống
+            luutrant("SKT_USER_TAIK", tk);
+            window.skttktoanc = tk; 
+            
+            // Tiếp tục vòng xoay để phân quyền
+            document.getElementById('instant-loader').style.display = 'flex';
+            kiemtqvata();
+        })
+        .withFailureHandler(loi => {
+            alert("Mất kết nối với máy chủ khi lấy dữ liệu: " + loi.message);
+            document.getElementById('instant-loader').style.display = 'none';
+            document.getElementById('login-overlay').style.display = 'flex';
+        })
+        .skt_lay_mapin_qr();
   }
     // --- KẾT THÚC KHỐI QR ---
 
