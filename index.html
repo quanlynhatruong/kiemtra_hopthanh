@@ -22,7 +22,6 @@
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
     
-    /* Cấu trúc các lựa chọn đăng nhập */
     .lua-chon-group { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
     .label-lua-chon { font-size: 13px; color: #666; margin-bottom: 15px; display: block; font-style: italic; }
     
@@ -140,6 +139,26 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+
+  <div id="pin-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1060; justify-content: center; align-items: center; font-family: 'Times New Roman', serif;">
+    <div style="background: white; padding: 30px; border-radius: 12px; width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 5px solid #1e3a8a;">
+      <h4 id="pin-modal-title" style="color: #1e3a8a; font-weight: bold; margin-bottom: 15px; font-size: 18px; text-transform: uppercase;">XÁC THỰC ĐỊNH DANH</h4>
+      <p id="pin-modal-desc" style="font-size: 15px; color: #475569; margin-bottom: 20px;"></p>
+
+      <div id="pin-step-1">
+          <input type="password" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 20px; text-align: center; letter-spacing: 5px; margin-bottom: 15px; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+      </div>
+
+      <div id="pin-step-2" style="display: none;">
+          <input type="password" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 20px; text-align: center; letter-spacing: 5px; margin-bottom: 20px; outline: none; transition: border-color 0.3s;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="dongPinModal(false)" style="flex: 1; padding: 12px; background: #f1f5f9; color: #475569; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">HỦY BỎ</button>
+          <button id="btn-pin-submit" onclick="dongPinModal(true)" style="flex: 1; padding: 12px; background: #1e3a8a; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">XÁC NHẬN</button>
+      </div>
+    </div>
+  </div>
 
   <div class="modal fade" id="trialModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" style="z-index: 1090;">
     <div class="modal-dialog modal-dialog-centered">
@@ -289,7 +308,6 @@
         const lichSuChat = document.getElementById('ai-chat-history');
         const nutGui = document.getElementById('btn-send-ai');
         
-        // Hiển thị câu hỏi của người dùng
         const tinNhanNguoiDung = document.createElement('div');
         tinNhanNguoiDung.className = "ai-msg-user";
         tinNhanNguoiDung.innerText = cauHoi;
@@ -298,7 +316,6 @@
         phanTuNhap.value = "";
         lichSuChat.scrollTop = lichSuChat.scrollHeight;
 
-        // Hiển thị trạng thái đang xử lý
         const tinNhanCho = document.createElement('div');
         tinNhanCho.id = "ai-loading-msg";
         tinNhanCho.className = "ai-msg-loading";
@@ -309,7 +326,6 @@
         phanTuNhap.disabled = true;
         nutGui.disabled = true;
 
-        // Gọi hàm Apps Script
         google.script.run
             .withSuccessHandler(kq => {
                 document.getElementById('ai-loading-msg').remove();
@@ -340,8 +356,55 @@
             .skt_notebooklm_qa(cauHoi);
     }
 
-    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ BẢO MẬT 2 LỚP ---
+    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ HIỂN THỊ MÃ PIN CHE KHUẤT ---
     let html5QrCode = null;
+    let resolvePinPromise = null;
+
+    // Thuật toán hiển thị Box nhập PIN ảo
+    function hienThiNhapPin(tieuDe, moTa, canTaoMoi) {
+        return new Promise((resolve) => {
+            document.getElementById('pin-modal-title').innerText = tieuDe;
+            document.getElementById('pin-modal-desc').innerHTML = moTa;
+            document.getElementById('pin-input-1').value = '';
+            document.getElementById('pin-input-2').value = '';
+
+            document.getElementById('pin-step-1').style.display = 'block';
+            if(canTaoMoi) {
+                document.getElementById('pin-step-2').style.display = 'block';
+                document.getElementById('pin-input-1').placeholder = "Nhập mã cấp phát của trường...";
+            } else {
+                document.getElementById('pin-step-2').style.display = 'none';
+                document.getElementById('pin-input-1').placeholder = "Nhập mã PIN cá nhân...";
+            }
+
+            document.getElementById('pin-modal-overlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('pin-input-1').focus(), 100);
+
+            resolvePinPromise = resolve;
+        });
+    }
+
+    // Thuật toán đóng Box và trả dữ liệu
+    function dongPinModal(isXacNhan) {
+        if(!isXacNhan) {
+            document.getElementById('pin-modal-overlay').style.display = 'none';
+            if(resolvePinPromise) resolvePinPromise(null);
+            return;
+        }
+
+        let p1 = document.getElementById('pin-input-1').value.trim();
+        let p2 = document.getElementById('pin-input-2').value.trim();
+        let step2Visible = document.getElementById('pin-step-2').style.display !== 'none';
+
+        if(!p1) { alert("Vui lòng không để trống mã bảo mật!"); document.getElementById('pin-input-1').focus(); return; }
+        if(step2Visible && !p2) { alert("Vui lòng tạo mã PIN định danh mới!"); document.getElementById('pin-input-2').focus(); return; }
+        if(step2Visible && p2.length < 4) { alert("Mã PIN mới phải có ít nhất 4 ký tự/số để đảm bảo an toàn!"); document.getElementById('pin-input-2').focus(); return; }
+
+        document.getElementById('pin-modal-overlay').style.display = 'none';
+        if(resolvePinPromise) {
+            resolvePinPromise(step2Visible ? {goc: p1, moi: p2} : {goc: p1, moi: ""});
+        }
+    }
 
     function batDauQuetQR() {
       document.getElementById('qr-reader-container').style.display = 'block';
@@ -390,7 +453,7 @@
 
       // Chuyển toàn bộ luồng kiểm tra trạng thái lên Máy chủ Google
       google.script.run
-        .withSuccessHandler(kq_trangthai => {
+        .withSuccessHandler(async kq_trangthai => {
             document.getElementById('instant-loader').style.display = 'none';
 
             if (kq_trangthai.loai === 'KHONG_TON_TAI') {
@@ -406,24 +469,18 @@
             }
 
             if (kq_trangthai.loai === 'DA_TAO') {
-                let khoa_nhap = prompt("HỆ THỐNG ĐỊNH DANH CÁ NHÂN\n----------------------------\nTài khoản: " + tk + "\n\nVui lòng nhập Mã PIN cá nhân của Thầy/Cô:");
-                if (khoa_nhap === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
+                // Gọi hộp thoại PIN Che giấu (Lần truy cập sau)
+                let pinData = await hienThiNhapPin("XÁC THỰC ĐỊNH DANH", "Tài khoản: <b>" + tk + "</b><br>Vui lòng nhập Mã PIN cá nhân của Thầy/Cô:", false);
+                if (!pinData) { document.getElementById('login-overlay').style.display = 'flex'; return; }
                 
-                tiepTucXacThucQR(tk, khoa_nhap, 'DA_TAO', "");
+                tiepTucXacThucQR(tk, pinData.goc, 'DA_TAO', "");
                 
             } else if (kq_trangthai.loai === 'CHUA_TAO') {
-                let khoa_goc = prompt("HỆ THỐNG ĐỊNH DANH - LẦN TRUY CẬP ĐẦU TIÊN\n----------------------------\nTài khoản: " + tk + "\n\nVui lòng nhập Mã PIN cấp phát của nhà trường (Mã mặc định):");
-                if (khoa_goc === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
+                // Gọi hộp thoại PIN Che giấu (Lần truy cập đầu)
+                let pinData = await hienThiNhapPin("KÍCH HOẠT TÀI KHOẢN MỚI", "Tài khoản: <b>" + tk + "</b><br>Lần đầu truy cập, vui lòng nhập mã bảo mật cấp phát và tự tạo Mã PIN mới.", true);
+                if (!pinData) { document.getElementById('login-overlay').style.display = 'flex'; return; }
 
-                let khoa_moi = prompt("TẠO MÃ PIN ĐỊNH DANH CÁ NHÂN\n----------------------------\nVui lòng tạo một Mã PIN mới (Từ 4 đến 6 ký tự/số) để sử dụng bảo mật cho các lần sau. Hãy ghi nhớ kỹ mã này:");
-                if (khoa_moi === null) { document.getElementById('login-overlay').style.display = 'flex'; return; }
-                if (khoa_moi.length < 4) {
-                    alert("⛔ MÃ BẢO MẬT QUÁ NGẮN: Mã PIN cá nhân phải có ít nhất 4 ký tự!");
-                    document.getElementById('login-overlay').style.display = 'flex';
-                    return;
-                }
-
-                tiepTucXacThucQR(tk, khoa_goc, 'CHUA_TAO', khoa_moi);
+                tiepTucXacThucQR(tk, pinData.goc, 'CHUA_TAO', pinData.moi);
             }
         })
         .withFailureHandler(loi => {
