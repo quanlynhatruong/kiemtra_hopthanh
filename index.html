@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" href="https://i.ibb.co/yL0gGt7/Logo-TH-THCS-V2-1.png">
+  <link rel="icon" href="https://i.ibb.co/d0JNW94Z/logo-l-a-ch-n6.png">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sổ Kiểm Tra Nội Bộ - TH&THCS Hợp Thành</title>
@@ -37,7 +37,7 @@
     .dev-icon-fly { font-size: 16px; margin-right: 8px; animation: bounce 2s infinite; }
     .dev-text-group { display: flex; flex-direction: column; text-align: right; line-height: 1.1; }
     .dev-name-label { font-weight: 800; font-size: 11px; color: #ffeb3b; text-transform: uppercase; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; letter-spacing: 1px; text-shadow: 1px 1px 1px rgba(0,0,0,0.3); }
-    .dev-role-label { font-size: 10px; font-weight: bold; color: #ffffff; opacity: 1; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
+    .dev-role-label { font-size: 9px; color: #ffffff; opacity: 0.9; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
@@ -165,7 +165,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content text-center p-4 border-0 shadow-lg" style="background: rgba(255, 255, 255, 0.95);">
         <div class="mb-4 mt-2">
-          <img src="https://i.ibb.co/yL0gGt7/Logo-TH-THCS-V2-1.png" alt="Hợp Thành Logo" width="100">
+          <img src="https://i.ibb.co/d0JNW94Z/logo-l-a-ch-n6.png" alt="Hợp Thành Logo" width="100">
         </div>
         <h5 class="fw-bold mb-3" style="font-family: 'Segoe UI', sans-serif;" id="trialTitle">Thông báo dùng thử</h5>
         <p class="fs-5 text-secondary" style="font-family: 'Segoe UI', sans-serif;" id="trialMessage">
@@ -178,7 +178,7 @@
 
   <div id="login-overlay">
     <div class="login-box">
-      <img src="https://i.ibb.co/yL0gGt7/Logo-TH-THCS-V2-1.png" class="login-logo">
+      <img src="https://i.ibb.co/d0JNW94Z/logo-l-a-ch-n6.png" class="login-logo">
       <h2 style="color: #b91c1c; margin-top: 0; text-transform: uppercase;">Sổ Kiểm Tra Nội Bộ</h2>
       <h3 style="color: #1e3a8a; margin-bottom: 25px;">Trường TH&THCS Hợp Thành</h3>
       
@@ -209,7 +209,7 @@
           </div>
       </div>
       
-      <div style="margin-top: 30px; font-size: 12px; color: #999; font-weight: bold;">Nhà phát triển: HOÀNG NGỌC LÂM</div>
+      <div style="margin-top: 30px; font-size: 12px; color: #999; font-weight: bold;">Thiết kế và phát triển: HOÀNG NGỌC LÂM</div>
     </div>
   </div>
 
@@ -221,7 +221,7 @@
   <div id="main-wrapper">
     <div class="school-header">
       <div class="logo-group">
-        <img src="https://i.ibb.co/yL0gGt7/Logo-TH-THCS-V2-1.png" class="school-logo">
+        <img src="https://i.ibb.co/d0JNW94Z/logo-l-a-ch-n6.png" class="school-logo">
         <span class="school-name">Trường TH&THCS Hợp Thành</span>
       </div>
       
@@ -232,8 +232,8 @@
         <div class="dev-badge-container">
           <div class="dev-icon-fly">🚀</div>
           <div class="dev-text-group">
-            <div class="dev-name-label">THIẾT KẾ VÀ PHÁT TRIỂN</div>
-            <div class="dev-role-label">HOÀNG NGỌC LÂM</div>
+            <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
+            <div class="dev-role-label">System Developer</div>
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@
         <h3>Thông báo:</h3>
         <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
         <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem được nội dung cuộc kiểm tra của mình. Không thể mở được của người khác!</p>
-        <p><b> Tác giả: Hoàng Ngọc Lâm </b></p>
+        <p><b> Thiết kế và phát triển: Hoàng Ngọc Lâm </b></p>
       </div>
     </div>
 
@@ -417,7 +417,7 @@
         config,
         (decodedText) => {
           huyQuetQR();
-          thucHienDangNhap(decodedText);
+          thucHienDangNhapQR(decodedText);
         },
         (errorMessage) => { /* Quét liên tục, không báo lỗi log */ }
       ).catch(err => {
@@ -438,31 +438,31 @@
       }
     }
 
-  function thucHienDangNhap(chuoiMaQR) {
+  // HÀM 1: ĐĂNG NHẬP DÀNH RIÊNG CHO QUÉT MÃ QR (CẦN XÁC THỰC PIN)
+  function thucHienDangNhapQR(chuoiMaQR) {
       let chuo_goc = String(chuoiMaQR).trim();
       let tk_giai_ma = chuo_goc.replace('mailto:', '');
-
-      // Khối thuật toán an toàn: Tự động phát hiện và giải mã Base64 (Nếu là QR mã hóa)
+      
+      // Thuật toán an toàn: Tự động giải mã Base64
       try {
           let thu_giai_ma = decodeURIComponent(escape(window.atob(tk_giai_ma)));
           if (thu_giai_ma.includes("@")) {
               tk_giai_ma = thu_giai_ma;
           }
       } catch (loi_giai_ma) {
-          // Bỏ qua lỗi ngầm nếu chuỗi đọc được là text thường không phải Base64 (Tương thích mã QR cũ)
+          // Giữ nguyên nếu là mã QR thường (tương thích ngược)
       }
 
       tk_giai_ma = tk_giai_ma.toLowerCase();
 
       if (!tk_giai_ma.includes("@")) {
-          alert("Lỗi: Mã QR không hợp lệ hoặc sai định dạng mã hóa!\n\nChuỗi hệ thống đọc được từ camera là: [" + chuo_goc + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Định danh yêu cầu dạng chuẩn hoặc đã được mã hóa an toàn.");
+          alert("Lỗi: Mã QR không hợp lệ!\n\nChuỗi hệ thống đọc được từ camera là: [" + chuo_goc + "]\n\nVui lòng kiểm tra lại quá trình tạo mã QR. Mã này không phải là một chuỗi định danh chuẩn.");
           return;
       }
 
       document.getElementById('login-overlay').style.display = 'none';
       document.getElementById('instant-loader').style.display = 'flex';
 
-      // Gửi dữ liệu tk_giai_ma đã được làm sạch lên Server để kiểm tra trạng thái
       google.script.run
         .withSuccessHandler(async kq_trangthai => {
             document.getElementById('instant-loader').style.display = 'none';
@@ -518,7 +518,6 @@
 
             luutrant("SKT_USER_TAIK", tk_giai_ma);
             window.skttktoanc = tk_giai_ma; 
-            
             kiemtqvata();
         })
         .withFailureHandler(loi => {
@@ -528,7 +527,22 @@
         })
         .skt_xacthuc_qr(tk_giai_ma, khoa_nhap, kieu_xthuc, khoa_moi);
   }
-    // --- KẾT THÚC KHỐI QR ---
+
+  // HÀM 2: ĐĂNG NHẬP DÀNH CHO GOOGLE (BỎ QUA BƯỚC HỎI PIN)
+  function thucHienDangNhapGoogle(chuoiDinhDanh) {
+      let tk = String(chuoiDinhDanh).toLowerCase().trim();
+      
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('instant-loader').style.display = 'flex';
+      
+      // Vì nền tảng Google đã xác thực danh tính người dùng an toàn tuyệt đối 
+      // nên hệ thống có thể tin tưởng và cấp quyền phân luồng vào thẳng hồ sơ.
+      luutrant("SKT_USER_TAIK", tk);
+      window.skttktoanc = tk; 
+      kiemtqvata();
+  }
+
+    // --- KẾT THÚC KHỐI ĐĂNG NHẬP ---
 
     function kiemtdt() {
        return true; 
@@ -566,7 +580,8 @@
         const dln = giaimjw(phanh.credential);
         const tk = dln['em' + 'ail']; 
         
-        thucHienDangNhap(tk);
+        // Điều hướng kết quả của Nút Google sang luồng đăng nhập không cần PIN
+        thucHienDangNhapGoogle(tk);
       } catch (loie) {
         alert("Lỗi giải mã Google: " + loie.message);
       }
