@@ -376,7 +376,9 @@
             nutDoc.innerHTML = '<i class="bi bi-file-earmark-text-fill"></i>';
         }
     }
-// Nâng cấp: Gửi câu hỏi AI kết hợp mã hóa dữ liệu & Bộ đếm ngược chống treo
+
+    // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản
+   // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản (Cơ chế chống treo)
 function guiCauHoiAI() {
     const phanTuNhap = document.getElementById('ai-chat-input');
     const cauHoi = phanTuNhap.value.trim();
@@ -406,64 +408,37 @@ function guiCauHoiAI() {
     nutGui.disabled = true;
     nutDoc.disabled = true;
 
-    // BỘ ĐẾM NGƯỢC CHỐNG TREO: Tự nhả giao diện nếu Server mất kết nối quá 45 giây
-    let isDone = false;
-    let timeoutId = setTimeout(() => {
-        if (!isDone) {
-            isDone = true;
-            xuLyLoiAI({message: "Máy chủ AI quá tải hoặc dữ liệu bảng chứa ký tự chặn luồng. Vui lòng tải lại trang và thử lại!"});
-        }
-    }, 45000); 
-
-    // Lấy định danh tài khoản để truyền vào Server (giải quyết lỗi rớt phân quyền)
-    let taiKhoanHienTai = window.skttktoanc || layluutrant("SKT_USER_TAIK") || "";
-
-    try {
-        if (duLieuVanBanHienTai) {
-            // MÃ HÓA BẢO VỆ: Cắt ngắn và bọc mã hóa chống lỗi ký tự ẩn làm sập Google RPC
-            let duLieuGui = String(duLieuVanBanHienTai);
-            if (duLieuGui.length > 20000) {
-                duLieuGui = duLieuGui.substring(0, 20000) + "\n...[Dữ liệu được cắt bớt để đảm bảo tốc độ AI]...";
-            }
-            let duLieuMaHoa = encodeURIComponent(duLieuGui);
-
-            google.script.run
-                .withSuccessHandler(kq => {
-                    if(isDone) return; isDone = true; clearTimeout(timeoutId);
-                    if (kq && typeof kq === 'object') {
-                        hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi phân tích: " + kq.tbao);
-                    } else {
-                        hoanTatXuLyAI("Lỗi hệ thống: Dữ liệu trả về bị hỏng.");
-                    }
-                    duLieuVanBanHienTai = ""; // Dọn dẹp ngữ cảnh
-                })
-                .withFailureHandler(loi => { 
-                    if(isDone) return; isDone = true; clearTimeout(timeoutId);
-                    xuLyLoiAI(loi); 
-                })
-                .skt_phantich_dulieu_text(cauHoi, duLieuMaHoa, taiKhoanHienTai);
-        } else {
-            // Trạng thái: Hỏi đáp văn bản thông thường
-            google.script.run
-                .withSuccessHandler(kq => {
-                    if(isDone) return; isDone = true; clearTimeout(timeoutId);
-                    if (kq && typeof kq === 'object') {
-                        hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao);
-                    } else {
-                        hoanTatXuLyAI("Lỗi hệ thống: Dữ liệu trả về bị hỏng.");
-                    }
-                })
-                .withFailureHandler(loi => { 
-                    if(isDone) return; isDone = true; clearTimeout(timeoutId);
-                    xuLyLoiAI(loi); 
-                })
-                .skt_notebooklm_qa(cauHoi);
-        }
-    } catch(loiChinh) {
-        if(!isDone) {
-            isDone = true; clearTimeout(timeoutId);
-            xuLyLoiAI(loiChinh);
-        }
+    // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
+    if (duLieuVanBanHienTai) {
+        // Trạng thái: Có kẹp dữ liệu bảng vào trong ngữ cảnh
+        google.script.run
+            .withSuccessHandler(kq => {
+                // KIỂM TRA PHÒNG VỆ: Chống treo nếu Server trả về rỗng
+                if (kq && typeof kq === 'object') {
+                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi phân tích bảng: " + kq.tbao);
+                } else {
+                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
+                }
+                duLieuVanBanHienTai = ""; // Dọn dẹp ngữ cảnh
+            })
+            .withFailureHandler(loi => {
+                xuLyLoiAI(loi);
+            })
+            .skt_phantich_dulieu_text(cauHoi, duLieuVanBanHienTai);
+    } else {
+        // Trạng thái: Hỏi đáp văn bản thông thường
+        google.script.run
+            .withSuccessHandler(kq => {
+                if (kq && typeof kq === 'object') {
+                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao);
+                } else {
+                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
+                }
+            })
+            .withFailureHandler(loi => {
+                xuLyLoiAI(loi);
+            })
+            .skt_notebooklm_qa(cauHoi);
     }
 }
 
