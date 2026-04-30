@@ -1,56 +1,69 @@
 <style>
+  /* Cấu trúc Modal chuẩn an toàn, không chiếm quyền điều khiển trình duyệt */
   #upload_modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10005; justify-content: center; align-items: center; }
-  .up-container { background: white; padding: 20px; border-radius: 12px; width: 600px; max-width: 95%; box-shadow: 0 5px 20px rgba(0,0,0,0.3); font-family: "Times New Roman"; }
-  .up-header { text-align: center; border-bottom: 2px solid #1e3a8a; margin-bottom: 15px; padding-bottom: 5px; }
-  .up-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-  .up-dropzone { border: 2px dashed #3b82f6; padding: 25px; text-align: center; background: white; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-  .up-dropzone:hover { background: #eff6ff; }
-  #uploadBtn { width: 100%; padding: 12px; background: #059669; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; opacity: 0.5; pointer-events: none; margin-top: 10px; }
+  .up-container { background: #fff; padding: 20px; border-radius: 8px; width: 500px; max-width: 95%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-family: 'Times New Roman', serif; }
+  .up-header { border-bottom: 2px solid #b91c1c; padding-bottom: 10px; margin-bottom: 15px; text-align: center; }
+  .up-box { margin-bottom: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+  .up-dropzone { border: 2px dashed #ccc; padding: 20px; text-align: center; cursor: pointer; border-radius: 6px; transition: 0.3s; background: #fafafa; }
+  .up-dropzone:hover { border-color: #0891b2; background: #f0f9ff; }
+  
+  #uploadBtn { width: 100%; padding: 12px; background: #0891b2; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; opacity: 0.5; pointer-events: none; margin-top: 10px; }
   #uploadBtn.active { opacity: 1; pointer-events: auto; }
-  .close-up { background: #ef4444; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; float: right; }
-  #warnDelete { display:none; color:#d97706; font-size:13px; text-align:center; margin-bottom:5px; font-weight:bold; background: #fffbeb; padding: 5px; border-radius: 4px; border: 1px dashed #d97706; }
+  .close-up { width: 100%; padding: 10px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+  .close-up:hover { background: #475569; }
+  
+  #warnDelete { display:none; color:#d97706; font-size:13px; text-align:center; margin-bottom:10px; font-weight:bold; background: #fffbeb; padding: 8px; border-radius: 4px; border: 1px dashed #d97706; }
+  #linkInputArea { display:none; text-align: left; }
 </style>
 
 <div id="upload_modal">
   <div class="up-container">
-    <div class="up-header"><h2 style="margin:0; color:#1e3a8a;">📁 MINH CHỨNG</h2></div>
+    <div class="up-header"><h2 style="margin:0; color:#b91c1c;">📁 MINH CHỨNG KÈM THEO</h2></div>
     
     <div class="up-box">
-      <label><b>1. Chọn thư mục lưu trữ (Tiêu chuẩn):</b></label>
+      <label><b>1. Chọn thư mục lưu trữ (Tiêu chuẩn tải File):</b></label>
       <select id="folderSelect" style="width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px;">
-        <option>⏳ Đang quét...</option>
+        <option>⏳ Đang kết nối...</option>
       </select>
     </div>
 
     <div class="up-box">
-      <label style="display:block; margin-bottom:5px;"><b>2. Chọn chế độ và phương thức tải:</b></label>
+      <label style="display:block; margin-bottom:5px;"><b>2. Phương thức đính kèm minh chứng:</b></label>
       
-      <div style="display:flex; gap:20px; justify-content:center; margin-bottom:10px; font-weight:bold;">
-        <label><input type="radio" name="upMode" value="file" checked onchange="chuyencdta()"> 📄 Chọn nhiều File lẻ</label>
-        <label><input type="radio" name="upMode" value="folder" onchange="chuyencdtm()"> 📂 Cả thư mục</label>
+      <div style="display:flex; gap:15px; justify-content:center; margin-bottom:10px; font-weight:bold; flex-wrap: wrap;">
+        <label><input type="radio" name="upMode" value="file" checked onchange="chuyencd_upload()"> 📄 Tải File lẻ</label>
+        <label><input type="radio" name="upMode" value="folder" onchange="chuyencd_upload()"> 📂 Cả thư mục</label>
+        <label style="color: #047857;"><input type="radio" name="upMode" value="link" onchange="chuyencd_upload()"> 🔗 Gán link Web/Drive</label>
       </div>
       
       <div style="display:flex; gap:20px; justify-content:center; padding:8px; background:#e0f2fe; border-radius:6px; margin-bottom:10px; font-size: 14px;">
         <label style="color:#0369a1; cursor:pointer;" title="Xóa tài liệu cũ trên hệ thống, thay bằng tài liệu mới">
-          <input type="radio" name="writeMode" value="replace" checked onchange="capnhtcb()"> 🔄 Thay thế tài liệu cũ
+          <input type="radio" name="writeMode" value="replace" checked onchange="capnhtcb()"> 🔄 Thay thế cũ
         </label>
         <label style="color:#0369a1; cursor:pointer;" title="Giữ nguyên tài liệu cũ, chèn thêm tài liệu mới vào hệ thống">
-          <input type="radio" name="writeMode" value="append" onchange="capnhtcb()"> ➕ Chèn thêm tài liệu
+          <input type="radio" name="writeMode" value="append" onchange="capnhtcb()"> ➕ Chèn thêm
         </label>
       </div>
       
-      <div class="up-dropzone" onclick="document.getElementById('fileIn').click()">
-        <span id="fileLabel">Nhấn vào đây để chọn file</span>
+      <!-- Vùng thả file -->
+      <div class="up-dropzone" id="dropzoneArea" onclick="document.getElementById('fileIn').click()">
+        <span id="fileLabel">Nhấn vào đây để chọn file minh chứng</span>
         <input type="file" id="fileIn" style="display:none" onchange="chonte(this)" multiple>
+      </div>
+
+      <!-- Vùng nhập link -->
+      <div id="linkInputArea">
+          <input type="text" id="txtDirectLink" placeholder="Dán đường link (Google Drive hoặc link web trực tiếp) vào đây..." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-family: Arial, sans-serif; box-sizing: border-box;" oninput="kiemtralink()" autocomplete="off" spellcheck="false">
+          <div style="font-size:12px; color:#666; margin-top:5px; font-style: italic;">* Lưu ý: Hỗ trợ link Google Drive đã mở quyền (Bất kỳ ai có liên kết) hoặc link file web trực tiếp. AI chỉ đọc được nếu file không bị khóa mật khẩu.</div>
       </div>
     </div>
 
-    <div id="warnDelete">⚠️ Tài liệu cũ (File/Thư mục) trên Drive sẽ bị xóa vĩnh viễn để thay thế bằng tài liệu mới.</div>
+    <div id="warnDelete">⚠️ Tài liệu/Liên kết cũ sẽ bị thay thế (Hệ thống tự động dọn dẹp file Drive cũ nếu có).</div>
 
     <div id="upStatus" style="text-align:center; font-weight:bold; min-height:20px; color:#333;"></div>
     
     <div style="margin-top:10px;">
-      <button id="uploadBtn" onclick="thuchta()">BẮT ĐẦU TẢI LÊN</button>
+      <button id="uploadBtn" onclick="thuchta()">TẢI LÊN NGAY</button>
       <button class="close-up" onclick="donghopthta()">ĐÓNG</button>
       <div style="clear:both"></div>
     </div>
@@ -62,6 +75,7 @@
   let lkcx = ""; 
   const idgo = '1_Z4ipFI-LQCJ33FSyb4zzURg6KINvWgG';
 
+  // Tải danh sách thư mục con vào ComboBox
   function taithu() {
     const hop = document.getElementById('folderSelect');
     google.script.run.withSuccessHandler(tm => {
@@ -70,6 +84,7 @@
     }).skt_laytm_con();
   }
 
+  // Khởi động Modal đính kèm
   function mohopthta(lkht) {
     const hpnkt = document.getElementById('cbNguoiKiemTra');
     if (hpnkt) {
@@ -78,10 +93,22 @@
     }
     
     lkcx = lkht || "";
+    document.getElementById('txtDirectLink').value = "";
+    document.getElementById('fileIn').value = "";
+    document.getElementById('fileLabel').innerText = "Nhấn vào đây để chọn file minh chứng";
+    document.getElementById('uploadBtn').classList.remove('active');
+    document.getElementById('upStatus').innerText = "";
+    tepht = [];
+    
+    // Mặc định chọn tải File lẻ
+    document.querySelector('input[name="upMode"][value="file"]').checked = true;
+    chuyencd_upload();
+
     capnhtcb();
     document.getElementById('upload_modal').style.display = 'flex';
   }
 
+  // Cập nhật cảnh báo thay thế
   function capnhtcb() {
     const cdg = document.querySelector('input[name="writeMode"]:checked').value;
     const vungcb = document.getElementById('warnDelete');
@@ -93,37 +120,71 @@
     }
   }
 
+  // Đóng Modal
   function donghopthta() {
     document.getElementById('upload_modal').style.display = 'none';
     document.getElementById('upStatus').innerText = "";
     document.getElementById('fileIn').value = "";
-    document.getElementById('fileLabel').innerText = "Nhấn để chọn file";
+    document.getElementById('txtDirectLink').value = "";
+    document.getElementById('fileLabel').innerText = "Nhấn để chọn file minh chứng";
     document.getElementById('warnDelete').style.display = 'none';
     tepht = []; 
     lkcx = "";
     document.getElementById('uploadBtn').classList.remove('active');
   }
 
-  function chuyencdta() {
-    const dh = document.getElementById('fileIn');
-    dh.removeAttribute('webkitdirectory'); dh.removeAttribute('directory'); 
-    dh.setAttribute('multiple', 'multiple'); 
-    datlnhte();
+  // Chuyển đổi giao diện Đính kèm File/Thư mục/Link
+  function chuyencd_upload() {
+     const cd = document.querySelector('input[name="upMode"]:checked').value;
+     const dh = document.getElementById('fileIn');
+     const dz = document.getElementById('dropzoneArea');
+     const la = document.getElementById('linkInputArea');
+     const btn = document.getElementById('uploadBtn');
+
+     if (cd === 'link') {
+         dz.style.display = 'none';
+         la.style.display = 'block';
+         btn.innerText = "LƯU LINK NÀY NGAY";
+         btn.style.background = "#047857";
+         document.getElementById('txtDirectLink').value = "";
+         capnhtcb();
+         kiemtralink();
+     } else {
+         dz.style.display = 'block';
+         la.style.display = 'none';
+         btn.innerText = "TẢI LÊN NGAY";
+         btn.style.background = "#0891b2";
+         dh.value = "";
+         document.getElementById('fileLabel').innerText = "Nhấn vào đây để chọn file minh chứng";
+         btn.classList.remove('active');
+         
+         if (cd === 'folder') {
+             dh.setAttribute('webkitdirectory', ''); 
+             dh.setAttribute('directory', ''); 
+             dh.setAttribute('multiple', 'multiple');
+             document.getElementById('warnDelete').style.display = 'none';
+         } else {
+             dh.removeAttribute('webkitdirectory'); 
+             dh.removeAttribute('directory'); 
+             dh.setAttribute('multiple', 'multiple');
+             capnhtcb();
+         }
+     }
+     tepht = [];
   }
 
-  function chuyencdtm() {
-    const dh = document.getElementById('fileIn');
-    dh.setAttribute('webkitdirectory', ''); dh.setAttribute('directory', ''); dh.setAttribute('multiple', 'multiple');
-    datlnhte();
+  // Kiểm tra tính hợp lệ của Link dán vào
+  function kiemtralink() {
+      const val = document.getElementById('txtDirectLink').value.trim();
+      const btn = document.getElementById('uploadBtn');
+      if (val !== "") {
+          btn.classList.add('active');
+      } else {
+          btn.classList.remove('active');
+      }
   }
 
-  function datlnhte() {
-    document.getElementById('fileIn').value = "";
-    document.getElementById('fileLabel').innerText = "Nhấn vào đây để chọn file";
-    document.getElementById('uploadBtn').classList.remove('active');
-    tepht = [];
-  }
-
+  // Xử lý sự kiện chọn file từ thiết bị
   function chonte(dauv) {
     if (dauv.files.length > 0) {
       tepht = dauv.files;
@@ -139,16 +200,59 @@
         }
       }
       document.getElementById('uploadBtn').classList.add('active');
-      document.getElementById('upStatus').innerText = "Sẵn sàng.";
+      document.getElementById('upStatus').innerText = "Sẵn sàng tải lên.";
     }
   }
 
+  // Xử lý Gửi dữ liệu (Upload) hoặc Chèn Link
   function thuchta() {
-    if (!tepht || tepht.length === 0) return;
-    const nt = document.getElementById('uploadBtn'), tt = document.getElementById('upStatus');
-    const idt = document.getElementById('folderSelect').value || idgo;
     const cd = document.querySelector('input[name="upMode"]:checked').value;
     const cdg = document.querySelector('input[name="writeMode"]:checked').value;
+    const nt = document.getElementById('uploadBtn');
+    const tt = document.getElementById('upStatus');
+
+    // MẠCH 1: XỬ LÝ GÁN LINK TRỰC TIẾP (FIRE AND FORGET)
+    if (cd === 'link') {
+        const linkVal = document.getElementById('txtDirectLink').value.trim();
+        if (!linkVal) return;
+        
+        nt.classList.remove('active');
+        tt.style.color = "blue";
+
+        let finalLinkStr = linkVal;
+
+        if (cdg === 'append' && lkcx && lkcx.trim() !== "") {
+            tt.innerText = "⏳ Đang gắn kết thêm đường dẫn...";
+            finalLinkStr = lkcx + "," + linkVal;
+            
+            setTimeout(() => {
+                xulykqta({ tcon: true, lkpt: finalLinkStr, tbao: "Đã chèn thêm link thành công!" }, tt, nt);
+            }, 300);
+        } 
+        else if (cdg === 'replace' && lkcx && lkcx.trim() !== "") {
+            tt.innerText = "⏳ Đang dọn dẹp và ghi đè liên kết...";
+            
+            // Xóa ngầm file cũ trên Drive để giải phóng dung lượng (Fire and forget)
+            if(typeof google.script.run.skt_xoatep_dd === 'function') {
+                google.script.run.withSuccessHandler(function() {}).withFailureHandler(function() {}).skt_xoatep_dd(lkcx);
+            }
+            
+            setTimeout(() => {
+                xulykqta({ tcon: true, lkpt: finalLinkStr, tbao: "Đã thay thế và gán link mới thành công!" }, tt, nt);
+            }, 300);
+        } 
+        else {
+            tt.innerText = "⏳ Đang cập nhật hệ thống...";
+            setTimeout(() => {
+                xulykqta({ tcon: true, lkpt: finalLinkStr, tbao: "Đã gán link thành công!" }, tt, nt);
+            }, 300); 
+        }
+        return;
+    }
+
+    // MẠCH 2: XỬ LÝ TẢI FILE HOẶC THƯ MỤC TRUYỀN THỐNG
+    if (!tepht || tepht.length === 0) return;
+    const idt = document.getElementById('folderSelect').value || idgo;
     
     let mhs = "";
     if (typeof donghtta !== 'undefined' && donghtta) {
@@ -167,12 +271,12 @@
     }
 
     nt.classList.remove('active');
-    tt.style.color = "blue"; tt.innerText = "⏳ Đang xử lý tải lên...";
+    tt.style.color = "blue"; tt.innerText = "⏳ Đang chuẩn bị luồng dữ liệu...";
 
     if (cd === 'file') {
       let dlte = [];
       let dem = 0;
-      tt.innerText = `⏳ Đang đọc ${tepht.length} file...`;
+      tt.innerText = `⏳ Đang đọc chuẩn hóa ${tepht.length} file...`;
       
       Array.from(tepht).forEach(te => {
         const do1 = new FileReader();
@@ -181,12 +285,10 @@
           dem++;
           
           if (dem === tepht.length) {
-            tt.innerText = `⏳ Đang gửi ${tepht.length} file lên Drive...`;
+            tt.innerText = `⏳ Đang đồng bộ ${tepht.length} file lên Hệ thống...`;
             
             google.script.run
-            .withSuccessHandler(kq => {
-                xulykqta(kq, tt, nt);
-            })
+            .withSuccessHandler(kq => { xulykqta(kq, tt, nt); })
             .withFailureHandler(lo => {
                 tt.style.color = "red"; 
                 tt.innerText = "❌ Lỗi mạng hoặc Server: " + lo.message;
@@ -201,7 +303,7 @@
       const tent = tepht[0].webkitRelativePath.split('/')[0];
       let dlte = [];
       let dem = 0;
-      tt.innerText = `⏳ Đang đọc ${tepht.length} file...`;
+      tt.innerText = `⏳ Đang đọc cấu trúc ${tepht.length} file...`;
       
       Array.from(tepht).forEach(te => {
         const do1 = new FileReader();
@@ -210,12 +312,10 @@
           dem++;
           
           if (dem === tepht.length) {
-            tt.innerText = "⏳ Đang gửi dữ liệu lên Drive...";
+            tt.innerText = "⏳ Đang đóng gói và gửi lên Drive...";
             
             google.script.run
-            .withSuccessHandler(kq => {
-                xulykqta(kq, tt, nt);
-            })
+            .withSuccessHandler(kq => { xulykqta(kq, tt, nt); })
             .withFailureHandler(lo => {
                 tt.style.color = "red"; 
                 tt.innerText = "❌ Lỗi mạng hoặc Server: " + lo.message;
@@ -229,6 +329,7 @@
     }
   }
 
+  // Kết thúc quy trình và cập nhật dòng dữ liệu
   function xulykqta(kq, tt, nt) {
     if (kq.tcon) {
       tt.style.color = "green"; tt.innerText = "✅ " + kq.tbao;
