@@ -130,6 +130,56 @@
     background: #bae6fd;
     color: #0c4a6e;
   }
+
+  /* BỔ SUNG: Khung Chat Modal giao tiếp AI theo NGUYÊN TẮC VÀNG */
+  .ai-modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;
+  }
+  .ai-modal-content {
+      background: #fff; width: 90%; max-width: 600px; border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;
+  }
+  .ai-modal-header {
+      background: #1e3a8a; color: white; padding: 15px; font-weight: bold;
+      display: flex; justify-content: space-between; align-items: center;
+  }
+  
+  .ai-modal-body { 
+      padding: 15px; 
+      flex: 1; 
+      max-height: 60vh; 
+      overflow-y: auto; 
+      overscroll-behavior: contain;
+      scroll-behavior: smooth; 
+  }
+  .ai-modal-body::-webkit-scrollbar { width: 8px; }
+  .ai-modal-body::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+  .ai-modal-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  .ai-modal-body::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  .ai-modal-footer { padding: 15px; background: #f3f4f6; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; }
+  
+  .ai-response-box {
+      background: #e0f2fe; padding: 10px; border-radius: 5px; margin-bottom: 10px;
+      border-left: 4px solid #0284c7; font-size: 14px; color: #1e3a8a; min-height: 50px; 
+      white-space: normal;
+      line-height: 1.6;
+  }
+  
+  #aiQueryInput {
+      overflow-y: auto;
+  }
+  #aiQueryInput::-webkit-scrollbar { width: 6px; }
+  #aiQueryInput::-webkit-scrollbar-track { background: transparent; }
+  #aiQueryInput::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+  .btn-copy {
+      background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569;
+      padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer;
+      margin-top: 10px; display: inline-block; font-weight: bold; transition: all 0.3s;
+  }
+  .btn-copy:hover { background-color: #e2e8f0; color: #1e3a8a; border-color: #94a3b8; }
 </style>
 
 <div class="header-card">
@@ -210,7 +260,7 @@
         <th style="width:50px">XL khác</th>
         <th style="width:160px">Ý kiến</th>
         <th style="width:100px">Ký tên</th>
-        <th style="width:70px">Hồ sơ</th>
+        <th style="width:90px">Hồ sơ</th>
         <th style="width:110px">Mã HS</th>
       </tr>
     </thead>
@@ -229,7 +279,30 @@
   </div>
 </div>
 
+<!-- BỔ SUNG: Khung Chat AI tuân thủ Nguyên tắc vàng -->
+<div id="aiChatModal" class="ai-modal-overlay">
+    <div class="ai-modal-content">
+        <div class="ai-modal-header">
+            <span>🤖 Trợ lý AI Phân tích tài liệu</span>
+            <button onclick="closeChatModal()" style="background:transparent; border:none; color:white; font-size:16px; cursor:pointer;" title="Đóng">✖</button>
+        </div>
+        <div class="ai-modal-body">
+            <div id="aiResponseBox" class="ai-response-box">
+                <em>Xin chào! Hãy đặt câu hỏi về minh chứng kiểm tra này, tôi sẽ đọc và tóm tắt thông tin giúp đồng chí.</em>
+            </div>
+            <input type="hidden" id="aiCurrentFileUrl">
+        </div>
+        <div class="ai-modal-footer">
+            <textarea id="aiQueryInput" placeholder="Ví dụ: Ưu điểm nổi bật nhất trong tài liệu này là gì?" style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px; resize:none; height:40px; font-family:inherit;" onkeydown="checkEnterChat(event)"></textarea>
+            <button onclick="sendChatToAI()" id="btnSendAI" style="background:#1e3a8a; color:white; border:none; padding:0 20px; border-radius:4px; font-weight:bold; cursor:pointer;">Hỏi AI</button>
+        </div>
+    </div>
+</div>
+
 <script>
+  // BỘ NHỚ ĐỆM AI CHO TRANG TRA CỨU
+  window.SKT_AI_CACHE = window.SKT_AI_CACHE || {};
+
   (function khoitti() {
     const ng = new Date();
     const th = String(ng.getMonth() + 1).padStart(2, '0');
@@ -310,9 +383,15 @@
         let hml = "";
         if(bg[15] && bg[15].includes('http')) {
             const clk = bg[15].toString().split(',').map(l1 => l1.trim()).filter(l1 => l1 !== "");
-            hml = clk.map((dd, c1) => 
-                `<a href="${dd}" target="_blank" class="file-badge" title="Xem tài liệu ${c1 + 1}">📎 ${c1 + 1}</a>`
-            ).join('');
+            
+            // NÂNG CẤP: BỔ SUNG NÚT HỎI AI BÊN CẠNH LINK XEM HỒ SƠ
+            hml = `<div style="display:flex; flex-direction:column; gap:4px; align-items:center;">` +
+                   clk.map((dd, c1) => 
+                     `<div style="display:flex; gap:4px; align-items:center; justify-content:center;">
+                        <a href="${dd}" target="_blank" class="file-badge" title="Xem tài liệu ${c1 + 1}">📎 Xem</a>
+                        <button onclick="openChatModal('${dd}')" style="background:#fef08a; border:1px solid #fde047; padding:2px 6px; border-radius:3px; font-size:11px; font-weight:bold; color:#854d0e; cursor:pointer;" title="Hỏi Trợ lý AI về hồ sơ minh chứng này">🤖 AI</button>
+                      </div>`
+                   ).join('') + `</div>`;
         }
         
         dg.innerHTML = `
@@ -473,5 +552,139 @@
   }
   function donghtt() {
     document.getElementById('tk_modal_overlay').style.display = 'none';
+  }
+
+  // ==========================================
+  // KHỐI HÀM XỬ LÝ GIAO TIẾP VỚI TRỢ LÝ AI
+  // ==========================================
+  
+  function checkEnterChat(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault(); 
+          sendChatToAI();
+      }
+  }
+
+  function openChatModal(fileUrl) {
+      document.getElementById('aiChatModal').style.display = 'flex';
+      document.getElementById('aiCurrentFileUrl').value = fileUrl;
+      document.getElementById('aiResponseBox').innerHTML = '<em>Xin chào! Hãy đặt câu hỏi về hồ sơ minh chứng này, tôi sẽ đọc và tóm tắt thông tin giúp đồng chí.</em>';
+      document.getElementById('aiQueryInput').value = '';
+  }
+
+  function closeChatModal() {
+      document.getElementById('aiChatModal').style.display = 'none';
+  }
+
+  function formatAIResponse(text) {
+      if (!text) return "";
+      let html = text;
+      // Chuyển đổi in đậm
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // Gộp khoảng trắng thừa
+      html = html.replace(/\n{3,}/g, '\n\n');
+      // Chuyển xuống dòng
+      html = html.replace(/\n/g, '<br>');
+      return html;
+  }
+
+  function copyToClipboard(button, elementId) {
+      const contentElement = document.getElementById(elementId);
+      if (!contentElement) return;
+
+      let textToCopy = contentElement.innerText || contentElement.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalText = button.innerHTML;
+          button.innerHTML = "✅ Đã copy!";
+          button.style.backgroundColor = "#dcfce3";
+          button.style.color = "#166534";
+          button.style.borderColor = "#86efac";
+          setTimeout(() => {
+              button.innerHTML = originalText;
+              button.style.backgroundColor = "#f1f5f9";
+              button.style.color = "#475569";
+              button.style.borderColor = "#cbd5e1";
+          }, 2000);
+      }).catch(err => console.error("Lỗi sao chép: ", err));
+  }
+
+  function sendChatToAI() {
+      const queryInput = document.getElementById('aiQueryInput');
+      const query = queryInput.value.trim();
+      const fileUrl = document.getElementById('aiCurrentFileUrl').value;
+      const resBox = document.getElementById('aiResponseBox');
+      const btnSend = document.getElementById('btnSendAI');
+      const modalBody = document.querySelector('.ai-modal-body');
+
+      if(!query) {
+          alert("Vui lòng nhập câu hỏi!"); return;
+      }
+
+      // Xóa khung nhập ngay lập tức
+      queryInput.value = '';
+
+      btnSend.disabled = true;
+      btnSend.innerHTML = "⏳ Đang phân tích...";
+
+      if (resBox.innerHTML.includes('<em>Xin chào!')) {
+          resBox.innerHTML = '';
+      }
+
+      const messageId = "ai_msg_" + new Date().getTime();
+      const newChatBlock = `<div style="margin-top: 10px; border-top: 1px dashed #bae6fd; padding-top: 10px;"><strong>👤 Bạn:</strong> ${query}</div><div id="${messageId}" style="margin-top: 8px; padding: 8px; background: #f0f9ff; border-radius: 4px;"><span style="color:#666; font-style: italic;">⏳ AI đang đọc và phân tích tài liệu, xin vui lòng chờ giây lát...</span></div>`;
+      resBox.innerHTML += newChatBlock;
+
+      if (modalBody) modalBody.scrollTop = modalBody.scrollHeight;
+
+      const cacheKey = fileUrl + "_" + query.toLowerCase();
+      if (window.SKT_AI_CACHE[cacheKey]) {
+          btnSend.disabled = false;
+          btnSend.innerHTML = "Hỏi AI";
+          
+          const targetBox = document.getElementById(messageId);
+          if(targetBox) {
+              targetBox.style.background = 'transparent';
+              targetBox.style.padding = '0';
+              targetBox.innerHTML = `<strong>🤖 AI Phản hồi:</strong><br><div id="text_${messageId}">${window.SKT_AI_CACHE[cacheKey]}</div>
+                                     <button class="btn-copy" onclick="copyToClipboard(this, 'text_${messageId}')">📋 Copy kết quả</button>`;
+          }
+          if (modalBody) modalBody.scrollTop = modalBody.scrollHeight;
+          return;
+      }
+
+      google.script.run
+          .withSuccessHandler(res => {
+              btnSend.disabled = false;
+              btnSend.innerHTML = "Hỏi AI";
+              
+              const targetBox = document.getElementById(messageId);
+              
+              if(res.tcon) {
+                  const formattedResponse = formatAIResponse(res.kqua);
+                  window.SKT_AI_CACHE[cacheKey] = formattedResponse;
+                  
+                  if(targetBox) {
+                      targetBox.style.background = 'transparent';
+                      targetBox.style.padding = '0';
+                      targetBox.innerHTML = `<strong>🤖 AI Phản hồi:</strong><br><div id="text_${messageId}">${formattedResponse}</div>
+                                             <button class="btn-copy" onclick="copyToClipboard(this, 'text_${messageId}')">📋 Copy kết quả</button>`;
+                  }
+              } else {
+                  if(targetBox) targetBox.innerHTML = `<span style="color:red;"><strong>⚠️ Lỗi:</strong> ${res.tbao}</span>`;
+              }
+              
+              if (modalBody) modalBody.scrollTop = modalBody.scrollHeight;
+          })
+          .withFailureHandler(err => {
+              btnSend.disabled = false;
+              btnSend.innerHTML = "Hỏi AI";
+              
+              const targetBox = document.getElementById(messageId);
+              if(targetBox) targetBox.innerHTML = `<span style="color:red;"><strong>❌ Lỗi kết nối máy chủ:</strong> ${err}</span>`;
+              
+              if (modalBody) modalBody.scrollTop = modalBody.scrollHeight;
+          })
+          .skt_chatWithDocument(fileUrl, query);
   }
 </script>
