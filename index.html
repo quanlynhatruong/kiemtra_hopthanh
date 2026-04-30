@@ -9,8 +9,6 @@
   <script src="ketnoi.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  <!-- Bổ sung thư viện chụp màn hình an toàn phía Client -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -137,9 +135,6 @@
     
     .ai-msg-user { align-self: flex-end; background: #1e3a8a; color: white; padding: 14px 18px; border-radius: 12px 12px 0 12px; max-width: 90%; word-wrap: break-word; line-height: 1.5; }
     .ai-msg-loading { align-self: flex-start; background: #f1f5f9; padding: 12px 18px; border-radius: 12px 12px 12px 0; color: #64748b; font-style: italic; display: flex; align-items: center; gap: 8px; }
-    
-    /* Style cho khung hiển thị ảnh chụp màn hình */
-    .ai-vision-preview { width: 100%; border-radius: 8px; margin-bottom: 10px; border: 1px solid #cbd5e1; display: none; object-fit: contain; max-height: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -191,7 +186,7 @@
         <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ mật khẩu cá nhân của Thầy/Cô.
       </div>
 
-      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản AI: V3.0.2026 (Vision)</p1>
+      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản AI: V3.1.2026 (DOM Reader)</p1>
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
@@ -257,7 +252,7 @@
       <div id="TabHuongDan" class="tab-content">
         <h3>Thông báo:</h3>
         <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
-        <p><b>2. Tính năng mới:</b> Hệ thống đã tích hợp Trợ lý AI Vision. Thầy/Cô có thể yêu cầu AI quét màn hình dữ liệu hiện tại để tóm tắt, thống kê hoặc đánh giá chất lượng hồ sơ.</p>
+        <p><b>2. Tính năng mới:</b> Hệ thống đã tích hợp Trợ lý AI đọc DOM thông minh. Thầy/Cô có thể yêu cầu AI quét trực tiếp dữ liệu toàn bộ bảng hiện tại để bóc tách thông tin, thống kê mà không bị sót dữ liệu ẩn.</p>
         <p><b> Thiết kế và phát triển: Hoàng Ngọc Lâm </b></p>
       </div>
     </div>
@@ -284,15 +279,12 @@
           <button onclick="toggleAIChat()" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1;">&times;</button>
        </div>
        <div id="ai-chat-history">
-          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Trợ lý thông minh. Thầy/Cô có thể đặt câu hỏi hoặc bấm biểu tượng "Máy ảnh" để tôi đọc và phân tích bảng số liệu đang hiển thị trên màn hình.</div>
+          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Trợ lý thông minh. Thầy/Cô có thể đặt câu hỏi hoặc bấm biểu tượng "Đọc bảng" để tôi bóc tách và phân tích toàn bộ số liệu văn bản đang có trên màn hình (kể cả phần bị cuộn khuất).</div>
        </div>
        <div style="padding: 12px; background: white; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 8px;">
-          <!-- Khu vực hiển thị ảnh sau khi quét màn hình -->
-          <img id="ai-preview-img" class="ai-vision-preview">
-          
           <div style="display: flex; gap: 8px;">
-              <button onclick="chupManHinhVaPhanTich()" id="btn-ai-vision" style="background: #059669; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Đọc dữ liệu trên màn hình">
-                 <i class="bi bi-camera-fill"></i>
+              <button onclick="docDuLieuGiaoDien()" id="btn-ai-read" style="background: #059669; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Đọc toàn bộ dữ liệu bảng">
+                 <i class="bi bi-file-earmark-text-fill"></i>
               </button>
               <input type="text" id="ai-chat-input" placeholder="Nhập yêu cầu phân tích tại đây..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
               <button onclick="guiCauHoiAI()" id="btn-send-ai" style="background: #1e3a8a; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;">Gửi</button>
@@ -305,8 +297,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // --- KHỐI XỬ LÝ CHAT AI VÀ ĐỌC MÀN HÌNH (VISION) ---
-    let anhManHinhHienTai = null;
+    // --- KHỐI XỬ LÝ CHAT AI VÀ ĐỌC DỮ LIỆU DOM (TEXT EXTRACTION) ---
+    let duLieuVanBanHienTai = "";
 
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
@@ -316,43 +308,76 @@
         }
     }
 
-    // Bổ sung: Hàm chụp vùng dữ liệu (Sổ kiểm tra) thành ảnh Base64
-    async function chupManHinhVaPhanTich() {
-        const nutChup = document.getElementById('btn-ai-vision');
-        const anhXemTruoc = document.getElementById('ai-preview-img');
+    // Bổ sung: Hàm đọc trực tiếp DOM để lấy văn bản, thay thế cho việc băm ảnh
+    function docDuLieuGiaoDien() {
+        const nutDoc = document.getElementById('btn-ai-read');
         const lichSuChat = document.getElementById('ai-chat-history');
         
-        nutChup.disabled = true;
-        nutChup.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        nutDoc.disabled = true;
+        nutDoc.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
         try {
-            // Xác định vùng dữ liệu cần phân tích (toàn bộ khung bao chứa Sổ)
-            const vungDuLieu = document.getElementById('so_wrapper');
-            const canvas = await html2canvas(vungDuLieu, { scale: 1.5 }); // Độ phân giải tối ưu
-            anhManHinhHienTai = canvas.toDataURL('image/png');
+            let vanBanKetXuat = "DỮ LIỆU HIỆN TẠI TRÊN GIAO DIỆN:\n";
+            const cacBang = document.querySelectorAll('#so_wrapper table');
             
-            // Hiển thị ảnh xem trước
-            anhXemTruoc.src = anhManHinhHienTai;
-            anhXemTruoc.style.display = 'block';
+            if (cacBang.length === 0) {
+                alert("Không tìm thấy bảng dữ liệu nào trên giao diện hiện tại.");
+                nutDoc.disabled = false;
+                nutDoc.innerHTML = '<i class="bi bi-file-earmark-text-fill"></i>';
+                return;
+            }
+
+            // Quét qua các bảng để bóc tách văn bản, ưu tiên giá trị thẻ input/select
+            cacBang.forEach((bang, chiSo) => {
+                vanBanKetXuat += `\n--- Bảng dữ liệu ${chiSo + 1} ---\n`;
+                const cacDong = bang.querySelectorAll('tr');
+                
+                cacDong.forEach(dong => {
+                    let duLieuDong = [];
+                    const cacO = dong.querySelectorAll('th, td');
+                    
+                    cacO.forEach(o => {
+                        let giaTriO = "";
+                        const theNhap = o.querySelector('input, select, textarea');
+                        
+                        if (theNhap) {
+                            if (theNhap.tagName === 'SELECT') {
+                                giaTriO = theNhap.options[theNhap.selectedIndex] ? theNhap.options[theNhap.selectedIndex].text : "";
+                            } else {
+                                giaTriO = theNhap.value || "";
+                            }
+                        } else {
+                            giaTriO = o.innerText.trim().replace(/\n/g, ' ');
+                        }
+                        duLieuDong.push(giaTriO);
+                    });
+                    
+                    if(duLieuDong.join("").trim() !== "") {
+                        vanBanKetXuat += duLieuDong.join(" | ") + "\n";
+                    }
+                });
+            });
+
+            duLieuVanBanHienTai = vanBanKetXuat;
             
             // Phản hồi từ Bot
             const tinNhanBot = document.createElement('div');
             tinNhanBot.className = "ai-msg-bot";
-            tinNhanBot.innerText = "✅ Hệ thống đã quét dữ liệu trên màn hình thành công. Thầy/Cô cần tôi thống kê, nhận xét hay phân tích nội dung gì từ số liệu này ạ?";
+            tinNhanBot.innerText = "✅ Hệ thống đã bóc tách toàn bộ văn bản từ bảng dữ liệu thành công. Thầy/Cô cần tôi phân tích nội dung gì từ tập số liệu này ạ?";
             lichSuChat.appendChild(tinNhanBot);
             lichSuChat.scrollTop = lichSuChat.scrollHeight;
             
             document.getElementById('ai-chat-input').focus();
 
         } catch (loi) {
-            alert("Lỗi truy xuất màn hình: " + loi.message);
+            alert("Lỗi truy xuất dữ liệu giao diện: " + loi.message);
         } finally {
-            nutChup.disabled = false;
-            nutChup.innerHTML = '<i class="bi bi-camera-fill"></i>';
+            nutDoc.disabled = false;
+            nutDoc.innerHTML = '<i class="bi bi-file-earmark-text-fill"></i>';
         }
     }
 
-    // Nâng cấp: Luồng xử lý điều hướng thông minh (Có ảnh hoặc không ảnh)
+    // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản
     function guiCauHoiAI() {
         const phanTuNhap = document.getElementById('ai-chat-input');
         const cauHoi = phanTuNhap.value.trim();
@@ -360,7 +385,7 @@
 
         const lichSuChat = document.getElementById('ai-chat-history');
         const nutGui = document.getElementById('btn-send-ai');
-        const nutChup = document.getElementById('btn-ai-vision');
+        const nutDoc = document.getElementById('btn-ai-read');
         
         // 1. Hiển thị tin nhắn người dùng
         const tinNhanNguoiDung = document.createElement('div');
@@ -381,23 +406,20 @@
         
         phanTuNhap.disabled = true;
         nutGui.disabled = true;
-        nutChup.disabled = true;
+        nutDoc.disabled = true;
 
         // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
-        if (anhManHinhHienTai) {
-            // Trạng thái: Người dùng đang gửi kèm hình ảnh màn hình để phân tích
+        if (duLieuVanBanHienTai) {
+            // Trạng thái: Có kẹp dữ liệu bảng vào trong ngữ cảnh
             google.script.run
                 .withSuccessHandler(kq => {
-                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý hình ảnh: " + kq.tbao);
-                    
-                    // Xóa trạng thái ảnh sau khi phân tích xong để tối ưu bộ nhớ
-                    anhManHinhHienTai = null;
-                    document.getElementById('ai-preview-img').style.display = 'none';
-                    document.getElementById('ai-preview-img').src = '';
+                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi phân tích bảng: " + kq.tbao);
+                    // Dọn dẹp ngữ cảnh sau 1 lần hỏi để tránh lẫn lộn cho câu hỏi tiếp theo
+                    duLieuVanBanHienTai = ""; 
                 })
                 .withFailureHandler(loi => { xuLyLoiAI(loi); })
-                .skt_vision_ai_analyze(cauHoi, anhManHinhHienTai); 
-                // LƯU Ý KỸ THUẬT: Thầy cần bổ sung hàm skt_vision_ai_analyze bên file .gs
+                .skt_phantich_dulieu_text(cauHoi, duLieuVanBanHienTai); 
+                // LƯU Ý: Thầy bổ sung hàm skt_phantich_dulieu_text(cauHoi, duLieuGiaoDien) bên file .gs
         } else {
             // Trạng thái: Hỏi đáp văn bản thông thường
             google.script.run
@@ -414,7 +436,7 @@
         document.getElementById('ai-loading-msg').remove();
         document.getElementById('ai-chat-input').disabled = false;
         document.getElementById('btn-send-ai').disabled = false;
-        document.getElementById('btn-ai-vision').disabled = false;
+        document.getElementById('btn-ai-read').disabled = false;
         document.getElementById('ai-chat-input').focus();
         
         const lichSuChat = document.getElementById('ai-chat-history');
@@ -429,7 +451,7 @@
         document.getElementById('ai-loading-msg').remove();
         document.getElementById('ai-chat-input').disabled = false;
         document.getElementById('btn-send-ai').disabled = false;
-        document.getElementById('btn-ai-vision').disabled = false;
+        document.getElementById('btn-ai-read').disabled = false;
         
         const lichSuChat = document.getElementById('ai-chat-history');
         const tinNhanLoi = document.createElement('div');
