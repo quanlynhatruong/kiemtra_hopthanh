@@ -9,6 +9,8 @@
   <script src="ketnoi.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <!-- Bổ sung thư viện chụp màn hình an toàn phía Client -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
     #instant-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); z-index: 1050; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -135,6 +137,9 @@
     
     .ai-msg-user { align-self: flex-end; background: #1e3a8a; color: white; padding: 14px 18px; border-radius: 12px 12px 0 12px; max-width: 90%; word-wrap: break-word; line-height: 1.5; }
     .ai-msg-loading { align-self: flex-start; background: #f1f5f9; padding: 12px 18px; border-radius: 12px 12px 12px 0; color: #64748b; font-style: italic; display: flex; align-items: center; gap: 8px; }
+    
+    /* Style cho khung hiển thị ảnh chụp màn hình */
+    .ai-vision-preview { width: 100%; border-radius: 8px; margin-bottom: 10px; border: 1px solid #cbd5e1; display: none; object-fit: contain; max-height: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -186,7 +191,7 @@
         <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ mật khẩu cá nhân của Thầy/Cô.
       </div>
 
-      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản AI: V2.5.2026</p1>
+      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản AI: V3.0.2026 (Vision)</p1>
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
@@ -227,7 +232,7 @@
       
       <div style="display: flex; align-items: center; gap: 20px;">
         <button class="btn-ai-trigger" onclick="toggleAIChat()">
-            <i class="bi bi-robot"></i> AI Trợ Giúp
+            <i class="bi bi-robot"></i> AI Trợ Giúp & Phân Tích
         </button>
         <div class="dev-badge-container">
           <div class="dev-icon-fly">🚀</div>
@@ -252,7 +257,7 @@
       <div id="TabHuongDan" class="tab-content">
         <h3>Thông báo:</h3>
         <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
-        <p><b>2. Tính năng mới:</b> Người được kiểm tra chỉ có thể xem được nội dung cuộc kiểm tra của mình. Không thể mở được của người khác!</p>
+        <p><b>2. Tính năng mới:</b> Hệ thống đã tích hợp Trợ lý AI Vision. Thầy/Cô có thể yêu cầu AI quét màn hình dữ liệu hiện tại để tóm tắt, thống kê hoặc đánh giá chất lượng hồ sơ.</p>
         <p><b> Thiết kế và phát triển: Hoàng Ngọc Lâm </b></p>
       </div>
     </div>
@@ -275,15 +280,23 @@
     
     <div id="ai-chat-box">
        <div class="ai-chat-header">
-          <span>🤖 Trợ lý AI hướng dẫn quy trình sử dụng</span>
+          <span>🤖 Trợ lý AI Phân tích dữ liệu & Hướng dẫn</span>
           <button onclick="toggleAIChat()" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1;">&times;</button>
        </div>
        <div id="ai-chat-history">
-          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Hỏi - Đáp thông minh hướng dẫn sử dụng phần mềm. Thầy/Cô cần hỗ trợ thông tin gì về quy trình, hướng dẫn sử dụng hay phân quyền ạ?</div>
+          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Trợ lý thông minh. Thầy/Cô có thể đặt câu hỏi hoặc bấm biểu tượng "Máy ảnh" để tôi đọc và phân tích bảng số liệu đang hiển thị trên màn hình.</div>
        </div>
-       <div style="padding: 12px; background: white; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">
-          <input type="text" id="ai-chat-input" placeholder="Nhập câu hỏi tại đây..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
-          <button onclick="guiCauHoiAI()" id="btn-send-ai" style="background: #1e3a8a; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;">Gửi</button>
+       <div style="padding: 12px; background: white; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 8px;">
+          <!-- Khu vực hiển thị ảnh sau khi quét màn hình -->
+          <img id="ai-preview-img" class="ai-vision-preview">
+          
+          <div style="display: flex; gap: 8px;">
+              <button onclick="chupManHinhVaPhanTich()" id="btn-ai-vision" style="background: #059669; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Đọc dữ liệu trên màn hình">
+                 <i class="bi bi-camera-fill"></i>
+              </button>
+              <input type="text" id="ai-chat-input" placeholder="Nhập yêu cầu phân tích tại đây..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
+              <button onclick="guiCauHoiAI()" id="btn-send-ai" style="background: #1e3a8a; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;">Gửi</button>
+          </div>
        </div>
     </div>
 
@@ -292,7 +305,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // --- KHỐI XỬ LÝ CHAT AI HỎI ĐÁP ---
+    // --- KHỐI XỬ LÝ CHAT AI VÀ ĐỌC MÀN HÌNH (VISION) ---
+    let anhManHinhHienTai = null;
+
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
         hopChat.style.display = (hopChat.style.display === 'none' || hopChat.style.display === '') ? 'flex' : 'none';
@@ -301,6 +316,43 @@
         }
     }
 
+    // Bổ sung: Hàm chụp vùng dữ liệu (Sổ kiểm tra) thành ảnh Base64
+    async function chupManHinhVaPhanTich() {
+        const nutChup = document.getElementById('btn-ai-vision');
+        const anhXemTruoc = document.getElementById('ai-preview-img');
+        const lichSuChat = document.getElementById('ai-chat-history');
+        
+        nutChup.disabled = true;
+        nutChup.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        try {
+            // Xác định vùng dữ liệu cần phân tích (toàn bộ khung bao chứa Sổ)
+            const vungDuLieu = document.getElementById('so_wrapper');
+            const canvas = await html2canvas(vungDuLieu, { scale: 1.5 }); // Độ phân giải tối ưu
+            anhManHinhHienTai = canvas.toDataURL('image/png');
+            
+            // Hiển thị ảnh xem trước
+            anhXemTruoc.src = anhManHinhHienTai;
+            anhXemTruoc.style.display = 'block';
+            
+            // Phản hồi từ Bot
+            const tinNhanBot = document.createElement('div');
+            tinNhanBot.className = "ai-msg-bot";
+            tinNhanBot.innerText = "✅ Hệ thống đã quét dữ liệu trên màn hình thành công. Thầy/Cô cần tôi thống kê, nhận xét hay phân tích nội dung gì từ số liệu này ạ?";
+            lichSuChat.appendChild(tinNhanBot);
+            lichSuChat.scrollTop = lichSuChat.scrollHeight;
+            
+            document.getElementById('ai-chat-input').focus();
+
+        } catch (loi) {
+            alert("Lỗi truy xuất màn hình: " + loi.message);
+        } finally {
+            nutChup.disabled = false;
+            nutChup.innerHTML = '<i class="bi bi-camera-fill"></i>';
+        }
+    }
+
+    // Nâng cấp: Luồng xử lý điều hướng thông minh (Có ảnh hoặc không ảnh)
     function guiCauHoiAI() {
         const phanTuNhap = document.getElementById('ai-chat-input');
         const cauHoi = phanTuNhap.value.trim();
@@ -308,7 +360,9 @@
 
         const lichSuChat = document.getElementById('ai-chat-history');
         const nutGui = document.getElementById('btn-send-ai');
+        const nutChup = document.getElementById('btn-ai-vision');
         
+        // 1. Hiển thị tin nhắn người dùng
         const tinNhanNguoiDung = document.createElement('div');
         tinNhanNguoiDung.className = "ai-msg-user";
         tinNhanNguoiDung.innerText = cauHoi;
@@ -317,44 +371,75 @@
         phanTuNhap.value = "";
         lichSuChat.scrollTop = lichSuChat.scrollHeight;
 
+        // 2. Hiển thị trạng thái chờ
         const tinNhanCho = document.createElement('div');
         tinNhanCho.id = "ai-loading-msg";
         tinNhanCho.className = "ai-msg-loading";
-        tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang đọc code và phân tích...';
+        tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang phân tích dữ liệu...';
         lichSuChat.appendChild(tinNhanCho);
         lichSuChat.scrollTop = lichSuChat.scrollHeight;
         
         phanTuNhap.disabled = true;
         nutGui.disabled = true;
+        nutChup.disabled = true;
 
-        google.script.run
-            .withSuccessHandler(kq => {
-                document.getElementById('ai-loading-msg').remove();
-                phanTuNhap.disabled = false;
-                nutGui.disabled = false;
-                phanTuNhap.focus();
-                
-                const tinNhanBot = document.createElement('div');
-                tinNhanBot.className = "ai-msg-bot";
-                tinNhanBot.innerText = kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao;
-                lichSuChat.appendChild(tinNhanBot);
-                lichSuChat.scrollTop = lichSuChat.scrollHeight;
-            })
-            .withFailureHandler(loi => {
-                document.getElementById('ai-loading-msg').remove();
-                phanTuNhap.disabled = false;
-                nutGui.disabled = false;
-                
-                const tinNhanLoi = document.createElement('div');
-                tinNhanLoi.className = "ai-msg-bot";
-                tinNhanLoi.style.backgroundColor = "#fee2e2";
-                tinNhanLoi.style.color = "#991b1b";
-                tinNhanLoi.style.borderColor = "#fecaca";
-                tinNhanLoi.innerText = "Mất kết nối máy chủ: " + loi.message;
-                lichSuChat.appendChild(tinNhanLoi);
-                lichSuChat.scrollTop = lichSuChat.scrollHeight;
-            })
-            .skt_notebooklm_qa(cauHoi);
+        // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
+        if (anhManHinhHienTai) {
+            // Trạng thái: Người dùng đang gửi kèm hình ảnh màn hình để phân tích
+            google.script.run
+                .withSuccessHandler(kq => {
+                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý hình ảnh: " + kq.tbao);
+                    
+                    // Xóa trạng thái ảnh sau khi phân tích xong để tối ưu bộ nhớ
+                    anhManHinhHienTai = null;
+                    document.getElementById('ai-preview-img').style.display = 'none';
+                    document.getElementById('ai-preview-img').src = '';
+                })
+                .withFailureHandler(loi => { xuLyLoiAI(loi); })
+                .skt_vision_ai_analyze(cauHoi, anhManHinhHienTai); 
+                // LƯU Ý KỸ THUẬT: Thầy cần bổ sung hàm skt_vision_ai_analyze bên file .gs
+        } else {
+            // Trạng thái: Hỏi đáp văn bản thông thường
+            google.script.run
+                .withSuccessHandler(kq => {
+                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao);
+                })
+                .withFailureHandler(loi => { xuLyLoiAI(loi); })
+                .skt_notebooklm_qa(cauHoi);
+        }
+    }
+
+    // Các hàm phụ trợ cập nhật DOM cho khối AI
+    function hoanTatXuLyAI(noiDungTraVe) {
+        document.getElementById('ai-loading-msg').remove();
+        document.getElementById('ai-chat-input').disabled = false;
+        document.getElementById('btn-send-ai').disabled = false;
+        document.getElementById('btn-ai-vision').disabled = false;
+        document.getElementById('ai-chat-input').focus();
+        
+        const lichSuChat = document.getElementById('ai-chat-history');
+        const tinNhanBot = document.createElement('div');
+        tinNhanBot.className = "ai-msg-bot";
+        tinNhanBot.innerText = noiDungTraVe;
+        lichSuChat.appendChild(tinNhanBot);
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
+    }
+
+    function xuLyLoiAI(loi) {
+        document.getElementById('ai-loading-msg').remove();
+        document.getElementById('ai-chat-input').disabled = false;
+        document.getElementById('btn-send-ai').disabled = false;
+        document.getElementById('btn-ai-vision').disabled = false;
+        
+        const lichSuChat = document.getElementById('ai-chat-history');
+        const tinNhanLoi = document.createElement('div');
+        tinNhanLoi.className = "ai-msg-bot";
+        tinNhanLoi.style.backgroundColor = "#fee2e2";
+        tinNhanLoi.style.color = "#991b1b";
+        tinNhanLoi.style.borderColor = "#fecaca";
+        tinNhanLoi.innerText = "Mất kết nối máy chủ Google: " + loi.message;
+        lichSuChat.appendChild(tinNhanLoi);
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
     }
 
     // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ HIỂN THỊ MÃ PIN CHE KHUẤT ---
