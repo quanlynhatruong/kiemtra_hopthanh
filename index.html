@@ -22,7 +22,6 @@
     .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #1e3a8a; max-width: 450px; width: 95%; }
     .login-logo { width: 80px; height: 80px; margin-bottom: 15px; }
     
-    /* Cấu trúc các lựa chọn đăng nhập */
     .lua-chon-group { margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
     .label-lua-chon { font-size: 13px; color: #666; margin-bottom: 15px; display: block; font-style: italic; }
     
@@ -113,7 +112,6 @@
     .btn-upload-icon:disabled { opacity: 0.5; cursor: not-allowed; }
     .evidence-uploaded { background-color: #f0fdf4; }
 
-    /* Nút kích hoạt AI Trợ giúp */
     .btn-ai-trigger {
         background: linear-gradient(135deg, #2563eb, #7c3aed);
         color: white; border: none; padding: 8px 18px; border-radius: 25px;
@@ -122,7 +120,6 @@
     }
     .btn-ai-trigger:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
     
-    /* Giao diện Chatbot AI */
     #ai-chat-box {
         display: none; position: fixed; bottom: 20px; right: 20px; width: 450px; max-width: 95%;
         background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
@@ -186,7 +183,7 @@
         <i class="bi bi-shield-check" style="font-size: 14px;"></i> <b>Cam kết bảo mật:</b> Hệ thống sử dụng token an toàn của Google. Tuyệt đối không thu thập hay lưu trữ mật khẩu cá nhân của Thầy/Cô.
       </div>
 
-      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản AI: V3.1.2026 (DOM Reader)</p1>
+      <p1 style="font-size: 13px; color:#dc3545;font-weight: bold;; margin-bottom: 20px;">Phiên bản: V3.1.2026</p1>
       
       <div id="g_id_onload"
            data-client_id="407480994586-m6fpq6sfcc90qqj9k08rsmi1lge6br94.apps.googleusercontent.com"
@@ -227,7 +224,7 @@
       
       <div style="display: flex; align-items: center; gap: 20px;">
         <button class="btn-ai-trigger" onclick="toggleAIChat()">
-            <i class="bi bi-robot"></i> AI Trợ Giúp & Phân Tích
+            <i class="bi bi-robot"></i> Trợ Giúp Hướng Dẫn
         </button>
         <div class="dev-badge-container">
           <div class="dev-icon-fly">🚀</div>
@@ -252,7 +249,7 @@
       <div id="TabHuongDan" class="tab-content">
         <h3>Thông báo:</h3>
         <p><b>1. Nhập liệu:</b> Chọn đủ thông tin GV, Người KT. Bấm "Thêm dòng" để nhập nhiều nội dung.</p>
-        <p><b>2. Tính năng mới:</b> Hệ thống đã tích hợp Trợ lý AI đọc DOM thông minh. Thầy/Cô có thể yêu cầu AI quét trực tiếp dữ liệu toàn bộ bảng hiện tại để bóc tách thông tin, thống kê mà không bị sót dữ liệu ẩn.</p>
+        <p><b>2. Trợ giúp:</b> Bạn có thể hỏi đáp các quy định, thông tin hệ thống thông qua Trợ lý AI Hướng dẫn ở góc phải.</p>
         <p><b> Thiết kế và phát triển: Hoàng Ngọc Lâm </b></p>
       </div>
     </div>
@@ -275,18 +272,15 @@
     
     <div id="ai-chat-box">
        <div class="ai-chat-header">
-          <span>🤖 Trợ lý AI Phân tích dữ liệu & Hướng dẫn</span>
+          <span>🤖 Trợ lý AI Hướng dẫn</span>
           <button onclick="toggleAIChat()" style="background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1;">&times;</button>
        </div>
        <div id="ai-chat-history">
-          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Trợ lý thông minh. Thầy/Cô có thể đặt câu hỏi hoặc bấm biểu tượng "Đọc bảng" để tôi bóc tách và phân tích toàn bộ số liệu văn bản đang có trên màn hình (kể cả phần bị cuộn khuất).</div>
+          <div class="ai-msg-bot">Kính chào Thầy/Cô! Đây là hệ thống Trợ lý thông minh. Thầy/Cô có thể tra cứu thông tin hướng dẫn về sổ kiểm tra nội bộ tại đây.</div>
        </div>
        <div style="padding: 12px; background: white; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; gap: 8px;">
-              <button onclick="docDuLieuGiaoDien()" id="btn-ai-read" style="background: #059669; color: white; border: none; padding: 10px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s;" title="Đọc toàn bộ dữ liệu bảng">
-                 <i class="bi bi-file-earmark-text-fill"></i>
-              </button>
-              <input type="text" id="ai-chat-input" placeholder="Nhập yêu cầu phân tích tại đây..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
+              <input type="text" id="ai-chat-input" placeholder="Nhập câu hỏi tra cứu..." onkeypress="if(event.key === 'Enter') guiCauHoiAI()" style="flex: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 20px; outline: none; font-family: inherit; font-size: 14px;">
               <button onclick="guiCauHoiAI()" id="btn-send-ai" style="background: #1e3a8a; color: white; border: none; padding: 10px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.2s;">Gửi</button>
           </div>
        </div>
@@ -297,9 +291,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // --- KHỐI XỬ LÝ CHAT AI VÀ ĐỌC DỮ LIỆU DOM (TEXT EXTRACTION) ---
-    let duLieuVanBanHienTai = "";
-
+    // --- KHỐI XỬ LÝ CHAT AI HƯỚNG DẪN (Đã khôi phục thuần túy) ---
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
         hopChat.style.display = (hopChat.style.display === 'none' || hopChat.style.display === '') ? 'flex' : 'none';
@@ -308,174 +300,61 @@
         }
     }
 
-    // Bổ sung: Hàm đọc trực tiếp DOM để lấy văn bản, thay thế cho việc băm ảnh
-    function docDuLieuGiaoDien() {
-        const nutDoc = document.getElementById('btn-ai-read');
+    function guiCauHoiAI() {
+        const phanTuNhap = document.getElementById('ai-chat-input');
+        const cauHoi = phanTuNhap.value.trim();
+        if(!cauHoi) return;
+
         const lichSuChat = document.getElementById('ai-chat-history');
-        
-        nutDoc.disabled = true;
-        nutDoc.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        const nutGui = document.getElementById('btn-send-ai');
 
-        try {
-            let vanBanKetXuat = "DỮ LIỆU HIỆN TẠI TRÊN GIAO DIỆN:\n";
-            const cacBang = document.querySelectorAll('#so_wrapper table');
-            
-            if (cacBang.length === 0) {
-                alert("Không tìm thấy bảng dữ liệu nào trên giao diện hiện tại.");
-                nutDoc.disabled = false;
-                nutDoc.innerHTML = '<i class="bi bi-file-earmark-text-fill"></i>';
-                return;
-            }
+        const tinNhanNguoiDung = document.createElement('div');
+        tinNhanNguoiDung.className = "ai-msg-user";
+        tinNhanNguoiDung.innerText = cauHoi;
+        lichSuChat.appendChild(tinNhanNguoiDung);
+        phanTuNhap.value = "";
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
 
-            // Quét qua các bảng để bóc tách văn bản, ưu tiên giá trị thẻ input/select
-            cacBang.forEach((bang, chiSo) => {
-                vanBanKetXuat += `\n--- Bảng dữ liệu ${chiSo + 1} ---\n`;
-                const cacDong = bang.querySelectorAll('tr');
+        const tinNhanCho = document.createElement('div');
+        tinNhanCho.id = "ai-loading-msg";
+        tinNhanCho.className = "ai-msg-loading";
+        tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> Đang tìm câu trả lời...';
+        lichSuChat.appendChild(tinNhanCho);
+        lichSuChat.scrollTop = lichSuChat.scrollHeight;
+
+        phanTuNhap.disabled = true;
+        nutGui.disabled = true;
+
+        google.script.run
+            .withSuccessHandler(kq => {
+                document.getElementById('ai-loading-msg').remove();
+                phanTuNhap.disabled = false;
+                nutGui.disabled = false;
+                phanTuNhap.focus();
                 
-                cacDong.forEach(dong => {
-                    let duLieuDong = [];
-                    const cacO = dong.querySelectorAll('th, td');
-                    
-                    cacO.forEach(o => {
-                        let giaTriO = "";
-                        const theNhap = o.querySelector('input, select, textarea');
-                        
-                        if (theNhap) {
-                            if (theNhap.tagName === 'SELECT') {
-                                giaTriO = theNhap.options[theNhap.selectedIndex] ? theNhap.options[theNhap.selectedIndex].text : "";
-                            } else {
-                                giaTriO = theNhap.value || "";
-                            }
-                        } else {
-                            giaTriO = o.innerText.trim().replace(/\n/g, ' ');
-                        }
-                        duLieuDong.push(giaTriO);
-                    });
-                    
-                    if(duLieuDong.join("").trim() !== "") {
-                        vanBanKetXuat += duLieuDong.join(" | ") + "\n";
-                    }
-                });
-            });
-
-            duLieuVanBanHienTai = vanBanKetXuat;
-            
-            // Phản hồi từ Bot
-            const tinNhanBot = document.createElement('div');
-            tinNhanBot.className = "ai-msg-bot";
-            tinNhanBot.innerText = "✅ Hệ thống đã bóc tách toàn bộ văn bản từ bảng dữ liệu thành công. Thầy/Cô cần tôi phân tích nội dung gì từ tập số liệu này ạ?";
-            lichSuChat.appendChild(tinNhanBot);
-            lichSuChat.scrollTop = lichSuChat.scrollHeight;
-            
-            document.getElementById('ai-chat-input').focus();
-
-        } catch (loi) {
-            alert("Lỗi truy xuất dữ liệu giao diện: " + loi.message);
-        } finally {
-            nutDoc.disabled = false;
-            nutDoc.innerHTML = '<i class="bi bi-file-earmark-text-fill"></i>';
-        }
-    }
-
-    // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản
-   // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản (Cơ chế chống treo)
-function guiCauHoiAI() {
-    const phanTuNhap = document.getElementById('ai-chat-input');
-    const cauHoi = phanTuNhap.value.trim();
-    if(!cauHoi) return;
-
-    const lichSuChat = document.getElementById('ai-chat-history');
-    const nutGui = document.getElementById('btn-send-ai');
-    const nutDoc = document.getElementById('btn-ai-read');
-
-    // 1. Hiển thị tin nhắn người dùng
-    const tinNhanNguoiDung = document.createElement('div');
-    tinNhanNguoiDung.className = "ai-msg-user";
-    tinNhanNguoiDung.innerText = cauHoi;
-    lichSuChat.appendChild(tinNhanNguoiDung);
-    phanTuNhap.value = "";
-    lichSuChat.scrollTop = lichSuChat.scrollHeight;
-
-    // 2. Hiển thị trạng thái chờ
-    const tinNhanCho = document.createElement('div');
-    tinNhanCho.id = "ai-loading-msg";
-    tinNhanCho.className = "ai-msg-loading";
-    tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang phân tích dữ liệu...';
-    lichSuChat.appendChild(tinNhanCho);
-    lichSuChat.scrollTop = lichSuChat.scrollHeight;
-
-    phanTuNhap.disabled = true;
-    nutGui.disabled = true;
-    nutDoc.disabled = true;
-
-    // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
-    if (duLieuVanBanHienTai) {
-        // Trạng thái: Có kẹp dữ liệu bảng vào trong ngữ cảnh
-        google.script.run
-            .withSuccessHandler(kq => {
-                // KIỂM TRA PHÒNG VỆ: Chống treo nếu Server trả về rỗng
-                if (kq && typeof kq === 'object') {
-                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi phân tích bảng: " + kq.tbao);
-                } else {
-                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
-                }
-                duLieuVanBanHienTai = ""; // Dọn dẹp ngữ cảnh
+                const tinNhanBot = document.createElement('div');
+                tinNhanBot.className = "ai-msg-bot";
+                tinNhanBot.innerText = kq.tcon ? kq.kqua : "Lỗi: " + kq.tbao;
+                lichSuChat.appendChild(tinNhanBot);
+                lichSuChat.scrollTop = lichSuChat.scrollHeight;
             })
             .withFailureHandler(loi => {
-                xuLyLoiAI(loi);
-            })
-            .skt_phantich_dulieu_text(cauHoi, duLieuVanBanHienTai);
-    } else {
-        // Trạng thái: Hỏi đáp văn bản thông thường
-        google.script.run
-            .withSuccessHandler(kq => {
-                if (kq && typeof kq === 'object') {
-                    hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao);
-                } else {
-                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
-                }
-            })
-            .withFailureHandler(loi => {
-                xuLyLoiAI(loi);
+                document.getElementById('ai-loading-msg').remove();
+                phanTuNhap.disabled = false;
+                nutGui.disabled = false;
+                
+                const tinNhanLoi = document.createElement('div');
+                tinNhanLoi.className = "ai-msg-bot";
+                tinNhanLoi.style.backgroundColor = "#fee2e2";
+                tinNhanLoi.style.color = "#991b1b";
+                tinNhanLoi.innerText = "Lỗi kết nối hệ thống: " + loi.message;
+                lichSuChat.appendChild(tinNhanLoi);
+                lichSuChat.scrollTop = lichSuChat.scrollHeight;
             })
             .skt_notebooklm_qa(cauHoi);
     }
-}
 
-    // Các hàm phụ trợ cập nhật DOM cho khối AI
-    function hoanTatXuLyAI(noiDungTraVe) {
-        document.getElementById('ai-loading-msg').remove();
-        document.getElementById('ai-chat-input').disabled = false;
-        document.getElementById('btn-send-ai').disabled = false;
-        document.getElementById('btn-ai-read').disabled = false;
-        document.getElementById('ai-chat-input').focus();
-        
-        const lichSuChat = document.getElementById('ai-chat-history');
-        const tinNhanBot = document.createElement('div');
-        tinNhanBot.className = "ai-msg-bot";
-        tinNhanBot.innerText = noiDungTraVe;
-        lichSuChat.appendChild(tinNhanBot);
-        lichSuChat.scrollTop = lichSuChat.scrollHeight;
-    }
-
-    function xuLyLoiAI(loi) {
-        document.getElementById('ai-loading-msg').remove();
-        document.getElementById('ai-chat-input').disabled = false;
-        document.getElementById('btn-send-ai').disabled = false;
-        document.getElementById('btn-ai-read').disabled = false;
-        
-        const lichSuChat = document.getElementById('ai-chat-history');
-        const tinNhanLoi = document.createElement('div');
-        tinNhanLoi.className = "ai-msg-bot";
-        tinNhanLoi.style.backgroundColor = "#fee2e2";
-        tinNhanLoi.style.color = "#991b1b";
-        tinNhanLoi.style.borderColor = "#fecaca";
-        tinNhanLoi.innerText = "Mất kết nối máy chủ Google: " + loi.message;
-        lichSuChat.appendChild(tinNhanLoi);
-        lichSuChat.scrollTop = lichSuChat.scrollHeight;
-    }
-
-    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ HIỂN THỊ MÃ PIN CHE KHUẤT ---
+    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ ĐĂNG NHẬP ---
     let html5QrCode = null;
     let resolvePinPromise = null;
 
@@ -556,11 +435,9 @@ function guiCauHoiAI() {
       }
     }
 
-  // HÀM 1: ĐĂNG NHẬP DÀNH RIÊNG CHO QUÉT MÃ QR (CẦN XÁC THỰC PIN)
   function thucHienDangNhapQR(chuoiMaQR) {
       let chuo_goc = String(chuoiMaQR).trim();
       
-      // BƯỚC 1: KIỂM TRA NGHIÊM NGẶT - CHẶN MÃ KHÔNG MÃ HÓA
       if (chuo_goc.includes("@") || chuo_goc.toLowerCase().includes("mailto:")) {
           alert("⛔ LỖI CẤP ĐỘ BẢO MẬT: Thẻ QR này đang chứa địa chỉ trực tiếp, không an toàn!\n\nTheo quy định mới, hệ thống chỉ chấp nhận Thẻ QR đã được mã hóa chuỗi bảo mật để chống thu thập thông tin. Vui lòng sử dụng thẻ chuẩn của trường TH&THCS Hợp Thành.");
           return;
@@ -568,7 +445,6 @@ function guiCauHoiAI() {
 
       let tk_giai_ma = "";
 
-      // BƯỚC 2: BẮT BUỘC GIẢI MÃ
       try {
           tk_giai_ma = decodeURIComponent(escape(window.atob(chuo_goc))).toLowerCase();
       } catch (loi_giai_ma) {
@@ -576,7 +452,6 @@ function guiCauHoiAI() {
           return;
       }
 
-      // BƯỚC 3: XÁC THỰC KẾT QUẢ GIẢI MÃ
       if (!tk_giai_ma.includes("@")) {
           alert("⛔ LỖI DỮ LIỆU: Phân giải thành công nhưng không tìm thấy định danh hợp lệ.");
           return;
@@ -650,15 +525,12 @@ function guiCauHoiAI() {
         .skt_xacthuc_qr(tk_giai_ma, khoa_nhap, kieu_xthuc, khoa_moi);
   }
 
-  // HÀM 2: ĐĂNG NHẬP DÀNH CHO GOOGLE (BỎ QUA BƯỚC HỎI PIN)
   function thucHienDangNhapGoogle(chuoiDinhDanh) {
       let tk = String(chuoiDinhDanh).toLowerCase().trim();
       
       document.getElementById('login-overlay').style.display = 'none';
       document.getElementById('instant-loader').style.display = 'flex';
       
-      // Vì nền tảng Google đã xác thực danh tính người dùng an toàn tuyệt đối 
-      // nên hệ thống có thể tin tưởng và cấp quyền phân luồng vào thẳng hồ sơ.
       luutrant("SKT_USER_TAIK", tk);
       window.skttktoanc = tk; 
       kiemtqvata();
@@ -666,21 +538,19 @@ function guiCauHoiAI() {
 
     // --- KẾT THÚC KHỐI ĐĂNG NHẬP ---
 
-    function kiemtdt() {
-       return true; 
-    }
+    function kiemtdt() { return true; }
 
     window.sktluutrao = {};
     function luutrant(khoa, giat) {
         window.sktluutrao[khoa] = giat;
-        try { sessionStorage.setItem(khoa, giat); } catch(loie) { console.warn("Chrome chặn Storage - Dùng RAM ảo"); }
+        try { sessionStorage.setItem(khoa, giat); } catch(loie) {}
     }
     function layluutrant(khoa) {
         try { return sessionStorage.getItem(khoa) || window.sktluutrao[khoa] || null; } catch(loie) { return window.sktluutrao[khoa] || null; }
     }
     function xoaluutrant(khoa) {
         delete window.sktluutrao[khoa];
-        try { sessionStorage.removeItem(khoa); } catch(loie) { console.warn("Chrome chặn xóa"); }
+        try { sessionStorage.removeItem(khoa); } catch(loie) {}
     }
 
     window.onload = function() {
@@ -697,12 +567,9 @@ function guiCauHoiAI() {
 
     function xulyphanhxt(phanh) {
       if (!kiemtdt()) return; 
-
       try {
         const dln = giaimjw(phanh.credential);
         const tk = dln['em' + 'ail']; 
-        
-        // Điều hướng kết quả của Nút Google sang luồng đăng nhập không cần PIN
         thucHienDangNhapGoogle(tk);
       } catch (loie) {
         alert("Lỗi giải mã Google: " + loie.message);
