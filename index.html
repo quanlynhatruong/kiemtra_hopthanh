@@ -378,58 +378,69 @@
     }
 
     // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản
-    function guiCauHoiAI() {
-        const phanTuNhap = document.getElementById('ai-chat-input');
-        const cauHoi = phanTuNhap.value.trim();
-        if(!cauHoi) return;
+   // Nâng cấp: Gửi câu hỏi kết hợp bộ nhớ đệm văn bản (Cơ chế chống treo)
+function guiCauHoiAI() {
+    const phanTuNhap = document.getElementById('ai-chat-input');
+    const cauHoi = phanTuNhap.value.trim();
+    if(!cauHoi) return;
 
-        const lichSuChat = document.getElementById('ai-chat-history');
-        const nutGui = document.getElementById('btn-send-ai');
-        const nutDoc = document.getElementById('btn-ai-read');
-        
-        // 1. Hiển thị tin nhắn người dùng
-        const tinNhanNguoiDung = document.createElement('div');
-        tinNhanNguoiDung.className = "ai-msg-user";
-        tinNhanNguoiDung.innerText = cauHoi;
-        lichSuChat.appendChild(tinNhanNguoiDung);
-        
-        phanTuNhap.value = "";
-        lichSuChat.scrollTop = lichSuChat.scrollHeight;
+    const lichSuChat = document.getElementById('ai-chat-history');
+    const nutGui = document.getElementById('btn-send-ai');
+    const nutDoc = document.getElementById('btn-ai-read');
 
-        // 2. Hiển thị trạng thái chờ
-        const tinNhanCho = document.createElement('div');
-        tinNhanCho.id = "ai-loading-msg";
-        tinNhanCho.className = "ai-msg-loading";
-        tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang phân tích dữ liệu...';
-        lichSuChat.appendChild(tinNhanCho);
-        lichSuChat.scrollTop = lichSuChat.scrollHeight;
-        
-        phanTuNhap.disabled = true;
-        nutGui.disabled = true;
-        nutDoc.disabled = true;
+    // 1. Hiển thị tin nhắn người dùng
+    const tinNhanNguoiDung = document.createElement('div');
+    tinNhanNguoiDung.className = "ai-msg-user";
+    tinNhanNguoiDung.innerText = cauHoi;
+    lichSuChat.appendChild(tinNhanNguoiDung);
+    phanTuNhap.value = "";
+    lichSuChat.scrollTop = lichSuChat.scrollHeight;
 
-        // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
-        if (duLieuVanBanHienTai) {
-            // Trạng thái: Có kẹp dữ liệu bảng vào trong ngữ cảnh
-            google.script.run
-                .withSuccessHandler(kq => {
+    // 2. Hiển thị trạng thái chờ
+    const tinNhanCho = document.createElement('div');
+    tinNhanCho.id = "ai-loading-msg";
+    tinNhanCho.className = "ai-msg-loading";
+    tinNhanCho.innerHTML = '<span class="spinner-border spinner-border-sm text-primary" role="status"></span> AI đang phân tích dữ liệu...';
+    lichSuChat.appendChild(tinNhanCho);
+    lichSuChat.scrollTop = lichSuChat.scrollHeight;
+
+    phanTuNhap.disabled = true;
+    nutGui.disabled = true;
+    nutDoc.disabled = true;
+
+    // 3. Rẽ nhánh xử lý gọi hàm Google Apps Script
+    if (duLieuVanBanHienTai) {
+        // Trạng thái: Có kẹp dữ liệu bảng vào trong ngữ cảnh
+        google.script.run
+            .withSuccessHandler(kq => {
+                // KIỂM TRA PHÒNG VỆ: Chống treo nếu Server trả về rỗng
+                if (kq && typeof kq === 'object') {
                     hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi phân tích bảng: " + kq.tbao);
-                    // Dọn dẹp ngữ cảnh sau 1 lần hỏi để tránh lẫn lộn cho câu hỏi tiếp theo
-                    duLieuVanBanHienTai = ""; 
-                })
-                .withFailureHandler(loi => { xuLyLoiAI(loi); })
-                .skt_phantich_dulieu_text(cauHoi, duLieuVanBanHienTai); 
-                // LƯU Ý: Thầy bổ sung hàm skt_phantich_dulieu_text(cauHoi, duLieuGiaoDien) bên file .gs
-        } else {
-            // Trạng thái: Hỏi đáp văn bản thông thường
-            google.script.run
-                .withSuccessHandler(kq => {
+                } else {
+                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
+                }
+                duLieuVanBanHienTai = ""; // Dọn dẹp ngữ cảnh
+            })
+            .withFailureHandler(loi => {
+                xuLyLoiAI(loi);
+            })
+            .skt_phantich_dulieu_text(cauHoi, duLieuVanBanHienTai);
+    } else {
+        // Trạng thái: Hỏi đáp văn bản thông thường
+        google.script.run
+            .withSuccessHandler(kq => {
+                if (kq && typeof kq === 'object') {
                     hoanTatXuLyAI(kq.tcon ? kq.kqua : "Lỗi xử lý: " + kq.tbao);
-                })
-                .withFailureHandler(loi => { xuLyLoiAI(loi); })
-                .skt_notebooklm_qa(cauHoi);
-        }
+                } else {
+                    hoanTatXuLyAI("Lỗi hệ thống: Máy chủ Google Apps Script không phản hồi dữ liệu chuẩn.");
+                }
+            })
+            .withFailureHandler(loi => {
+                xuLyLoiAI(loi);
+            })
+            .skt_notebooklm_qa(cauHoi);
     }
+}
 
     // Các hàm phụ trợ cập nhật DOM cho khối AI
     function hoanTatXuLyAI(noiDungTraVe) {
