@@ -112,6 +112,9 @@
   let dongcxoa = null; 
   let btn_ai_dang_cho = null; 
 
+  // BỔ SUNG: BỘ NHỚ ĐỆM CHO TÍNH NĂNG ĐIỀN NHẬN XÉT CỦA AI
+  window.SKT_AI_CACHE = window.SKT_AI_CACHE || {};
+
   function chuanhchu(ch) {
       if (!ch) return "";
       return String(ch).normalize("NFC").toLowerCase().replace(/[\s\uFEFF\xA0]+/g, '');
@@ -180,6 +183,21 @@
       const nhlk = donghtta.querySelector('.link-input');
       const lk = nhlk ? nhlk.value : "";
 
+      // KIỂM TRA BỘ NHỚ ĐỆM (CACHE)
+      const cacheKey = "EXTRACT_" + lk + "_" + prompt.toLowerCase();
+      if (window.SKT_AI_CACHE[cacheKey]) {
+          const c = window.SKT_AI_CACHE[cacheKey];
+          dien_ai_nhanxet(c.uu, c.ton, c.bp);
+          const originalText = btn.innerHTML;
+          btn.innerHTML = "✅ Xong (Tức thì)";
+          btn.style.background = "#059669";
+          setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.background = "#10b981";
+          }, 3000);
+          return;
+      }
+
       const originalText = btn.innerHTML;
       btn.innerHTML = "⏳ Đang đọc...";
       btn.disabled = true;
@@ -188,6 +206,8 @@
       google.script.run
       .withSuccessHandler(aikq => {
           if (aikq.tcon) {
+              // LƯU KẾT QUẢ VÀO BỘ NHỚ ĐỆM
+              window.SKT_AI_CACHE[cacheKey] = {uu: aikq.uudiem, ton: aikq.tontai, bp: aikq.bienphap};
               dien_ai_nhanxet(aikq.uudiem, aikq.tontai, aikq.bienphap);
               btn.innerHTML = "✅ Xong";
               btn.style.background = "#059669";
