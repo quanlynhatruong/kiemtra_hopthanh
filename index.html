@@ -132,11 +132,54 @@
     
     .ai-msg-user { align-self: flex-end; background: #1e3a8a; color: white; padding: 14px 18px; border-radius: 12px 12px 0 12px; max-width: 90%; word-wrap: break-word; line-height: 1.5; }
     .ai-msg-loading { align-self: flex-start; background: #f1f5f9; padding: 12px 18px; border-radius: 12px 12px 12px 0; color: #64748b; font-style: italic; display: flex; align-items: center; gap: 8px; }
+
+    /* BỔ SUNG: KHỐI TÙY CHỈNH ALERT UI */
+    #custom-alert-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .custom-alert-box {
+      background: white; padding: 25px; border-radius: 12px; min-width: 350px; max-width: 90%;
+      text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-top: 5px solid #dc2626;
+      animation: alertSlideDown 0.3s ease-out;
+    }
+    .custom-alert-box.success { border-top-color: #059669; }
+    .custom-alert-box.warning { border-top-color: #d97706; }
+    .custom-alert-box.info { border-top-color: #2563eb; }
+    
+    .custom-alert-icon { font-size: 30px; margin-bottom: 10px; display: inline-block; }
+    .custom-alert-box.success .custom-alert-icon { color: #059669; }
+    .custom-alert-box.error .custom-alert-icon { color: #dc2626; }
+    .custom-alert-box.warning .custom-alert-icon { color: #d97706; }
+    .custom-alert-box.info .custom-alert-icon { color: #2563eb; }
+
+    .custom-alert-title { font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #1f2937; }
+    .custom-alert-message { font-size: 14px; color: #4b5563; margin-bottom: 20px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word;}
+    .custom-alert-btn {
+      background: #1f2937; color: white; border: none; padding: 10px 25px;
+      border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;
+    }
+    .custom-alert-btn:hover { background: #374151; }
+    @keyframes alertSlideDown {
+      from { transform: translateY(-30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+
+  <!-- BỔ SUNG: VÙNG CHỨA CUSTOM ALERT -->
+  <div id="custom-alert-overlay">
+    <div id="custom-alert-box" class="custom-alert-box error">
+      <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
+      <div id="custom-alert-title" class="custom-alert-title">Thông báo</div>
+      <div id="custom-alert-message" class="custom-alert-message">Nội dung thông báo</div>
+      <button class="custom-alert-btn" onclick="dongCustomAlert()">ĐÓNG</button>
+    </div>
+  </div>
 
   <div id="pin-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1060; justify-content: center; align-items: center; font-family: 'Times New Roman', serif;">
     <div style="background: white; padding: 30px; border-radius: 12px; width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 5px solid #1e3a8a;">
@@ -200,7 +243,6 @@
               <i class="bi bi-camera"></i> Đăng nhập bằng Thẻ QR
           </button>
           
-          <!-- BỔ SUNG: Nút đăng nhập dành cho chế độ Khách -->
           <button class="btn-qr-login" id="btn-guest-login" onclick="dangNhapKhach()" style="margin-top: 10px; background: #f0fdf4; color: #166534; border-color: #bbf7d0;">
               <i class="bi bi-person-badge"></i> Đăng nhập bằng quyền Khách
           </button>
@@ -296,6 +338,62 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    /* ========================================================================= */
+    /* HÀM GHI ĐÈ ALERT BẰNG CUSTOM UI                                           */
+    /* ========================================================================= */
+    function hienThongBaoUI(tieuDe, noiDung, loai = 'error') {
+      const box = document.getElementById('custom-alert-box');
+      const icon = document.getElementById('custom-alert-icon');
+      const title = document.getElementById('custom-alert-title');
+      const message = document.getElementById('custom-alert-message');
+      const overlay = document.getElementById('custom-alert-overlay');
+
+      box.className = `custom-alert-box ${loai}`;
+      
+      let iconHtml = '';
+      if(loai === 'error') iconHtml = '<i class="bi bi-x-circle-fill"></i>';
+      else if(loai === 'success') iconHtml = '<i class="bi bi-check-circle-fill"></i>';
+      else if(loai === 'warning') iconHtml = '<i class="bi bi-exclamation-triangle-fill"></i>';
+      else iconHtml = '<i class="bi bi-info-circle-fill"></i>';
+      
+      icon.innerHTML = iconHtml;
+      title.innerText = tieuDe;
+      message.innerHTML = noiDung.replace(/\n/g, '<br>');
+      
+      overlay.style.display = 'flex';
+    }
+
+    function dongCustomAlert() {
+      document.getElementById('custom-alert-overlay').style.display = 'none';
+    }
+
+    // Tự động ghi đè hàm alert() mặc định của trình duyệt
+    window.alert = function(msg) {
+        let type = 'error';
+        let title = 'Lỗi hệ thống';
+        let text = msg;
+
+        // Phân tích tiền tố để tự động chọn giao diện
+        if (msg.startsWith("⛔ LỖI") || msg.startsWith("⛔ HỆ THỐNG ĐANG KHÓA")) {
+            type = 'error';
+            let parts = msg.split(":");
+            title = parts[0].trim();
+            text = parts.slice(1).join(":").trim() || msg;
+        } else if (msg.startsWith("✅")) {
+            type = 'success';
+            let parts = msg.split(":");
+            title = parts[0].trim();
+            text = parts.slice(1).join(":").trim() || msg;
+        } else if (msg.includes("Lỗi") || msg.includes("Từ chối")) {
+             type = 'error';
+        } else {
+             type = 'info';
+             title = 'Thông báo';
+        }
+        
+        hienThongBaoUI(title, text, type);
+    };
+
     // --- KHỐI XỬ LÝ CHAT AI HƯỚNG DẪN ---
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
@@ -541,7 +639,7 @@
       kiemtqvata();
   }
 
-  /* BỔ SUNG: XỬ LÝ SỰ KIỆN NÚT ĐĂNG NHẬP KHÁCH */
+  /* XỬ LÝ SỰ KIỆN NÚT ĐĂNG NHẬP KHÁCH */
   function dangNhapKhach() {
       document.getElementById('login-overlay').style.display = 'none';
       document.getElementById('instant-loader').style.display = 'flex';
@@ -549,12 +647,10 @@
       google.script.run
           .withSuccessHandler(dlu => {
               if (dlu.cquy === true) {
-                  // D4 = 'all' đã vượt qua trình kiểm tra Backend, cho phép đăng nhập
                   luutrant("SKT_USER_TAIK", "khach");
                   window.skttktoanc = "khach";
                   taimdunht(); 
               } else {
-                  // D4 = rỗng, thông báo và quay lại
                   document.getElementById('instant-loader').style.display = 'none';
                   document.getElementById('login-overlay').style.display = 'flex';
                   alert("⛔ HỆ THỐNG ĐANG KHÓA: Chế độ đăng nhập dành cho Khách (D4=all) hiện chưa được kích hoạt. Vui lòng liên hệ Quản trị viên.");
@@ -646,7 +742,6 @@
             document.getElementById('denied_reason').innerText = dlu.tbao;
           } else {
             let nduyq = false;
-            // Áp dụng định danh mảng chuẩn, do logic Backend đã tự động lọc quyền.
             if(dlu.dlgv && dlu.dlgv.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
             if(dlu.dlnk && dlu.dlnk.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
             
@@ -712,7 +807,7 @@
                 #so_wrapper input, 
                 #so_wrapper textarea, 
                 #so_wrapper select, 
-                #so_wrapper button:not(.tab-button):not(.modal-btn) {
+                #so_wrapper button:not(.tab-button):not(.modal-btn):not(.custom-alert-btn) {
                     pointer-events: none !important;
                     background-color: #f1f5f9 !important;
                     opacity: 0.6 !important;
@@ -721,8 +816,8 @@
             document.head.appendChild(kl);
         }
         
-        document.getElementById('modal_message').innerHTML = "<span style='color:red; font-weight:bold;'>TÀI KHOẢN KHÁCH (CHỈ XEM)</span><br><br>Tài khoản của bạn không có trong hệ thống được cấp quyền. Bạn chỉ có thể đăng nhập, không có quyền tương tác trên ứng dụng.";
-        document.getElementById('modal_overlay').style.display = 'flex';
+        // Cập nhật thông báo sang UI Custom thay vì Modal cũ
+        hienThongBaoUI("TÀI KHOẢN KHÁCH", "Tài khoản của bạn không có trong hệ thống được cấp quyền.\nBạn chỉ có thể xem dữ liệu, không có quyền tương tác.", "warning");
     }
 
     function thuchkb(phant) {
