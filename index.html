@@ -195,9 +195,14 @@
       </div>
       
       <div class="lua-chon-group">
-          <span class="label-lua-chon">— Hoặc đăng nhập bằng mã QR —</span>
+          <span class="label-lua-chon">— Hoặc lựa chọn đăng nhập phụ —</span>
           <button class="btn-qr-login" id="btn-start-qr" onclick="batDauQuetQR()">
               <i class="bi bi-camera"></i> Đăng nhập bằng Thẻ QR
+          </button>
+          
+          <!-- BỔ SUNG: Nút đăng nhập dành cho chế độ Khách -->
+          <button class="btn-qr-login" id="btn-guest-login" onclick="dangNhapKhach()" style="margin-top: 10px; background: #f0fdf4; color: #166534; border-color: #bbf7d0;">
+              <i class="bi bi-person-badge"></i> Đăng nhập bằng quyền Khách
           </button>
           
           <div id="qr-reader-container">
@@ -291,7 +296,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // --- KHỐI XỬ LÝ CHAT AI HƯỚNG DẪN (Đã khôi phục thuần túy) ---
+    // --- KHỐI XỬ LÝ CHAT AI HƯỚNG DẪN ---
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
         hopChat.style.display = (hopChat.style.display === 'none' || hopChat.style.display === '') ? 'flex' : 'none';
@@ -536,6 +541,33 @@
       kiemtqvata();
   }
 
+  /* BỔ SUNG: XỬ LÝ SỰ KIỆN NÚT ĐĂNG NHẬP KHÁCH */
+  function dangNhapKhach() {
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('instant-loader').style.display = 'flex';
+
+      google.script.run
+          .withSuccessHandler(dlu => {
+              if (dlu.cquy === true) {
+                  // D4 = 'all' đã vượt qua trình kiểm tra Backend, cho phép đăng nhập
+                  luutrant("SKT_USER_TAIK", "khach");
+                  window.skttktoanc = "khach";
+                  taimdunht(); 
+              } else {
+                  // D4 = rỗng, thông báo và quay lại
+                  document.getElementById('instant-loader').style.display = 'none';
+                  document.getElementById('login-overlay').style.display = 'flex';
+                  alert("⛔ HỆ THỐNG ĐANG KHÓA: Chế độ đăng nhập dành cho Khách (D4=all) hiện chưa được kích hoạt. Vui lòng liên hệ Quản trị viên.");
+              }
+          })
+          .withFailureHandler(loie => {
+              document.getElementById('instant-loader').style.display = 'none';
+              document.getElementById('login-overlay').style.display = 'flex';
+              alert("Lỗi kết nối máy chủ: " + loie.message);
+          })
+          .skt_laydl_bda("khach", new Date().getTime());
+  }
+
     // --- KẾT THÚC KHỐI ĐĂNG NHẬP ---
 
     function kiemtdt() { return true; }
@@ -614,6 +646,7 @@
             document.getElementById('denied_reason').innerText = dlu.tbao;
           } else {
             let nduyq = false;
+            // Áp dụng định danh mảng chuẩn, do logic Backend đã tự động lọc quyền.
             if(dlu.dlgv && dlu.dlgv.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
             if(dlu.dlnk && dlu.dlnk.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
             
