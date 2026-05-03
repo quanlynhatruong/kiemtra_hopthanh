@@ -1,3 +1,8 @@
+<!-- 
+  Tên file: Menu_doc.html
+  Chức năng: Thanh điều hướng dọc (Sidebar) cho hệ thống Kiểm tra nội bộ
+  Tác giả: Hoàng Ngọc Lâm
+-->
 <style>
   .sidebar-menu { 
       width: 260px; 
@@ -72,8 +77,17 @@
       color: white; 
       box-shadow: 0 4px 6px rgba(30, 58, 138, 0.2);
   }
-  .menu-logout { 
+  
+  .menu-bottom-section {
       margin-top: auto; 
+      padding: 0 12px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      margin-bottom: 10px;
+  }
+  
+  .menu-logout { 
       margin-bottom: 25px;
       margin-left: 12px;
       margin-right: 12px;
@@ -106,6 +120,20 @@
       <button class="menu-btn" onclick="chuyentth('TabHuongDan', this)">
           <i class="bi bi-info-circle"></i> HƯỚNG DẪN SỬ DỤNG
       </button>
+  </div>
+
+  <div class="menu-bottom-section">
+      <button class="btn-ai-trigger w-100 justify-content-center" onclick="toggleAIChat()" style="border-radius: 8px; padding: 10px; font-size: 13px;">
+          <i class="bi bi-robot"></i> Trợ Giúp Hướng Dẫn
+      </button>
+      
+      <div class="dev-badge-container w-100 justify-content-center" style="border-radius: 8px; padding: 8px 5px;">
+        <div class="dev-icon-fly" style="margin-right: 8px; font-size: 14px;">🚀</div>
+        <div class="dev-text-group" style="text-align: left;">
+          <div class="dev-name-label" style="font-size: 10px;">HOÀNG NGỌC LÂM</div>
+          <div class="dev-role-label" style="font-size: 9px;">System Developer</div>
+        </div>
+      </div>
   </div>
 
   <button class="menu-btn menu-logout" onclick="dangxg()">
