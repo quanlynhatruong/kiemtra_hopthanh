@@ -45,11 +45,7 @@
     :root { --primary-blue: #1e3a8a; --brand-red: #b91c1c; --grid-border: #9ca3af; --step-gray: #d1d5db; --reset-color: #dc2626; --submit-green: #059669; }
     body { font-family: "Times New Roman", serif; background: #f3f4f6; padding: 16px; margin: 0; box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
-
-    .school-header { display: flex; align-items: center; justify-content: space-between; width: 1550px; max-width: 99%; margin: 0 auto 10px auto !important; }
-    .logo-group { display: flex; align-items: center; }
-    .school-logo { width: 1cm; height: 1cm; object-fit: contain; margin-right: 10px; padding: 0px; }
-    .school-name { font-weight: bold; font-size: 17px; color: var(--primary-blue); text-transform: uppercase; }
+    
     .loading-spin { background-image: url('https://i.gifer.com/ZKZg.gif') !important; background-repeat: no-repeat !important; background-position: right 8px center !important; background-size: 16px !important; background-color: #fffde7 !important; }
     
     #so_wrapper { width: 1550px; max-width: 99%; margin: auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -169,12 +165,22 @@
     }
 
     /* =========================================================
-       BỔ SUNG CSS PHÂN CHIA 2 CỘT TÍCH HỢP MENU DỌC
+       BỔ SUNG CSS PHÂN CHIA 2 CỘT TÍCH HỢP MENU DỌC (GỠ VÙNG ĐỆM TRÊN)
        ========================================================= */
     #MenuContainer { width: 260px; flex-shrink: 0; z-index: 1000; }
-    #ContentContainer { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; padding: 16px; box-sizing: border-box; }
+    
+    /* Vùng đệm phía trên đã được giảm xuống còn 5px */
+    #ContentContainer { 
+        flex-grow: 1; 
+        display: flex; 
+        flex-direction: column; 
+        height: 100vh; 
+        overflow-y: auto; 
+        padding: 5px 16px 16px 16px; 
+        box-sizing: border-box; 
+    }
+    
     .tab-container { display: none !important; } /* Ẩn menu ngang cũ */
-    .school-header { width: 100% !important; max-width: 100% !important; margin: 0 0 15px 0 !important; }
     #so_wrapper { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -280,25 +286,8 @@
 
     <!-- CỘT PHẢI: NỘI DUNG -->
     <div id="ContentContainer">
-        <div class="school-header">
-          <div class="logo-group">
-            <img src="https://i.ibb.co/S46wLjDt/logo-tr-ng-TH-THCS-Hop-Thanh3-removebg-preview.png" class="school-logo">
-            <span class="school-name">Trường TH&THCS Hợp Thành</span>
-          </div>
-          
-          <div style="display: flex; align-items: center; gap: 20px;">
-            <button class="btn-ai-trigger" onclick="toggleAIChat()">
-                <i class="bi bi-robot"></i> Trợ Giúp Hướng Dẫn
-            </button>
-            <div class="dev-badge-container">
-              <div class="dev-icon-fly">🚀</div>
-              <div class="dev-text-group">
-                <div class="dev-name-label">HOÀNG NGỌC LÂM</div>
-                <div class="dev-role-label">System Developer</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    
+        <!-- KHỐI HEADER LOGO VÀ TÊN TRƯỜNG ĐÃ ĐƯỢC XÓA TẠI ĐÂY -->
 
         <div id="so_wrapper">
           <div class="tab-container">
@@ -775,7 +764,6 @@
       try {
         const cgnh = "?v=" + new Date().getTime(); 
         
-        // BỔ SUNG LỆNH FETCH LOAD MENU DỌC
         const [phnhapl, phtimk, phminhc, phmenu] = await Promise.all([
             fetch('./SKT_NhapLieu.html' + cgnh),
             fetch('./SKT_TimKiem.html' + cgnh),
@@ -814,7 +802,6 @@
 
       setTimeout(function() { 
           document.getElementById('instant-loader').style.display = 'none'; 
-          // ĐỔI BLOCK THÀNH FLEX ĐỂ HIỂN THỊ 2 CỘT
           document.getElementById('main-wrapper').style.display = 'flex';
           setTimeout(() => { document.getElementById('main-wrapper').style.opacity = '1'; }, 50);
       }, 500); 
@@ -850,7 +837,6 @@
         });
     }
 
-    // CẬP NHẬT HÀM CHUYỂN TAB ĐỂ HỖ TRỢ MENU DỌC
     function chuyentth(idd, nut) {
       document.querySelectorAll('.tab-content').forEach(c1 => c1.classList.remove('active'));
       document.querySelectorAll('.tab-button').forEach(b1 => b1.classList.remove('active'));
