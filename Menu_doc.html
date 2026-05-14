@@ -1,12 +1,7 @@
-<!-- 
-  Tên file: Menu_doc.html
-  Chức năng: Thanh điều hướng dọc (Sidebar) cho hệ thống Kiểm tra nội bộ
-  Tác giả: Hoàng Ngọc Lâm
--->
 <style>
   .sidebar-menu { 
       width: 260px; 
-      background: #1e3a8a; /* Đã cập nhật nền xanh đặc trưng */
+      background: #1e3a8a; 
       border-right: 1px solid #172554; 
       height: 100vh; 
       position: sticky; 
@@ -28,96 +23,86 @@
       height: 65px;
       object-fit: contain;
       margin-bottom: 12px;
-      background: #ffffff; /* Nền trắng để làm nổi bật logo trên nền xanh */
+      background: #ffffff;
       border-radius: 50%;
       padding: 3px;
   }
   .sidebar-title {
-      color: #ffeb3b; /* Đổi màu chữ vàng để tương phản nền xanh */
+      color: #ffeb3b;
+      font-size: 16px;
       font-weight: bold;
-      font-size: 15px;
-      text-transform: uppercase;
-      margin: 0;
-      line-height: 1.3;
-  }
-  .sidebar-subtitle {
-      color: #ffffff; /* Đổi màu chữ trắng */
-      font-size: 13px;
-      font-weight: bold;
-      margin-top: 5px;
+      margin-bottom: 5px;
       letter-spacing: 0.5px;
   }
+  .sidebar-subtitle {
+      color: #ffffff;
+      font-size: 12px;
+      opacity: 0.9;
+  }
   .menu-list {
-      padding: 0 12px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 0 15px;
+  }
+  .menu-btn {
+      background: transparent;
+      color: #e2e8f0;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      transform: translateX(5px);
+  }
+  .menu-btn.active {
+      background: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .menu-bottom-section {
+      padding: 20px 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
       gap: 10px;
   }
-  .menu-btn { 
-      padding: 12px 15px; 
-      background: transparent; 
-      border: 1px solid transparent; 
-      text-align: left; 
-      font-weight: bold; 
-      color: #e2e8f0; /* Chữ trắng xám */
-      border-radius: 8px; 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      display: flex; 
-      align-items: center; 
-      gap: 12px; 
-      font-size: 14px;
-      text-transform: uppercase;
-  }
-  .menu-btn i { font-size: 18px; width: 20px; text-align: center; }
-  .menu-btn:hover { 
-      background: rgba(255, 255, 255, 0.1); 
-      color: #ffffff; 
-  }
-  .menu-btn.active { 
-      background: #ffffff; 
-      color: #1e3a8a; 
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .menu-bottom-section {
-      margin-top: auto; 
-      padding: 0 12px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 10px; 
-      margin-bottom: 10px;
-  }
-  
-  .menu-logout { 
-      margin-bottom: 25px;
-      margin-left: 12px;
-      margin-right: 12px;
-      color: #ffffff; 
-      background: #dc2626; 
-      border: 1px solid #b91c1c;
-      justify-content: center;
-      text-transform: uppercase;
-  }
-  .menu-logout:hover { 
-      background: #b91c1c; 
-      color: #ffffff;
-  }
-  
-  /* Ghi đè CSS riêng cho nút AI trong Sidebar */
   .btn-ai-sidebar {
       background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      color: white; border: none; padding: 10px; border-radius: 8px;
-      font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
   }
-  .btn-ai-sidebar:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  .btn-ai-sidebar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  }
 </style>
 
 <div class="sidebar-menu">
   <div class="sidebar-header">
-    <img src="https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png" class="sidebar-logo" alt="Logo">
-    <h3 class="sidebar-title">SỔ KIỂM TRA NỘI BỘ</h3>
-    <div class="sidebar-subtitle">TRƯỜNG TH&THCS HỢP THÀNH</div>
+    <img src="" class="sidebar-logo" alt="Logo">
+    <h3 class="sidebar-title" id="menu_title"></h3>
+    <div class="sidebar-subtitle" id="menu_subtitle"></div>
   </div>
   
   <div class="menu-list">
@@ -138,15 +123,11 @@
       </button>
       
       <div class="dev-badge-container w-100 justify-content-center" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 5px; box-shadow: none;">
-        <div class="dev-icon-fly" style="margin-right: 8px; font-size: 14px;">🚀</div>
+        <div class="dev-icon-fly" style="margin-right: 8px;">🚀</div>
         <div class="dev-text-group" style="text-align: left;">
-          <div class="dev-name-label" style="font-size: 10px; color: #ffeb3b;">HOÀNG NGỌC LÂM</div>
-          <div class="dev-role-label" style="font-size: 9px; color: #ffffff;">System Developer</div>
+          <div class="dev-name-label" id="menu_author" style="font-size: 10px;"></div>
+          <div class="dev-role-label" style="font-size: 8px;">Thiết kế & Phát triển</div>
         </div>
       </div>
   </div>
-
-  <button class="menu-btn menu-logout" onclick="dangxg()">
-      <i class="bi bi-door-open"></i> ĐĂNG XUẤT
-  </button>
 </div>
