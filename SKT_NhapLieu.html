@@ -9,7 +9,7 @@
 
 <div id="main_content">
   <div class="header-card">
-   <h1 style="text-align:center; color:var(--brand-red); margin-top:0; font-family: 'Times New Roman', serif; font-size: 22px; font-weight: bold;">SỔ KIỂM TRA NỘI BỘ TRƯỜNG TH&THCS HỢP THÀNH</h1>
+   <h1 id="title_nhaplieu" style="text-align:center; color:var(--brand-red); margin-top:0; font-family: 'Times New Roman', serif; font-size: 22px; font-weight: bold;">ĐANG ĐỒNG BỘ DỮ LIỆU...</h1>
     <div class="filter-section">
       <div class="f-item"><span>Giáo viên</span><select id="cbGiaoVien" class="f-input" onchange="khindthd('GV')"></select></div>
       <div class="f-item"><span>Người kiểm tra</span><select id="cbNguoiKiemTra" class="f-input" onchange="khindthd('NKT')"></select></div>
@@ -106,13 +106,25 @@
 </div>
 
 <script>
+  // --- ĐỒNG BỘ ĐỊNH DANH GIAO DIỆN ---
+  (function dongBoNhanDien() {
+      setTimeout(function() {
+          try {
+              const tieuDe = document.getElementById('title_nhaplieu');
+              if (tieuDe && typeof SKT_TEN_PM_UP !== 'undefined') {
+                  tieuDe.innerText = SKT_TEN_PM_UP + " - " + SKT_TEN_TRUONG_UP;
+              }
+          } catch(e) {}
+      }, 50);
+  })();
+
+  // --- LOGIC HOẠT ĐỘNG ---
   let tknd = window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || ""; 
   let dlgvi = [], dlnktra = [], dlbpha = {}, dlmhso = [];
   let donghtta = null; 
   let dongcxoa = null; 
   let btn_ai_dang_cho = null; 
 
-  // BỔ SUNG: BỘ NHỚ ĐỆM CHO TÍNH NĂNG ĐIỀN NHẬN XÉT CỦA AI
   window.SKT_AI_CACHE = window.SKT_AI_CACHE || {};
 
   function chuanhchu(ch) {
@@ -183,7 +195,6 @@
       const nhlk = donghtta.querySelector('.link-input');
       const lk = nhlk ? nhlk.value : "";
 
-      // KIỂM TRA BỘ NHỚ ĐỆM (CACHE)
       const cacheKey = "EXTRACT_" + lk + "_" + prompt.toLowerCase();
       if (window.SKT_AI_CACHE[cacheKey]) {
           const c = window.SKT_AI_CACHE[cacheKey];
@@ -206,7 +217,6 @@
       google.script.run
       .withSuccessHandler(aikq => {
           if (aikq.tcon) {
-              // LƯU KẾT QUẢ VÀO BỘ NHỚ ĐỆM
               window.SKT_AI_CACHE[cacheKey] = {uu: aikq.uudiem, ton: aikq.tontai, bp: aikq.bienphap};
               dien_ai_nhanxet(aikq.uudiem, aikq.tontai, aikq.bienphap);
               btn.innerHTML = "✅ Xong";
