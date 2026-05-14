@@ -1,14 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" href="https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sổ Kiểm Tra Nội Bộ - TH&THCS Hợp Thành</title>
-  
   <script src="ketnoi.js"></script>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <script>
+    /* ========================================================================= */
+    /* ĐỒNG BỘ GIAO DIỆN TỪ KETNOI.JS VÀ INTERNAL API BRIDGE                     */
+    /* ========================================================================= */
+    document.addEventListener("DOMContentLoaded", function() {
+      // (Tiêu đề và Icon đã được chuyển hoàn toàn sang ketnoi.js xử lý)
+      
+      document.querySelectorAll('img[alt="Hợp Thành Logo"], .login-logo').forEach(img => {
+        img.src = SKT_LOGO_URL;
+      });
+      
+      const loginSubTitle = document.querySelector('.login-box h3');
+      if (loginSubTitle) loginSubTitle.innerText = SKT_TEN_TRUONG;
+
+      const loaderText = document.querySelector('.loader-text');
+      if (loaderText) loaderText.innerText = "PHẦN MỀM KIỂM TRA NỘI BỘ " + SKT_TEN_TRUONG_UP;
+    });
+
+    // INTERNAL API BRIDGE 
+    function createRunner(onSuccess, onFailure) {
+        return {
+            withSuccessHandler: function(cb) { return createRunner(cb, onFailure); },
+            withFailureHandler: function(cb) { return createRunner(onSuccess, cb); },
+            _call: function(hdong, tso) {
+                const sysId = window.skttktoanc || sessionStorage.getItem("SKT_USER_TAIK") || ""; 
+                fetch(SKT_GAS_URL, {
+                    method: 'POST',
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ hdong: hdong, tso: tso, taik: sysId })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.trth === "tcon") { if (onSuccess) onSuccess(res.dliu); } 
+                    else {
+                        if (onFailure) onFailure(new Error(res.tbao));
+                        else console.error("Lỗi từ máy chủ Google:", res.tbao);
+                    }
+                })
+                .catch(err => {
+                    if (onFailure) onFailure(err);
+                    else console.error("Lỗi mất kết nối:", err);
+                });
+            },
+            skt_laydl_bda: function(taik, cnh) { this._call('skt_laydl_bda', { cnh: cnh }); },
+            skt_laybg_mahs: function(mhso) { this._call('skt_laybg_mahs', { mhso: mhso }); },
+            skt_luubg_nha: function(mdl) { this._call('skt_luubg_nha', { mdl: mdl }); },
+            skt_nopbg_cuo: function(mdl) { this._call('skt_nopbg_cuo', { mdl: mdl }); },
+            skt_layds_mhs_cn: function() { this._call('skt_layds_mhs_cn', {}); },
+            skt_xoadon_nki_thc: function(mhso) { this._call('skt_xoadon_nki_thc', { mhso: mhso }); },
+            skt_laytm_con: function() { this._call('skt_laytm_con', {}); },
+            skt_tainhiu_tep: function(dltep, mhso, idtm, ddcu, cdghi) { this._call('skt_tainhiu_tep', { dltep: dltep, mhso: mhso, idtm: idtm, ddcu: ddcu, cdghi: cdghi }); },
+            skt_taitm_minhc: function(idcha, tentmu, dltep, ddcu, cdghi) { this._call('skt_taitm_minhc', { idcha: idcha, tentmu: tentmu, dltep: dltep, ddcu: ddcu, cdghi: cdghi }); },
+            skt_tk_laydl_loc: function() { this._call('skt_tk_laydl_loc', {}); },
+            skt_timbg_kq: function(tchi) { this._call('skt_timbg_kq', { tchi: tchi }); },
+            skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi }); },
+            skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
+            skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); },
+            skt_ktra_trangthai_qr: function(chuoi_dinhdanh) { this._call('skt_ktra_trangthai_qr', { chuoi_dinhdanh: chuoi_dinhdanh }); },
+            skt_xacthuc_qr: function(chuoi_dinhdanh, khoa_nhap, kieu_xthuc, khoa_moi) { this._call('skt_xacthuc_qr', { chuoi_dinhdanh: chuoi_dinhdanh, khoa_nhap: khoa_nhap, kieu_xthuc: kieu_xthuc, khoa_moi: khoa_moi }); }
+        };
+    }
+    const google = { script: { get run() { return createRunner(null, null); } } };
+  </script>
 
   <style>
     /* =========================================================
@@ -149,14 +211,12 @@
     /* =========================================================
        BỔ SUNG CSS PHÂN CHIA 2 CỘT & GIẢI QUYẾT THANH TRƯỢT 100%
        ========================================================= */
-    /* Triệt tiêu cuộn ngoài cùng của thẻ body */
     body { font-family: "Times New Roman", serif; background: #f3f4f6; margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
     
     #main-wrapper { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
     
     #MenuContainer { width: 260px; flex-shrink: 0; z-index: 1000; height: 100vh; overflow-y: auto; background: #1e3a8a; }
     
-    /* Vùng chứa chính không có padding trên cùng, ép khuôn 100vh và ẩn cuộn */
     #ContentContainer { 
         flex-grow: 1; 
         display: flex; 
@@ -167,15 +227,13 @@
         box-sizing: border-box; 
     }
     
-    /* Xóa bỏ tab ngang cũ */
     .tab-container { display: none !important; }
     
-    /* Container của tab trở thành hệ thống Flex để chiếm nốt phần trống */
     #so_wrapper { 
         flex-grow: 1; 
         display: flex; 
         flex-direction: column; 
-        min-height: 0; /* Cho phép co lại nếu bảng quá dài */
+        min-height: 0; 
         width: 100% !important; 
         max-width: 100% !important; 
         margin: 0 !important; 
@@ -185,11 +243,9 @@
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     
-    /* Nội dung tab biến thành cột flex */
     .tab-content { display: none; flex-direction: column; flex-grow: 1; min-height: 0; padding-top: 5px; }
     .tab-content.active { display: flex; }
     
-    /* ĐÂY LÀ NƠI CHỨA THANH CUỘN DUY NHẤT (Ngang & Dọc) */
     .table-container { 
         flex-grow: 1; 
         overflow: auto !important; 
@@ -199,7 +255,6 @@
         position: relative;
     }
     
-    /* Ghim dòng tiêu đề để không bị mất khi cuộn dọc */
     .table-container th { 
         position: sticky; 
         top: 0; 
@@ -208,7 +263,6 @@
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
     }
     
-    /* Cho phép cuộn phần minh chứng nếu nó xuất hiện độc lập */
     #MinhChungContainer { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; min-height: 0; }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -216,7 +270,6 @@
 </head>
 <body>
 
-  <!-- VÙNG CHỨA CUSTOM ALERT -->
   <div id="custom-alert-overlay">
     <div id="custom-alert-box" class="custom-alert-box error">
       <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
@@ -250,7 +303,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content text-center p-4 border-0 shadow-lg" style="background: rgba(255, 255, 255, 0.95);">
         <div class="mb-4 mt-2">
-          <img src="https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png" alt="Hợp Thành Logo" width="100">
+          <img src="https://i.ibb.co/S46wLjDt/logo-tr-ng-TH-THCS-Hop-Thanh3-removebg-preview.png" alt="Hợp Thành Logo" width="100">
         </div>
         <h5 class="fw-bold mb-3" style="font-family: 'Segoe UI', sans-serif;" id="trialTitle">Thông báo dùng thử</h5>
         <p class="fs-5 text-secondary" style="font-family: 'Segoe UI', sans-serif;" id="trialMessage">
@@ -263,7 +316,7 @@
 
   <div id="login-overlay">
     <div class="login-box">
-      <img src="https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png" class="login-logo">
+      <img src="https://i.ibb.co/S46wLjDt/logo-tr-ng-TH-THCS-Hop-Thanh3-removebg-preview.png" class="login-logo">
       <h2 style="color: #b91c1c; margin-top: 0; text-transform: uppercase;">Sổ Kiểm Tra Nội Bộ</h2>
       <h3 style="color: #1e3a8a; margin-bottom: 25px;">Trường TH&THCS Hợp Thành</h3>
       
@@ -307,12 +360,9 @@
     <div class="loader-text">PHẦN MỀM KIỂM TRA NỘI BỘ TRƯỜNG TH&THCS HỢP THÀNH</div>
   </div>
 
-  <!-- CẤU TRÚC 2 CỘT SAU KHI ĐĂNG NHẬP -->
   <div id="main-wrapper">
-    <!-- CỘT TRÁI: MENU -->
     <div id="MenuContainer"></div>
 
-    <!-- CỘT PHẢI: NỘI DUNG -->
     <div id="ContentContainer">
 
         <div id="so_wrapper">
@@ -342,7 +392,6 @@
         </div>
     </div>
 
-    <!-- CÁC MODAL & OVERLAY GIỮ NGUYÊN BÊN NGOÀI KHUNG -->
     <div id="modal_overlay">
       <div id="modal_box">
         <h3>✅ THÔNG BÁO</h3>
@@ -425,7 +474,6 @@
         hienThongBaoUI(title, text, type);
     };
 
-    // --- KHỐI XỬ LÝ CHAT AI HƯỚNG DẪN ---
     function toggleAIChat() {
         const hopChat = document.getElementById('ai-chat-box');
         hopChat.style.display = (hopChat.style.display === 'none' || hopChat.style.display === '') ? 'flex' : 'none';
@@ -488,7 +536,6 @@
             .skt_notebooklm_qa(cauHoi);
     }
 
-    // --- KHỐI XỬ LÝ NHẬN DIỆN QR VÀ ĐĂNG NHẬP ---
     let html5QrCode = null;
     let resolvePinPromise = null;
 
@@ -694,8 +741,6 @@
           .skt_laydl_bda("khach", new Date().getTime());
   }
 
-    // --- KẾT THÚC KHỐI ĐĂNG NHẬP ---
-
     function kiemtdt() { return true; }
 
     window.sktluutrao = {};
@@ -813,6 +858,16 @@
         thuchkb(document.getElementById('MenuContainer'));
 
         setTimeout(() => {
+            // ĐỒNG BỘ NỘI DUNG TẢI ĐỘNG
+            const sidebarLogo = document.querySelector('.sidebar-logo');
+            if (sidebarLogo) sidebarLogo.src = SKT_LOGO_URL;
+            
+            const sidebarSubtitle = document.querySelector('.sidebar-subtitle');
+            if (sidebarSubtitle) sidebarSubtitle.innerText = SKT_TEN_TRUONG_UP;
+    
+            const h1NhapLieu = document.querySelector('.header-card h1');
+            if (h1NhapLieu) h1NhapLieu.innerText = "SỔ KIỂM TRA NỘI BỘ " + SKT_TEN_TRUONG_UP;
+
             try { if (typeof taidli === 'function') taidli(); } catch(loie) {}
             try { if (typeof taithu === 'function') taithu(); } catch(loie) {}
             try { if (typeof themdongmo === 'function' && document.getElementById('tableContent').rows.length === 0) themdongmo(); } catch(loie) {}
