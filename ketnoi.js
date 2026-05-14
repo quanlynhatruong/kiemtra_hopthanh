@@ -4,7 +4,7 @@
  * Tác giả: Hoàng Ngọc Lâm
  */
 const SKT_GAS_URL = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec";
-//const SKT_LOGO_URL = "https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png";
+const SKT_LOGO_URL = "https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png4";
 
 const SKT_TEN_TRUONG = "Trường TH&THCS Hợp Thành";
 const SKT_TEN_TRUONG_UP = "TRƯỜNG TH&THCS HỢP THÀNH";
