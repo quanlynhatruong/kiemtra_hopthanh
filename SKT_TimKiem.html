@@ -133,7 +133,7 @@
 </style>
 
 <div class="header-card">
-  <div class="page-title">TRA CỨU HỒ SƠ - THỐNG KÊ</div>
+  <div class="page-title" id="title_timkiem">ĐANG ĐỒNG BỘ DỮ LIỆU...</div>
   
   <div class="filter-section-search">
     <div class="f-item"><span>Giáo viên</span><select id="s_gv" class="f-input"><option value="">-- Tất cả --</option></select></div>
@@ -220,7 +220,7 @@
   </table>
 </div>
 
-<div class="design-footer">Phát triển bởi: Hoàng Ngọc Lâm</div>
+<div class="design-footer" id="footer_timkiem"></div>
 
 <div id="tk_modal_overlay" class="modal-overlay">
   <div class="modal-box">
@@ -230,6 +230,23 @@
 </div>
 
 <script>
+  // --- ĐỒNG BỘ ĐỊNH DANH GIAO DIỆN ---
+  (function dongBoNhanDien() {
+      setTimeout(function() {
+          try {
+              const tkTitle = document.getElementById('title_timkiem');
+              if (tkTitle && typeof SKT_TEN_PM_UP !== 'undefined') {
+                  tkTitle.innerText = "TRA CỨU & THỐNG KÊ - " + SKT_TEN_PM_UP;
+              }
+              const tkFooter = document.getElementById('footer_timkiem');
+              if (tkFooter && typeof SKT_TAC_GIA !== 'undefined') {
+                  tkFooter.innerText = "Phát triển bởi: " + SKT_TAC_GIA;
+              }
+          } catch(e) {}
+      }, 50);
+  })();
+
+  // --- LOGIC HOẠT ĐỘNG ---
   (function khoitti() {
     const ng = new Date();
     const th = String(ng.getMonth() + 1).padStart(2, '0');
