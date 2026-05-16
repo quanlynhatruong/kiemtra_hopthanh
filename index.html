@@ -29,13 +29,13 @@
       if (versionText) versionText.innerText = "Phiên bản: " + SKT_PHIEN_BAN;
 
       const authorText = document.getElementById('app-author-text');
-      if (authorText) authorText.innerText = "Phát triển bởi: " + SKT_TAC_GIA_UP;
+      if (authorText) authorText.innerText = "Thiết kế và phát triển: " + SKT_TAC_GIA_UP;
 
       const loaderText = document.querySelector('.loader-text');
       if (loaderText) loaderText.innerText = SKT_TEN_PM_DAY_DU + " " + SKT_TEN_TRUONG_UP;
       
       const hdTacGia = document.getElementById('huong-dan-tac-gia');
-      if (hdTacGia) hdTacGia.innerText = "Phát triển bởi: " + SKT_TAC_GIA;
+      if (hdTacGia) hdTacGia.innerText = "Thiết kế và phát triển: " + SKT_TAC_GIA;
     });
 
     // INTERNAL API BRIDGE
@@ -74,10 +74,7 @@
             skt_taitm_minhc: function(idcha, tentmu, dltep, ddcu, cdghi) { this._call('skt_taitm_minhc', { idcha: idcha, tentmu: tentmu, dltep: dltep, ddcu: ddcu, cdghi: cdghi }); },
             skt_tk_laydl_loc: function() { this._call('skt_tk_laydl_loc', {}); },
             skt_timbg_kq: function(tchi) { this._call('skt_timbg_kq', { tchi: tchi }); },
-            
-            // ĐÃ BỔ SUNG TRUYỀN LOGO XUỐNG SERVER KHI IN BÁO CÁO
             skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi, logo: (typeof SKT_LOGO_URL !== 'undefined' ? SKT_LOGO_URL : "") }); },
-            
             skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
             skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); },
             skt_ktra_trangthai_qr: function(chuoi_dinhdanh) { this._call('skt_ktra_trangthai_qr', { chuoi_dinhdanh: chuoi_dinhdanh }); },
@@ -219,9 +216,7 @@
       from { transform: translateY(-30px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-    /* =========================================================
-       BỔ SUNG CSS PHÂN CHIA 2 CỘT & GIẢI QUYẾT THANH TRƯỢT 100%
-       ========================================================= */
+
     body { font-family: "Times New Roman", serif; background: #f3f4f6; margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
     
     #main-wrapper { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
@@ -283,7 +278,7 @@
 
   <div id="custom-alert-overlay">
     <div id="custom-alert-box" class="custom-alert-box error">
-      <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
+      <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-x-circle-fill"></i></div>
       <div id="custom-alert-title" class="custom-alert-title">Thông báo</div>
       <div id="custom-alert-message" class="custom-alert-message">Nội dung thông báo</div>
       <button class="custom-alert-btn" onclick="dongCustomAlert()">ĐÓNG</button>
@@ -296,11 +291,11 @@
       <p id="pin-modal-desc" style="font-size: 15px; color: #475569; margin-bottom: 20px;"></p>
 
       <div id="pin-step-1">
-          <input type="password" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="text" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif; -webkit-text-security: disc;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div id="pin-step-2" style="display: none;">
-          <input type="password" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="text" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif; -webkit-text-security: disc;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div style="display: flex; gap: 10px; justify-content: center;">
@@ -711,7 +706,7 @@
         })
         .withFailureHandler(loi => {
             alert("Mất kết nối với máy chủ khi xác thực: " + loi.message);
-            document.getElementById('instant-loader').style.display = 'none';
+            document.getElementById('instant-loader').style.display = 'flex';
             document.getElementById('login-overlay').style.display = 'flex';
         })
         .skt_xacthuc_qr(tk_giai_ma, khoa_nhap, kieu_xthuc, khoa_moi);
@@ -869,7 +864,6 @@
         thuchkb(document.getElementById('MenuContainer'));
 
         setTimeout(() => {
-            // ĐỒNG BỘ NỘI DUNG TẢI ĐỘNG TỪ KETNOI.JS VÀO TẤT CẢ CÁC FILE CON (MENU, NHẬP LIỆU, TÌM KIẾM, MINH CHỨNG)
             const sidebarLogo = document.querySelector('.sidebar-logo');
             if (sidebarLogo) sidebarLogo.src = SKT_LOGO_URL;
             
@@ -882,7 +876,6 @@
             const sidebarAuthor = document.getElementById('menu_author');
             if (sidebarAuthor) sidebarAuthor.innerText = SKT_TAC_GIA_UP;
             
-            // Tìm và sửa động toàn bộ thẻ tiêu đề trong các phần mềm con
             document.querySelectorAll('.page-title, .header-card h1, .up-header h3').forEach(el => {
                 let textHienTai = el.innerText.toUpperCase();
                 if(textHienTai.includes('GHI SỔ') || textHienTai.includes('NHẬP LIỆU')) {
@@ -896,7 +889,6 @@
                 }
             });
 
-            // Gọi chạy các hàm khởi tạo giao diện
             try { if (typeof taidli === 'function') taidli(); } catch(loie) {}
             try { if (typeof taithu === 'function') taithu(); } catch(loie) {}
             try { if (typeof themdongmo === 'function' && document.getElementById('tableContent').rows.length === 0) themdongmo(); } catch(loie) {}
@@ -958,175 +950,3 @@
   </script>
 </body>
 </html>
-
-}
-<br>
-```javascript
-// Function in Code.gs
-function skt_tk_taobc_vb(tcchi, logoUrl) {
-  if (!skt_kiemt_quy()) return { tcon: false, tbao: skttbkoquy };
-  const tientotep = "SO_KIEM_TRA_";
-  const tentep = tientotep + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "dd-MM-yyyy_HH-mm");
-  const tentmngd = "KẾT QUẢ KIỂM TRA (HỢP THÀNH)"; 
-
-  try {
-    const dlth = skt_tk_timbg(tcchi);
-    if (!dlth || dlth.length === 0) return { tcon: false, tbao: "Không có dữ liệu để in!" };
-
-    let tmdic;
-    const cactm = DriveApp.getFoldersByName(tentmngd);
-    if (cactm.hasNext()) {
-      tmdic = cactm.next();
-    } else {
-      tmdic = DriveApp.createFolder(tentmngd);
-    }
-
-    try {
-      const cactepcu = tmdic.getFiles();
-      while (cactepcu.hasNext()) {
-        let tept = cactepcu.next();
-        if (tept.getName().startsWith(tientotep)) {
-          tept.setTrashed(true);
-        }
-      }
-    } catch (loix) {
-      console.log("Lỗi xóa file cũ: " + loix.toString());
-    }
-
-    const tailie = DocumentApp.create(tentep);
-    const thantl = tailie.getBody();
-    const idtep = tailie.getId();
-    
-    thantl.setPageHeight(595.276); thantl.setPageWidth(841.89);   
-    thantl.setMarginTop(28.35); thantl.setMarginBottom(56.7);
-    thantl.setMarginLeft(56.7); thantl.setMarginRight(75);
-    
-    const kieucb = {};
-    kieucb[DocumentApp.Attribute.FONT_FAMILY] = 'Times New Roman';
-    kieucb[DocumentApp.Attribute.FONT_SIZE] = 11;
-    thantl.setAttributes(kieucb);
-
-    const bangtd = thantl.appendTable();
-    bangtd.setBorderWidth(0);
-    const dongtd = bangtd.appendTableRow();
-    
-    // SỬ DỤNG LOGO TỪ CLIENT TRUYỀN XUỐNG, NẾU KHÔNG CÓ THÌ DÙNG LOGO MẶC ĐỊNH
-    const ddbieut = (logoUrl && logoUrl.trim() !== "") ? logoUrl : "[https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png](https://i.ibb.co/SXSKh9xM/Logo-m-i-c-a-tr-ng-H-p-Th-Nh.png)";
-    
-    try {
-        const khoianh = UrlFetchApp.fetch(ddbieut).getBlob();
-        const obieut = dongtd.appendTableCell();
-        const hinhan = obieut.appendImage(khoianh);
-        hinhan.setWidth(60).setHeight(60); 
-        obieut.setWidth(61).setPaddingRight(0).setPaddingLeft(0).setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
-    } catch(err) { dongtd.appendTableCell("").setWidth(61); }
-
-    const oten = dongtd.appendTableCell();
-    oten.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER).setPaddingLeft(0); 
-    const doanten = oten.appendParagraph("TRƯỜNG TH&THCS HỢP THÀNH");
-    doanten.setAlignment(DocumentApp.HorizontalAlignment.LEFT).setSpacingBefore(0).setSpacingAfter(0);
-    const chuten = doanten.editAsText();
-    chuten.setBold(true).setForegroundColor("#b91c1c").setFontFamily("Times New Roman").setFontSize(13);
-
-    const tieud = thantl.appendParagraph("SỔ KIỂM TRA NỘI BỘ");
-    tieud.setHeading(DocumentApp.ParagraphHeading.HEADING1).setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(0).setSpacingAfter(5);
-    tieud.editAsText().setBold(true).setFontFamily("Times New Roman");
-    
-    let chutt = `Người kiểm tra: ${tcchi.nkiem || "Tất cả"}`;
-    chutt += `\nThời gian kiểm tra: Từ ngày ${tcchi.tkiem || "..."} đến ngày ${tcchi.dkiem || "..."}`;
-    const ttphu = thantl.appendParagraph(chutt);
-    ttphu.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingAfter(10);
-    ttphu.editAsText().setItalic(true).setFontSize(11).setFontFamily("Times New Roman");
-
-    const bangdl = thantl.appendTable();
-    const cactieud = ["STT", "Thời gian", "Giáo viên", "Nội dung", "Ưu điểm", "Tồn tại", "Biện pháp", "XL HS", "XL GD", "XL KS", "XL khác", "Ý kiến", "Ký tên"];
-    const daubang = bangdl.appendTableRow();
-    cactieud.forEach(h1 => {
-      const o1 = daubang.appendTableCell(h1);
-      o1.setBackgroundColor("#e0f2fe").setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
-      o1.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-      o1.editAsText().setBold(true).setItalic(false).setFontFamily("Times New Roman").setFontSize(10);
-    });
-    
-    const dorongcot = [25, 55, 70, 85, 120, 110, 85, 30, 30, 30, 35, 60, 40];
-    for(let iso = 0; iso < dorongcot.length; iso++) bangdl.setColumnWidth(iso, dorongcot[iso]);
-
-    dlth.forEach((donv, csso) => {
-      const dontb = bangdl.appendTableRow();
-      const dlcaco = [
-        (csso + 1).toString(), donv[4] ? Utilities.formatDate(new Date(skt_phnt_ngay(donv[4])), Session.getScriptTimeZone(), "dd/MM/yyyy") : "",
-        donv[0], donv[5], donv[6], donv[7], donv[8], donv[9], donv[10], donv[11], donv[12], donv[13], donv[14]
-      ];
-      dlcaco.forEach(c1 => {
-        const o1 = dontb.appendTableCell(String(c1 || ""));
-        o1.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
-        o1.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.LEFT);
-        o1.editAsText().setBold(false).setItalic(false).setFontFamily("Times New Roman").setFontSize(10);
-      });
-    });
-    tailie.saveAndClose();
-
-    const tept = DriveApp.getFileById(idtep);
-    tept.moveTo(tmdic);
-    
-    return { tcon: true, lkpt: tept.getUrl() };
-  } catch (err) {
-    return { tcon: false, tbao: "Lỗi tạo file: " + err.toString() };
-  }
-}
-
-function skt_phnt_ngay(ngay) { 
-  if (!ngay) return null; 
-  if (ngay instanceof Date) return ngay; 
-  const p1 = String(ngay).split('/');
-  if (p1.length === 3) return new Date(p1[2], p1[1]-1, p1[0]); 
-  return null; 
-}
-
-function doPost(sukien) {
-  try {
-    var chuoiyc = sukien.postData.contents;
-    if (!chuoiyc) {
-        throw new Error("Không nhận được dữ liệu từ web.");
-    }
-    
-    var yeuc = JSON.parse(chuoiyc);
-    var hdong = yeuc.hdong;
-    var tso = yeuc.tso;
-    tktoancuc = yeuc.taik; 
-
-    var kqua;
-    if (hdong === "skt_laydl_bda") kqua = skt_laydl_bda(tktoancuc, tso.cnh);
-    else if (hdong === "skt_laybg_mahs") kqua = skt_laybg_mahs(tso.mhso);
-    else if (hdong === "skt_luubg_nha") kqua = skt_luubg_nha(tso.mdl);
-    else if (hdong === "skt_nopbg_cuo") kqua = skt_nopbg_cuo(tso.mdl);
-    else if (hdong === "skt_layds_mhs_cn") kqua = skt_layds_mhs_cn();
-    else if (hdong === "skt_xoadon_nki_thc") kqua = skt_xoadon_nki_thc(tso.mhso);
-    else if (hdong === "skt_laytm_con") kqua = skt_tai_laytmc();
-    else if (hdong === "skt_tainhiu_tep") kqua = skt_tai_tainhiutep(tso.dltep, tso.mhso, tso.idtm, tso.ddcu, tso.cdghi);
-    else if (hdong === "skt_taitm_minhc") kqua = skt_tai_taitm_mc(tso.idcha, tso.tentmu, tso.dltep, tso.ddcu, tso.cdghi);
-    else if (hdong === "skt_tk_laydl_loc") kqua = skt_tk_laydl_loc();
-    else if (hdong === "skt_timbg_kq") kqua = skt_tk_timbg(tso.tchi);
-    else if (hdong === "skt_taobc_vba") kqua = skt_tk_taobc_vb(tso.tchi, tso.logo); // <-- ADDED tso.logo
-    else if (hdong === "skt_pt_mc_ai") kqua = skt_pt_mc_ai(tso.chuoilk, tso.yeucau);
-    else if (hdong === "skt_notebooklm_qa") kqua = skt_notebooklm_qa(tso.question);
-    
-    // API GIAO TIẾP HỎI ĐÁP TRỰC TIẾP MINH CHỨNG (TÍNH NĂNG MỚI)
-    else if (hdong === "skt_chatWithDocument") kqua = skt_chatWithDocument(tso.url, tso.query);
-    
-    // API XỬ LÝ ĐỊNH DANH 2 LỚP - ÁNH XẠ DÒNG ĐỘNG
-    else if (hdong === "skt_ktra_trangthai_qr") kqua = skt_ktra_trangthai_qr(tso.chuoi_dinhdanh);
-    else if (hdong === "skt_xacthuc_qr") kqua = skt_xacthuc_qr(tso.chuoi_dinhdanh, tso.khoa_nhap, tso.kieu_xthuc, tso.khoa_moi);
-    
-    else throw new Error("Lệnh không hợp lệ: " + hdong);
-
-    var dara = ContentService.createTextOutput(JSON.stringify({ trth: "tcon", dliu: kqua }));
-    dara.setMimeType(ContentService.MimeType.JSON);
-    return dara;
-    
-  } catch (loie) {
-    var daraloi = ContentService.createTextOutput(JSON.stringify({ trth: "loi", tbao: "Lỗi Server: " + loie.toString() }));
-    daraloi.setMimeType(ContentService.MimeType.JSON);
-    return daraloi;
-  }
-}
