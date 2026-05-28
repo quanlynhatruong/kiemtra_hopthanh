@@ -10,6 +10,9 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <script>
+    /* ========================================================================= */
+    /* ĐỒNG BỘ GIAO DIỆN TỪ KETNOI.JS VÀ INTERNAL API BRIDGE                     */
+    /* ========================================================================= */
     document.addEventListener("DOMContentLoaded", function() {
       
       document.querySelectorAll('.login-logo, .sys-logo').forEach(img => {
@@ -74,11 +77,15 @@
             skt_taobc_vba: function(tchi) { this._call('skt_taobc_vba', { tchi: tchi, logo: (typeof SKT_LOGO_URL !== 'undefined' ? SKT_LOGO_URL : "") }); },
             skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
             skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); },
+            skt_chatWithDocument: function(url, query) { this._call('skt_chatWithDocument', { url: url, query: query }); },
             skt_ktra_trangthai_qr: function(chuoi_dinhdanh) { this._call('skt_ktra_trangthai_qr', { chuoi_dinhdanh: chuoi_dinhdanh }); },
             skt_xacthuc_qr: function(chuoi_dinhdanh, khoa_nhap, kieu_xthuc, khoa_moi) { this._call('skt_xacthuc_qr', { chuoi_dinhdanh: chuoi_dinhdanh, khoa_nhap: khoa_nhap, kieu_xthuc: kieu_xthuc, khoa_moi: khoa_moi }); },
             
+            // CÁC HÀM API CHO QUẢN TRỊ VIÊN XX
             skt_lay_phanquyen: function() { this._call('skt_lay_phanquyen', {}); },
-            skt_luu_phanquyen: function(phamvi, mangdl) { this._call('skt_luu_phanquyen', { phamvi: phamvi, mangdl: mangdl }); }
+            skt_luu_phanquyen: function(phamvi, mangdl) { this._call('skt_luu_phanquyen', { phamvi: phamvi, mangdl: mangdl }); },
+            skt_lay_bophan: function() { this._call('skt_lay_bophan', {}); },
+            skt_luu_bophan: function(mangdl) { this._call('skt_luu_bophan', { mangdl: mangdl }); }
         };
     }
     const google = { script: { get run() { return createRunner(null, null); } } };
@@ -376,7 +383,6 @@
             <button class="tab-button" onclick="chuyentth('TabTimKiem', this)">🔍 THỐNG KÊ</button>
             <button class="tab-button" onclick="chuyentth('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
             <button class="tab-button" onclick="chuyentth('TabPhanQuyen', this)">🔑 CẤP QUYỀN</button>
-            <button class="tab-button" onclick="dangxg()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
           </div>
           
           <div id="TabNhapLieu" class="tab-content active"></div>
@@ -802,7 +808,6 @@
       let taikht = window.skttktoanc || layluutrant("SKT_USER_TAIK") || "";
       taikht = String(taikht).toLowerCase().trim();
 
-      // Bổ sung cờ để lưu quyền hạn hiện tại
       window.sktquyenht = "";
 
       google.script.run
@@ -828,7 +833,7 @@
                 let userMatch = dlu.dlgv.find(m1 => String(m1.taik).toLowerCase() === taikht);
                 if (userMatch) {
                     nduyq = true;
-                    window.sktquyenht = userMatch.quyen; // Lưu quyền để xử lý chặn UI
+                    window.sktquyenht = userMatch.quyen;
                 }
             }
             if(dlu.dlnk && dlu.dlnk.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
@@ -895,14 +900,13 @@
                     el.innerText = "THỐNG KÊ & TRA CỨU - " + SKT_TEN_PM_UP;
                 } else if(textHienTai.includes('MINH CHỨNG')) {
                     el.innerText = "QUẢN LÝ MINH CHỨNG - " + SKT_TEN_TRUONG_UP;
-                } else if(textHienTai.includes('CẤP QUYỀN TRUY CẬP')) {
-                    // Giữ nguyên tiêu đề cấp quyền
+                } else if(textHienTai.includes('QUYỀN TRUY CẬP')) {
+                    // Giữ nguyên tiêu đề quản lý quyền
                 } else {
                     el.innerText = SKT_TEN_PM_UP + " - " + SKT_TEN_TRUONG_UP;
                 }
             });
 
-            // ẨN TAB PHÂN QUYỀN NẾU KHÔNG PHẢI QUẢN TRỊ VIÊN XX
             if (window.sktquyenht !== 'xx') {
                 document.querySelectorAll('button[onclick*="TabPhanQuyen"]').forEach(btn => btn.style.display = 'none');
             }
