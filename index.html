@@ -77,7 +77,6 @@
             skt_ktra_trangthai_qr: function(chuoi_dinhdanh) { this._call('skt_ktra_trangthai_qr', { chuoi_dinhdanh: chuoi_dinhdanh }); },
             skt_xacthuc_qr: function(chuoi_dinhdanh, khoa_nhap, kieu_xthuc, khoa_moi) { this._call('skt_xacthuc_qr', { chuoi_dinhdanh: chuoi_dinhdanh, khoa_nhap: khoa_nhap, kieu_xthuc: kieu_xthuc, khoa_moi: khoa_moi }); },
             
-            // API CHO PHÂN QUYỀN
             skt_lay_phanquyen: function() { this._call('skt_lay_phanquyen', {}); },
             skt_luu_phanquyen: function(phamvi, mangdl) { this._call('skt_luu_phanquyen', { phamvi: phamvi, mangdl: mangdl }); }
         };
@@ -459,7 +458,7 @@
         let title = 'Lỗi hệ thống';
         let text = msg;
 
-        if (msg.startsWith("⛔ LỖI") || msg.startsWith("⛔ HỆ THỐNG ĐANG KHÓA")) {
+        if (msg.startsWith("⛔ LỖI") || msg.startsWith("⛔ HỆ THỐNG ĐANG KHÓA") || msg.startsWith("⛔ TỪ CHỐI")) {
             type = 'error';
             let parts = msg.split(":");
             title = parts[0].trim();
@@ -803,6 +802,9 @@
       let taikht = window.skttktoanc || layluutrant("SKT_USER_TAIK") || "";
       taikht = String(taikht).toLowerCase().trim();
 
+      // Bổ sung cờ để lưu quyền hạn hiện tại
+      window.sktquyenht = "";
+
       google.script.run
         .withSuccessHandler(dlu => {
           if (dlu.cquy === false) {
@@ -822,7 +824,13 @@
             document.getElementById('denied_reason').innerText = dlu.tbao;
           } else {
             let nduyq = false;
-            if(dlu.dlgv && dlu.dlgv.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
+            if(dlu.dlgv) {
+                let userMatch = dlu.dlgv.find(m1 => String(m1.taik).toLowerCase() === taikht);
+                if (userMatch) {
+                    nduyq = true;
+                    window.sktquyenht = userMatch.quyen; // Lưu quyền để xử lý chặn UI
+                }
+            }
             if(dlu.dlnk && dlu.dlnk.some(m1 => String(m1.taik).toLowerCase() === taikht)) nduyq = true;
             
             window.sktduocuyq = nduyq; 
@@ -840,7 +848,6 @@
       try {
         const cgnh = "?v=" + new Date().getTime(); 
         
-        // TẢI THÊM TỆP SKT_phanquyen.html CÙNG VỚI CÁC TỆP CŨ
         const [phnhapl, phtimk, phminhc, phmenu, phphanquyen] = await Promise.all([
             fetch('./SKT_NhapLieu.html' + cgnh),
             fetch('./SKT_TimKiem.html' + cgnh),
@@ -859,7 +866,7 @@
         document.getElementById('TabTimKiem').innerHTML = await phtimk.text();
         document.getElementById('MinhChungContainer').innerHTML = await phminhc.text();
         document.getElementById('MenuContainer').innerHTML = await phmenu.text();
-        document.getElementById('TabPhanQuyen').innerHTML = await phphanquyen.text(); // Nạp tệp phân quyền
+        document.getElementById('TabPhanQuyen').innerHTML = await phphanquyen.text(); 
 
         thuchkb(document.getElementById('TabNhapLieu'));
         thuchkb(document.getElementById('TabTimKiem'));
@@ -894,6 +901,11 @@
                     el.innerText = SKT_TEN_PM_UP + " - " + SKT_TEN_TRUONG_UP;
                 }
             });
+
+            // ẨN TAB PHÂN QUYỀN NẾU KHÔNG PHẢI QUẢN TRỊ VIÊN XX
+            if (window.sktquyenht !== 'xx') {
+                document.querySelectorAll('button[onclick*="TabPhanQuyen"]').forEach(btn => btn.style.display = 'none');
+            }
 
             try { if (typeof taidli === 'function') taidli(); } catch(loie) {}
             try { if (typeof taithu === 'function') taithu(); } catch(loie) {}
@@ -945,7 +957,6 @@
         });
     }
 
-    // CẬP NHẬT HOOK GỌI TẢI DỮ LIỆU KHI CHUYỂN TAB CẤP QUYỀN
     function chuyentth(idd, nut) {
       document.querySelectorAll('.tab-content').forEach(c1 => c1.classList.remove('active'));
       document.querySelectorAll('.tab-button').forEach(b1 => b1.classList.remove('active'));
@@ -954,7 +965,6 @@
       document.getElementById(idd).classList.add('active');
       if(nut) nut.classList.add('active');
       
-      // Auto trigger load data if clicking on TabPhanQuyen
       if (idd === 'TabPhanQuyen') {
           if (typeof loadPhanQuyen === 'function') loadPhanQuyen();
       }
