@@ -10,9 +10,6 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <script>
-    /* ========================================================================= */
-    /* ĐỒNG BỘ GIAO DIỆN TỪ KETNOI.JS VÀ INTERNAL API BRIDGE                     */
-    /* ========================================================================= */
     document.addEventListener("DOMContentLoaded", function() {
       
       document.querySelectorAll('.login-logo, .sys-logo').forEach(img => {
@@ -29,13 +26,13 @@
       if (versionText) versionText.innerText = "Phiên bản: " + SKT_PHIEN_BAN;
 
       const authorText = document.getElementById('app-author-text');
-      if (authorText) authorText.innerText = "Thiết kế và phát triển: " + SKT_TAC_GIA_UP;
+      if (authorText) authorText.innerText = "Phát triển bởi: " + SKT_TAC_GIA_UP;
 
       const loaderText = document.querySelector('.loader-text');
       if (loaderText) loaderText.innerText = SKT_TEN_PM_DAY_DU + " " + SKT_TEN_TRUONG_UP;
       
       const hdTacGia = document.getElementById('huong-dan-tac-gia');
-      if (hdTacGia) hdTacGia.innerText = "Thiết kế và phát triển: " + SKT_TAC_GIA;
+      if (hdTacGia) hdTacGia.innerText = "Phát triển bởi: " + SKT_TAC_GIA;
     });
 
     // INTERNAL API BRIDGE
@@ -78,7 +75,11 @@
             skt_pt_mc_ai: function(chuoilk, yeucau) { this._call('skt_pt_mc_ai', { chuoilk: chuoilk, yeucau: yeucau }); },
             skt_notebooklm_qa: function(question) { this._call('skt_notebooklm_qa', { question: question }); },
             skt_ktra_trangthai_qr: function(chuoi_dinhdanh) { this._call('skt_ktra_trangthai_qr', { chuoi_dinhdanh: chuoi_dinhdanh }); },
-            skt_xacthuc_qr: function(chuoi_dinhdanh, khoa_nhap, kieu_xthuc, khoa_moi) { this._call('skt_xacthuc_qr', { chuoi_dinhdanh: chuoi_dinhdanh, khoa_nhap: khoa_nhap, kieu_xthuc: kieu_xthuc, khoa_moi: khoa_moi }); }
+            skt_xacthuc_qr: function(chuoi_dinhdanh, khoa_nhap, kieu_xthuc, khoa_moi) { this._call('skt_xacthuc_qr', { chuoi_dinhdanh: chuoi_dinhdanh, khoa_nhap: khoa_nhap, kieu_xthuc: kieu_xthuc, khoa_moi: khoa_moi }); },
+            
+            // API CHO PHÂN QUYỀN
+            skt_lay_phanquyen: function() { this._call('skt_lay_phanquyen', {}); },
+            skt_luu_phanquyen: function(phamvi, mangdl) { this._call('skt_luu_phanquyen', { phamvi: phamvi, mangdl: mangdl }); }
         };
     }
     const google = { script: { get run() { return createRunner(null, null); } } };
@@ -216,7 +217,6 @@
       from { transform: translateY(-30px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     body { font-family: "Times New Roman", serif; background: #f3f4f6; margin: 0; padding: 0; height: 100vh; width: 100vw; overflow: hidden; box-sizing: border-box; }
     
     #main-wrapper { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
@@ -278,7 +278,7 @@
 
   <div id="custom-alert-overlay">
     <div id="custom-alert-box" class="custom-alert-box error">
-      <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-x-circle-fill"></i></div>
+      <div id="custom-alert-icon" class="custom-alert-icon"><i class="bi bi-exclamation-circle-fill"></i></div>
       <div id="custom-alert-title" class="custom-alert-title">Thông báo</div>
       <div id="custom-alert-message" class="custom-alert-message">Nội dung thông báo</div>
       <button class="custom-alert-btn" onclick="dongCustomAlert()">ĐÓNG</button>
@@ -291,11 +291,11 @@
       <p id="pin-modal-desc" style="font-size: 15px; color: #475569; margin-bottom: 20px;"></p>
 
       <div id="pin-step-1">
-          <input type="text" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif; -webkit-text-security: disc;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="password" id="pin-input-1" placeholder="..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 15px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div id="pin-step-2" style="display: none;">
-          <input type="text" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif; -webkit-text-security: disc;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
+          <input type="password" id="pin-input-2" placeholder="Tạo mã PIN cá nhân mới..." style="width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s; font-family: 'Times New Roman', serif;" onfocus="this.style.borderColor='#1e3a8a'" onblur="this.style.borderColor='#cbd5e1'" onkeypress="if(event.key === 'Enter') dongPinModal(true);">
       </div>
 
       <div style="display: flex; gap: 10px; justify-content: center;">
@@ -376,6 +376,7 @@
             <button class="tab-button active" onclick="chuyentth('TabNhapLieu', this)">📝 GHI SỔ</button>
             <button class="tab-button" onclick="chuyentth('TabTimKiem', this)">🔍 THỐNG KÊ</button>
             <button class="tab-button" onclick="chuyentth('TabHuongDan', this)">ℹ️ HƯỚNG DẪN</button>
+            <button class="tab-button" onclick="chuyentth('TabPhanQuyen', this)">🔑 CẤP QUYỀN</button>
             <button class="tab-button" onclick="dangxg()" style="margin-left:auto; color:#dc2626; border-color:#fca5a5; background:#fef2f2;">🚪 ĐĂNG XUẤT</button>
           </div>
           
@@ -387,6 +388,7 @@
             <p><b>2. Trợ giúp:</b> Bạn có thể hỏi đáp các quy định, thông tin hệ thống thông qua Trợ lý AI Hướng dẫn ở góc phải.</p>
             <p><b id="huong-dan-tac-gia"></b></p>
           </div>
+          <div id="TabPhanQuyen" class="tab-content"></div> 
         </div>
 
         <div id="MinhChungContainer"></div>
@@ -426,9 +428,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    /* ========================================================================= */
-    /* HÀM GHI ĐÈ ALERT BẰNG CUSTOM UI                                           */
-    /* ========================================================================= */
     function hienThongBaoUI(tieuDe, noiDung, loai = 'error') {
       const box = document.getElementById('custom-alert-box');
       const icon = document.getElementById('custom-alert-icon');
@@ -706,7 +705,7 @@
         })
         .withFailureHandler(loi => {
             alert("Mất kết nối với máy chủ khi xác thực: " + loi.message);
-            document.getElementById('instant-loader').style.display = 'flex';
+            document.getElementById('instant-loader').style.display = 'none';
             document.getElementById('login-overlay').style.display = 'flex';
         })
         .skt_xacthuc_qr(tk_giai_ma, khoa_nhap, kieu_xthuc, khoa_moi);
@@ -841,27 +840,32 @@
       try {
         const cgnh = "?v=" + new Date().getTime(); 
         
-        const [phnhapl, phtimk, phminhc, phmenu] = await Promise.all([
+        // TẢI THÊM TỆP SKT_phanquyen.html CÙNG VỚI CÁC TỆP CŨ
+        const [phnhapl, phtimk, phminhc, phmenu, phphanquyen] = await Promise.all([
             fetch('./SKT_NhapLieu.html' + cgnh),
             fetch('./SKT_TimKiem.html' + cgnh),
             fetch('./SKT_MinhChung.html' + cgnh),
-            fetch('./Menu_doc.html' + cgnh)
+            fetch('./Menu_doc.html' + cgnh),
+            fetch('./SKT_phanquyen.html' + cgnh)
         ]);
 
         if (!phnhapl.ok) throw new Error("Không tìm thấy file SKT_NhapLieu.html");
         if (!phtimk.ok) throw new Error("Không tìm thấy file SKT_TimKiem.html");
         if (!phminhc.ok) throw new Error("Không tìm thấy file SKT_MinhChung.html");
         if (!phmenu.ok) throw new Error("Không tìm thấy file Menu_doc.html");
+        if (!phphanquyen.ok) throw new Error("Không tìm thấy file SKT_phanquyen.html");
 
         document.getElementById('TabNhapLieu').innerHTML = await phnhapl.text();
         document.getElementById('TabTimKiem').innerHTML = await phtimk.text();
         document.getElementById('MinhChungContainer').innerHTML = await phminhc.text();
         document.getElementById('MenuContainer').innerHTML = await phmenu.text();
+        document.getElementById('TabPhanQuyen').innerHTML = await phphanquyen.text(); // Nạp tệp phân quyền
 
         thuchkb(document.getElementById('TabNhapLieu'));
         thuchkb(document.getElementById('TabTimKiem'));
         thuchkb(document.getElementById('MinhChungContainer'));
         thuchkb(document.getElementById('MenuContainer'));
+        thuchkb(document.getElementById('TabPhanQuyen'));
 
         setTimeout(() => {
             const sidebarLogo = document.querySelector('.sidebar-logo');
@@ -884,6 +888,8 @@
                     el.innerText = "THỐNG KÊ & TRA CỨU - " + SKT_TEN_PM_UP;
                 } else if(textHienTai.includes('MINH CHỨNG')) {
                     el.innerText = "QUẢN LÝ MINH CHỨNG - " + SKT_TEN_TRUONG_UP;
+                } else if(textHienTai.includes('CẤP QUYỀN TRUY CẬP')) {
+                    // Giữ nguyên tiêu đề cấp quyền
                 } else {
                     el.innerText = SKT_TEN_PM_UP + " - " + SKT_TEN_TRUONG_UP;
                 }
@@ -939,6 +945,7 @@
         });
     }
 
+    // CẬP NHẬT HOOK GỌI TẢI DỮ LIỆU KHI CHUYỂN TAB CẤP QUYỀN
     function chuyentth(idd, nut) {
       document.querySelectorAll('.tab-content').forEach(c1 => c1.classList.remove('active'));
       document.querySelectorAll('.tab-button').forEach(b1 => b1.classList.remove('active'));
@@ -946,6 +953,11 @@
       
       document.getElementById(idd).classList.add('active');
       if(nut) nut.classList.add('active');
+      
+      // Auto trigger load data if clicking on TabPhanQuyen
+      if (idd === 'TabPhanQuyen') {
+          if (typeof loadPhanQuyen === 'function') loadPhanQuyen();
+      }
     }
   </script>
 </body>
