@@ -3,7 +3,7 @@
  * Hệ thống: Sổ Kiểm Tra Nội Bộ (SKT)
  * Tác giả: Hoàng Ngọc Lâm
  */
-const SKT_GAS_URL = "https://script.google.com/macros/s/AKfycbxeQAXxsFNGjJlnnaimCshsK8wLVea9wnVePCR-ioB9Xr3Q4mVVUsDXIUIEYQ1vIZHb/exec";
+const SKT_GAS_URL = "https://script.google.com/macros/s/AKfycbyyFQ7C3rgX2KdL-etZiOYhieuGeLgjuSxi5FatO6Pi2rulQQbLgrvUhuk-fF9cycEA/exec";
 const SKT_LOGO_URL = "https://i.ibb.co/6R8Y9DNq/logo-l-a-ch-n6.png";
 
 const SKT_TEN_TRUONG = "Trường TH&THCS Hợp Thành";
