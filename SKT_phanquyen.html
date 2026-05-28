@@ -1,48 +1,114 @@
 <div class="header-card mb-3 p-3 bg-white rounded shadow-sm border-top border-primary border-3">
-    <h1 class="page-title m-0 text-primary" style="font-size: 18px; font-weight: bold; text-transform: uppercase;">CẤP QUYỀN TRUY CẬP</h1>
+    <h1 class="page-title m-0 text-primary" style="font-size: 18px; font-weight: bold; text-transform: uppercase;">QUẢN LÝ QUYỀN TRUY CẬP VÀ BỘ PHẬN</h1>
 </div>
 
-<div class="bg-white p-3 rounded shadow-sm border d-flex flex-column" style="height: calc(100vh - 110px);">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="d-flex align-items-center gap-2">
-            <label for="inp-phamvi" class="fw-bold mb-0" style="white-space: nowrap; color: #1e3a8a;">Phạm vi đối tượng:</label>
-            <input type="text" id="inp-phamvi" class="form-control form-control-sm" style="width: 250px; font-family: 'Times New Roman';" placeholder="Nhập phạm vi (Ví dụ: all)">
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-success fw-bold" onclick="addRowPQ()">
-                <i class="bi bi-plus-circle"></i> Thêm mới
-            </button>
-            <button class="btn btn-sm btn-primary fw-bold" onclick="savePhanQuyen()">
-                <i class="bi bi-save"></i> Cập nhật
-            </button>
-        </div>
-    </div>
+<ul class="nav nav-tabs mb-2" style="font-family: 'Times New Roman', serif; font-size: 16px;">
+  <li class="nav-item">
+    <a class="nav-link active fw-bold text-primary" id="btn-tab-1-1" href="#" onclick="chuyenTabPQ('tab-1-1', this)" style="cursor:pointer;">1.1 Quyền truy cập</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link fw-bold text-secondary" id="btn-tab-1-2" href="#" onclick="chuyenTabPQ('tab-1-2', this)" style="cursor:pointer;">1.2 Khai báo bộ phận</a>
+  </li>
+</ul>
+
+<div class="bg-white p-3 rounded shadow-sm border d-flex flex-column" style="height: calc(100vh - 160px);">
     
-    <div class="table-container flex-grow-1" style="overflow-y: auto; border: 1px solid #9ca3af;">
-        <table class="table table-bordered table-hover mb-0" id="tb-phanquyen">
-            <thead class="table-primary sticky-top" style="z-index: 5;">
-                <tr>
-                    <th style="width: 50px;" class="text-center">Xóa</th>
-                    <th style="width: 60px;" class="text-center">STT</th>
-                    <th style="width: 35%;">Họ và tên</th>
-                    <th style="width: 35%;">Email</th>
-                    <th style="width: 15%;">Quyền</th>
-                </tr>
-            </thead>
-            <tbody id="tb-phanquyen-body">
-                </tbody>
-        </table>
+    <div id="tab-1-1" class="khung-tab-pq d-flex flex-column" style="height: 100%;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <label for="inp-phamvi" class="fw-bold mb-0" style="white-space: nowrap; color: #1e3a8a;">Phạm vi đối tượng:</label>
+                <input type="text" id="inp-phamvi" class="form-control form-control-sm" style="width: 250px; font-family: 'Times New Roman';" placeholder="Nhập phạm vi (Ví dụ: all)">
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-success fw-bold" onclick="addRowPQ()">
+                    <i class="bi bi-plus-circle"></i> Thêm mới
+                </button>
+                <button class="btn btn-sm btn-primary fw-bold" onclick="savePhanQuyen()">
+                    <i class="bi bi-save"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-container flex-grow-1" style="overflow-y: auto; border: 1px solid #9ca3af;">
+            <table class="table table-bordered table-hover mb-0" id="tb-phanquyen">
+                <thead class="table-primary sticky-top" style="z-index: 5;">
+                    <tr>
+                        <th style="width: 50px;" class="text-center">Xóa</th>
+                        <th style="width: 60px;" class="text-center">STT</th>
+                        <th style="width: 35%;">Họ và tên</th>
+                        <th style="width: 35%;">Email</th>
+                        <th style="width: 15%;">Quyền</th>
+                    </tr>
+                </thead>
+                <tbody id="tb-phanquyen-body">
+                    </tbody>
+            </table>
+        </div>
     </div>
+
+    <div id="tab-1-2" class="khung-tab-pq d-none flex-column" style="height: 100%;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="m-0 fw-bold" style="color: #1e3a8a; font-size: 16px; text-transform: uppercase;">KHAI BÁO BỘ PHẬN TỔ CHỨC</h4>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-success fw-bold" onclick="addRowBP()">
+                    <i class="bi bi-plus-circle"></i> Thêm mới
+                </button>
+                <button class="btn btn-sm btn-primary fw-bold" onclick="saveBoPhan()">
+                    <i class="bi bi-save"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-container flex-grow-1" style="overflow-y: auto; border: 1px solid #9ca3af;">
+            <table class="table table-bordered table-hover mb-0" id="tb-bophan">
+                <thead class="table-success sticky-top" style="z-index: 5;">
+                    <tr>
+                        <th style="width: 50px;" class="text-center">Xóa</th>
+                        <th style="width: 60px;" class="text-center">STT</th>
+                        <th style="width: 60%;">Tên bộ phận</th>
+                        <th style="width: 40%;">Mã bộ phận</th>
+                    </tr>
+                </thead>
+                <tbody id="tb-bophan-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <script>
+    // -----------------------------------------------------
+    // LOGIC ĐIỀU HƯỚNG TAB
+    // -----------------------------------------------------
+    function chuyenTabPQ(tabId, btn) {
+        document.querySelectorAll('.khung-tab-pq').forEach(el => {
+            el.classList.remove('d-flex');
+            el.classList.add('d-none');
+        });
+        
+        document.getElementById(tabId).classList.remove('d-none');
+        document.getElementById(tabId).classList.add('d-flex');
+        
+        document.querySelectorAll('#btn-tab-1-1, #btn-tab-1-2').forEach(el => {
+            el.classList.remove('active', 'text-primary');
+            el.classList.add('text-secondary');
+        });
+        
+        btn.classList.add('active', 'text-primary');
+        btn.classList.remove('text-secondary');
+    }
+
+    // -----------------------------------------------------
+    // KHỐI 1.1: QUẢN LÝ QUYỀN TRUY CẬP
+    // -----------------------------------------------------
     function loadPhanQuyen() {
         document.getElementById('instant-loader').style.display = 'flex';
         google.script.run
             .withSuccessHandler(kq => {
                 document.getElementById('instant-loader').style.display = 'none';
                 if (!kq.tcon) {
-                    alert("Lỗi tải dữ liệu: " + kq.tbao);
+                    alert("Lỗi tải dữ liệu quyền: " + kq.tbao);
                     return;
                 }
                 
@@ -50,10 +116,7 @@
                 const tbody = document.getElementById('tb-phanquyen-body');
                 tbody.innerHTML = '';
                 
-                // Mảng đổ vào theo trình tự hiển thị
                 if (kq.dlieu && kq.dlieu.length > 0) {
-                    // Do hàm addRowPQ mặc định chèn lên đầu, ta cần duyệt mảng ngược lại 
-                    // để hiển thị đúng thứ tự ban đầu từ trang tính.
                     for (let i = kq.dlieu.length - 1; i >= 0; i--) {
                         let row = kq.dlieu[i];
                         if (String(row[1]).trim() !== '' || String(row[2]).trim() !== '') { 
@@ -62,6 +125,9 @@
                     }
                 }
                 updateSTTPQ();
+                
+                // Nạp luôn dữ liệu bộ phận
+                loadBoPhan();
             })
             .withFailureHandler(err => {
                 document.getElementById('instant-loader').style.display = 'none';
@@ -95,7 +161,6 @@
             </td>
         `;
         
-        // Luôn chèn dòng mới lên đầu tiên
         if (tbody.firstChild) {
             tbody.insertBefore(tr, tbody.firstChild);
         } else {
@@ -107,8 +172,7 @@
     
     function deleteRowPQ(btn) {
         if (confirm("Thầy/Cô có chắc chắn muốn xóa dòng quyền này?")) {
-            const tr = btn.closest('tr');
-            tr.remove();
+            btn.closest('tr').remove();
             updateSTTPQ();
         }
     }
@@ -124,7 +188,7 @@
         const phamvi = document.getElementById('inp-phamvi').value.trim();
         const rows = document.getElementById('tb-phanquyen-body').querySelectorAll('tr');
         const mangdl = [];
-        let tonTaiNguoiXX = false; // Cờ kiểm tra
+        let tonTaiNguoiXX = false; 
         
         rows.forEach((row, idx) => {
             const ten = row.querySelector('.ten-col').value.trim();
@@ -138,7 +202,6 @@
             }
         });
         
-        // KIỂM TRA ĐIỀU KIỆN QUYỀN XX
         if (!tonTaiNguoiXX) {
             alert("⛔ TỪ CHỐI CẬP NHẬT:\nHệ thống yêu cầu phải có tối thiểu 1 người dùng được cấp quyền 'xx' để đảm bảo duy trì quyền quản trị cấp cao!");
             return;
@@ -164,5 +227,103 @@
                 alert("Lỗi kết nối máy chủ: " + err.message);
             })
             .skt_luu_phanquyen(phamvi, mangdl);
+    }
+
+    // -----------------------------------------------------
+    // KHỐI 1.2: QUẢN LÝ BỘ PHẬN TỔ CHỨC
+    // -----------------------------------------------------
+    function loadBoPhan() {
+        google.script.run
+            .withSuccessHandler(kq => {
+                if (!kq.tcon) {
+                    console.error("Lỗi tải bộ phận:", kq.tbao);
+                    return;
+                }
+                
+                const tbody = document.getElementById('tb-bophan-body');
+                tbody.innerHTML = '';
+                
+                if (kq.dlieu && kq.dlieu.length > 0) {
+                    for (let i = kq.dlieu.length - 1; i >= 0; i--) {
+                        let row = kq.dlieu[i];
+                        if (String(row[0]).trim() !== '' || String(row[1]).trim() !== '') { 
+                            addRowBP(row[0], row[1]);
+                        }
+                    }
+                }
+                updateSTTBP();
+            })
+            .withFailureHandler(err => {
+                console.error("Lỗi kết nối tải bộ phận:", err.message);
+            })
+            .skt_lay_bophan();
+    }
+
+    function addRowBP(tenbp = '', mabp = '') {
+        const tbody = document.getElementById('tb-bophan-body');
+        const tr = document.createElement('tr');
+        
+        tr.innerHTML = `
+            <td class="text-center align-middle">
+                <button class="btn-icon-del" onclick="deleteRowBP(this)" title="Xóa dòng"><i class="bi bi-trash"></i></button>
+            </td>
+            <td class="text-center align-middle fw-bold stt-col-bp" style="color: #64748b;"></td>
+            <td><input type="text" class="cell-input ten-bp-col" value="${tenbp}" placeholder="Nhập tên bộ phận..."></td>
+            <td><input type="text" class="cell-input ma-bp-col" value="${mabp}" placeholder="Nhập mã bộ phận..."></td>
+        `;
+        
+        // Luôn chèn dòng mới lên đầu tiên
+        if (tbody.firstChild) {
+            tbody.insertBefore(tr, tbody.firstChild);
+        } else {
+            tbody.appendChild(tr);
+        }
+        
+        updateSTTBP();
+    }
+
+    function deleteRowBP(btn) {
+        if (confirm("Thầy/Cô có chắc chắn muốn xóa bộ phận này?")) {
+            btn.closest('tr').remove();
+            updateSTTBP();
+        }
+    }
+
+    function updateSTTBP() {
+        const rows = document.getElementById('tb-bophan-body').querySelectorAll('tr');
+        rows.forEach((row, idx) => {
+            row.querySelector('.stt-col-bp').innerText = idx + 1;
+        });
+    }
+
+    function saveBoPhan() {
+        const rows = document.getElementById('tb-bophan-body').querySelectorAll('tr');
+        const mangdl = [];
+        
+        rows.forEach((row) => {
+            const tenbp = row.querySelector('.ten-bp-col').value.trim();
+            const mabp = row.querySelector('.ma-bp-col').value.trim();
+            
+            if (tenbp !== '' || mabp !== '') {
+                mangdl.push([tenbp, mabp]);
+            }
+        });
+        
+        document.getElementById('instant-loader').style.display = 'flex';
+        google.script.run
+            .withSuccessHandler(kq => {
+                document.getElementById('instant-loader').style.display = 'none';
+                if (kq.tcon) {
+                    alert("✅ " + kq.tbao);
+                    loadBoPhan(); 
+                } else {
+                    alert("⛔ Lỗi cập nhật bộ phận: " + kq.tbao);
+                }
+            })
+            .withFailureHandler(err => {
+                document.getElementById('instant-loader').style.display = 'none';
+                alert("Lỗi kết nối máy chủ khi lưu bộ phận: " + err.message);
+            })
+            .skt_luu_bophan(mangdl);
     }
 </script>
