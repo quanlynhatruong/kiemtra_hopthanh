@@ -71,6 +71,13 @@
       color: #ffffff;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
+  .menu-logout {
+      color: #fca5a5 !important;
+  }
+  .menu-logout:hover {
+      background: rgba(239, 68, 68, 0.1) !important;
+      color: #fef2f2 !important;
+  }
   .menu-bottom-section {
       padding: 20px 15px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -117,6 +124,10 @@
       </button>
       <button class="menu-btn" onclick="chuyentth('TabPhanQuyen', this)">
           <i class="bi bi-shield-lock"></i> CẤP QUYỀN TRUY CẬP
+      </button>
+
+      <button class="menu-btn menu-logout" onclick="dangxg()" style="margin-top: auto;">
+          <i class="bi bi-box-arrow-right"></i> ĐĂNG XUẤT
       </button>
   </div>
 
